@@ -10,4 +10,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 }
-data class login(val )
+
+data class req(val uid:String, val upw:String)
+
+interface login {
+    @GET("https://anabada.du.r.appspot.com/api")
+    fun
+}
