@@ -10,4 +10,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 }
-data class login(val )
+
+data class LoginReq (
+    val uid: String,
+    val upw: String
+)
+
+data class LoginRes (
+    val success: Boolean,
+    val resultCode: String,
+    val id: Int,
+    val nickname: String
+)
