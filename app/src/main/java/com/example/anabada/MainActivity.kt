@@ -2,6 +2,7 @@ package com.example.anabada
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.anabada.databinding.ActivityMainBinding
 import retrofit2.Retrofit
@@ -38,8 +39,8 @@ class MainActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<Res>, response: Response<Res>) {
                     login = response.body()
                     val dialog = AlertDialog.Builder(this@MainActivity)
-                    dialog.setTitle(login?.success.toString())
-                    dialog.setMessage(login?.resultCode + login?.id.toString() + login?.nickname)
+                    dialog.setTitle("success: " + login?.success.toString())
+                    dialog.setMessage("result code: " + login?.resultCode + "\nid: " + login?.id.toString() + "\nnickname: " + login?.nickname)
                     dialog.show()
                 }
             })
