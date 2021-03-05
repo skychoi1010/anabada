@@ -1,5 +1,6 @@
 package com.example.anabada
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,7 +13,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    var login:Res? = null
+    var login:LoginRes? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -29,14 +30,14 @@ class MainActivity : AppCompatActivity() {
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
 
-            service.reqLogin(uid, upw).enqueue(object : Callback<Res>{
-                override fun onFailure(call: Call<Res>, t: Throwable) {
+            service.reqLogin(uid, upw).enqueue(object : Callback<LoginRes>{
+                override fun onFailure(call: Call<LoginRes>, t: Throwable) {
                     val dialog = AlertDialog.Builder(this@MainActivity)
                     dialog.setTitle("Failed connection")
                     dialog.show()
                 }
 
-                override fun onResponse(call: Call<Res>, response: Response<Res>) {
+                override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
                     login = response.body()
                     val dialog = AlertDialog.Builder(this@MainActivity)
                     dialog.setTitle("success: " + login?.success.toString())
@@ -46,16 +47,11 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
-    }
+        binding.signupBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+            startActivity(intent)
+        }
 
-    /*
-    private fun createOkHttpClient(): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        builder.addInterceptor(interceptor)
-        return builder.build()
     }
-    */
 
 }
