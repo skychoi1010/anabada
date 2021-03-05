@@ -1,9 +1,7 @@
 package com.example.anabada
 
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -12,6 +10,20 @@ interface ApiService {
     fun reqLogin(
         @Field("uid") uid:String,
         @Field("upw") upw:String
-    ): Call<Res>
+    ): Call<LoginRes>
+
+    @GET("user/logout")
+    fun reqLogout(
+            @Query("success") success:Boolean,
+            @Query("resultCode") resultCode:String
+    ): Call<LogoutRes>
+
+    @FormUrlEncoded
+    @POST("user/signup")
+    fun reqSignup(
+            @Field("uid") uid:String,
+            @Field("upw") upw:String,
+            @Field("nickname") nickname:String
+    ): Call<SignupRes>
 
 }
