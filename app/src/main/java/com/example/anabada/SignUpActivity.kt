@@ -1,5 +1,6 @@
 package com.example.anabada
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,9 @@ class SignUpActivity: AppCompatActivity() {
                     dialog.setTitle("success: " + signup?.success.toString())
                     dialog.setMessage("result code: " + signup?.resultCode)
                     dialog.show()
+                    val intent = Intent(this@SignUpActivity, BoardActivity::class.java)
+                    intent.putExtra("nickname", nickname)
+                    startActivity(intent)
                 }
             })
         }
