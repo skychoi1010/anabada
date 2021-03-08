@@ -39,10 +39,11 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
                     login = response.body()
-                    val dialog = AlertDialog.Builder(this@MainActivity)
-                    dialog.setTitle("success: " + login?.success.toString())
-                    dialog.setMessage("result code: " + login?.resultCode + "\nid: " + login?.id.toString() + "\nnickname: " + login?.nickname)
-                    dialog.show()
+                    Toast.makeText(this@MainActivity, "success: " + login?.success.toString() +
+                            "\nresult code: " + login?.resultCode + "\nid: " + login?.id.toString() +
+                            "\nnickname: " + login?.nickname, Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@MainActivity, BoardActivity::class.java)
+                    startActivity(intent)
                 }
             })
         }

@@ -3,15 +3,12 @@ package com.example.anabada
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.anabada.databinding.ListitemBoardBinding
 
-class BoardRecyclerAdapter: RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
+class BoardRecyclerAdapter(): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
 
-    var items = MutableList<String>(30){
-        index -> mutableListOf<String>(tvGoodsName = "자바칩 프라푸치노 " + (index+1).toString(), tvGoodsPrice = index.toString(), ivGoodsImg = "img_coffee_0" + (index%5).toString())
-    }
+    var boardRecyclerList = MutableList<Int>(10){ i -> i }
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
@@ -23,20 +20,21 @@ class BoardRecyclerAdapter: RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyc
         this.itemClickListener = itemClickListener
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = boardRecyclerList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardRecyclerViewHolder {
-        val inflatedView = LayoutInflater.from(parent.context).inflate(BoardActivity, parent, false)
-        return BoardRecyclerViewHolder(inflatedView as ViewGroup)
+        val binding = ListitemBoardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return BoardRecyclerViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: BoardRecyclerViewHolder, position: Int) {
-        items[position].let { item ->
+        boardRecyclerList[position].let { item ->
             with(holder){
-                tvGoodsNameView.text = item.tvGoodsName
-                tvGoodsPriceView.text = item.tvGoodsPrice
-                val ivGoodsImgPath = context.resources.getIdentifier(item.ivGoodsImg, "drawable", context.packageName)
-                ivGoodsImageView.setImageResource(ivGoodsImgPath)
+                listBinding.tvBoardTitle.text = "title"
+                listBinding.tvBoardWriter.text = "writer"
+                listBinding.tvBoardDate.text = "date"
+                listBinding.tvBoardPrice.text = "price"
+                listBinding.tvBoardCommentNum.text = "1"
                 holder.itemView.setOnClickListener{
                     itemClickListener.onClick(it, position)
                 }
@@ -48,11 +46,6 @@ class BoardRecyclerAdapter: RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyc
         }
     }
 
-    inner class BoardRecyclerViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.listitem_shop_item_study, parent, false)) {
-        var tvGoodsNameView: TextView = itemView.tv_goods_name_study
-        var tvGoodsPriceView: TextView = itemView.tv_goods_price_study
-        var ivGoodsImageView: ImageView = itemView.iv_goods_img_study
-    }
+    inner class BoardRecyclerViewHolder(val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(listBinding.root) {}
 
 }

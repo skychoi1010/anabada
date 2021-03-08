@@ -1,5 +1,6 @@
 package com.example.anabada
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -12,15 +13,14 @@ class BoardActivity: AppCompatActivity() {
 
     private val boardRecyclerAdapter = BoardRecyclerAdapter()
 
-    private val binding = ActivityBoardBinding.inflate(layoutInflater)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = ActivityBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initView()
+        initView(binding)
     }
 
-    private fun initView() {
+    private fun initView(binding: ActivityBoardBinding) {
         binding.rvBoard.adapter = boardRecyclerAdapter
         binding.rvBoard.layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration = DividerItemDecoration(this@BoardActivity, LinearLayoutManager.VERTICAL)
@@ -32,5 +32,10 @@ class BoardActivity: AppCompatActivity() {
                 Toast.makeText(this@BoardActivity, "dummy item " + (position+1).toString() + " !!", Toast.LENGTH_SHORT).show()
             }
         })
+
+        binding.floatingActionButton.setOnClickListener{
+            val intent = Intent(this@BoardActivity, PostActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
