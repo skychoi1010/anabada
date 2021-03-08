@@ -52,6 +52,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, SignUpActivity::class.java)
             startActivity(intent)
         }
+
+        binding.skipBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, BoardActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }

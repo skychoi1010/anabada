@@ -30,11 +30,11 @@ class BoardRecyclerAdapter(): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRec
     override fun onBindViewHolder(holder: BoardRecyclerViewHolder, position: Int) {
         boardRecyclerList[position].let { item ->
             with(holder){
-                listBinding.tvBoardTitle.text = "title"
+                listBinding.tvBoardTitle.text = "title " + (position+1).toString()
                 listBinding.tvBoardWriter.text = "writer"
                 listBinding.tvBoardDate.text = "date"
                 listBinding.tvBoardPrice.text = "price"
-                listBinding.tvBoardCommentNum.text = "1"
+                listBinding.tvBoardCommentNum.text = (0..12).random().toString()
                 holder.itemView.setOnClickListener{
                     itemClickListener.onClick(it, position)
                 }
