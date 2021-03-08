@@ -6,12 +6,13 @@ data class LoginRes (
         var id: Int,
         var nickname: String
 )
+
 data class LogoutRes (
         var success: Boolean,
         var resultCode: String
 )
 
-data class SignupRes (
+data class SignUpRes (
         var success: Boolean,
         var resultCode: String
 )

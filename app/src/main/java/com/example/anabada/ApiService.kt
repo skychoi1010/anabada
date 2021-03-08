@@ -20,10 +20,10 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("user/signup")
-    fun reqSignup(
+    fun reqSignUp(
             @Field("uid") uid:String,
             @Field("upw") upw:String,
             @Field("nickname") nickname:String
-    ): Call<SignupRes>
+    ): Call<SignUpRes>
 
 }

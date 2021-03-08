@@ -45,8 +45,9 @@
         android:id="@+id/signup_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:backgroundTint="#514F4F"
+        android:layout_marginTop="16dp"
         android:text="signup"
+        app:backgroundTint="#514F4F"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_btn" />

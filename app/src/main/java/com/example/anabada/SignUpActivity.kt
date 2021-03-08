@@ -1,5 +1,6 @@
 package com.example.anabada
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +11,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity: AppCompatActivity() {
 
-    var signup:SignupRes? = null
+    var signup:SignUpRes? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +21,9 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://anabada.du.r.appspot.com/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl("https://anabada.du.r.appspot.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
 
         val service: ApiService = retrofit.create(ApiService::class.java)
 
@@ -31,23 +32,25 @@ class SignUpActivity : AppCompatActivity() {
             val upw = binding.pw.text.toString()
             val nickname = binding.nickname.text.toString()
 
-            service.reqSignup(uid, upw, nickname).enqueue(object : Callback<SignupRes> {
-                override fun onFailure(call: Call<SignupRes>, t: Throwable) {
+            service.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
+                override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
                     val dialog = AlertDialog.Builder(this@SignUpActivity)
                     dialog.setTitle("Failed connection")
                     dialog.show()
                 }
 
-                override fun onResponse(call: Call<SignupRes>, response: Response<SignupRes>) {
+                override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) {
                     signup = response.body()
                     val dialog = AlertDialog.Builder(this@SignUpActivity)
                     dialog.setTitle("success: " + signup?.success.toString())
                     dialog.setMessage("result code: " + signup?.resultCode)
                     dialog.show()
+                    val intent = Intent(this@SignUpActivity, BoardActivity::class.java)
+                    intent.putExtra("nickname", nickname)
+                    startActivity(intent)
                 }
             })
         }
+
     }
-
-
 }
