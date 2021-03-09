@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.anabada.databinding.ActivityBoardBinding
@@ -24,7 +25,7 @@ class BoardActivity: AppCompatActivity() {
         binding.rvBoard.adapter = boardRecyclerAdapter
         binding.rvBoard.layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration = DividerItemDecoration(this@BoardActivity, LinearLayoutManager.VERTICAL)
-        //ContextCompat.getDrawable(this@BoardActivity, R.drawable.divider_ececec)?.let { dividerItemDecoration.setDrawable(it) }
+        ContextCompat.getDrawable(this@BoardActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoard.addItemDecoration(dividerItemDecoration)
 
         boardRecyclerAdapter.setItemClickListener( object : BoardRecyclerAdapter.ItemClickListener{
