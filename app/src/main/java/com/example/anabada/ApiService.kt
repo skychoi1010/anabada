@@ -26,4 +26,11 @@ interface ApiService {
             @Field("nickname") nickname:String
     ): Call<SignUpRes>
 
+/*
+    @GET("user/logout")
+    fun reqBoard(
+            @Query("success") success:Boolean,
+            @Query("resultCode") resultCode:String
+    ): Call<BoardRes>
+ */
 }

@@ -16,3 +16,10 @@ data class SignUpRes (
         var success: Boolean,
         var resultCode: String
 )
+/*
+data class BoardRes (
+        var
+        )
+
+
+ */

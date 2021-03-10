@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/tv_board_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
@@ -45,7 +45,7 @@
         android:textSize="14sp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:maxEms="10"
+        android:maxEms="11"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintBottom_toTopOf="@id/tv_board_price"
@@ -55,7 +55,7 @@
 
     <TextView
         android:id="@+id/tv_board_date"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:text="날짜"
@@ -71,10 +71,11 @@
 
     <TextView
         android:id="@+id/tv_board_price"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginBottom="12dp"
+        android:layout_marginRight="5dp"
         android:text="가격"
         android:textSize="14sp"
         app:layout_constraintHorizontal_bias="0.0"
@@ -111,7 +112,6 @@
         android:maxEms="5"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_board_price"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
