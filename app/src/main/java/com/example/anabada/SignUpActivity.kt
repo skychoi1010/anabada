@@ -2,6 +2,8 @@ package com.example.anabada
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -11,9 +13,8 @@ import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.regex.Pattern
+
 
 class SignUpActivity: AppCompatActivity() {
 
@@ -21,29 +22,28 @@ class SignUpActivity: AppCompatActivity() {
     private val ID_POLICY:String = "4~12자리의 대소문자/숫자만 가능합니다."
     private val NICKNAME_POLICY:String = "2~10자리의 한글/대소문자/숫자만 가능합니다."
     private val PASSWORD_POLICY:String = "8~30자리의 숫자/대문자/소문자/특수문자(!,_) 중 2가지 이상의 조합이어야 합니다."
+    private val MATCH_PASSWORD:String = "비밀번호와 동일하지 않습니다."
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://anabada.du.r.appspot.com/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-        val service: ApiService = retrofit.create(ApiService::class.java)
+        val api = ApiService.create()
 
         binding.signupBtn.setOnClickListener {
-            (binding.id.parent.parent as TextInputLayout).error = null
-            (binding.nickname.parent.parent as TextInputLayout).error = null
-            (binding.pw.parent.parent as TextInputLayout).error = null
+            setError(binding.id, null)
+            setError(binding.pw, null)
+            setError(binding.nickname, null)
+            setError(binding.confirmPw, null)
+
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
             val nickname = binding.nickname.text.toString()
+            val cpw = binding.confirmPw.text.toString()
 
             if(isValidId(binding.id, uid) and isValidPassword(binding.pw, upw) and isValidNick(binding.nickname, nickname)) {
-                service.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
+                api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
                     override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
                         Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@SignUpActivity, BoardActivity::class.java)
@@ -72,16 +72,31 @@ class SignUpActivity: AppCompatActivity() {
 
         var valid = true
 
-        val exp = "^[a-zA-Z]{8,30}\$"
-        val num = "/[0-9]/g"
-        val lowerCase = "^[a-z]*$"
-        val upperCase = "^[A-Z]*$"
-        val specialChar = "^[!-]*$"
-        val pattern = Pattern.compile(exp)
-        val matcher = pattern.matcher(str)
-        if (!matcher.matches()) {
-            valid = false
-        }
+        val lenReg = "^[a-zA-Z0-9!_]{8,30}\$"
+        val lowerReg = "[a-z]"
+        val upperReg = "[A-Z]"
+        val numReg = "[0-9]"
+        val specReg = "[!_]"
+
+        var cnt = 0
+        if (Pattern.matches(lenReg, str)) {
+            if (Pattern.compile(lowerReg).matcher(str).find()) {
+                cnt++
+            }
+            if (Pattern.compile(upperReg).matcher(str).find()) {
+                cnt++
+            }
+            if (Pattern.compile(numReg).matcher(str).find()) {
+                cnt++
+            }
+            if (Pattern.compile(specReg).matcher(str).find()) {
+                cnt++
+            }
+
+            if (cnt < 2) {
+                valid = false
+            }
+        } else valid = false
 
         // Set error if required
         if (!valid) {
@@ -96,7 +111,6 @@ class SignUpActivity: AppCompatActivity() {
         var valid = true
 
         val exp = "^[a-zA-z0-9]{4,12}\$"
-
 
         val pattern = Pattern.compile(exp)
         val matcher = pattern.matcher(str)
@@ -117,6 +131,7 @@ class SignUpActivity: AppCompatActivity() {
         var valid = true
 
         val exp = "^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}\$"
+
         val pattern = Pattern.compile(exp)
         val matcher = pattern.matcher(str)
         if (!matcher.matches()) {
