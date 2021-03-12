@@ -31,11 +31,42 @@ class SignUpActivity: AppCompatActivity() {
 
         val api = ApiService.create()
 
+        binding.confirmPw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                setError(binding.confirmPw, null)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()){
+                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
+                        setError(binding.confirmPw, MATCH_PASSWORD)
+                    }
+                }
+            }
+        })
+
+        binding.pw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                setError(binding.confirmPw, null)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()){
+                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
+                        setError(binding.confirmPw, MATCH_PASSWORD)
+                    }
+                }
+            }
+        })
+
         binding.signupBtn.setOnClickListener {
             setError(binding.id, null)
             setError(binding.pw, null)
             setError(binding.nickname, null)
-            setError(binding.confirmPw, null)
 
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
