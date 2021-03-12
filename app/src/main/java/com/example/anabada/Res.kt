@@ -63,23 +63,9 @@ data class PostImageRes (
         var id: Int
         )
 
-data class PostContentReq (
-        var title: String,
-        var price: Int,
-        var contents: String,
-        var imgId: Int
-        )
-
 data class PostContentRes (
         var result: String,
         var id: Int
-        )
-
-data class ReviseContentReq (
-        var title: String,
-        var price: Int,
-        var contents: String,
-        var imgId: Int //not confirmed
         )
 
 data class ReviseContentRes (
@@ -92,18 +78,9 @@ data class DeleteContentRes (
         var id: Int
         )
 
-data class PostCommentReq (
-        var boardId: Int,
-        var contents: String
-        )
-
 data class PostCommentRes (
         var result: String,
         var id: Int
-        )
-
-data class ReviseCommentReq (
-        var contents: String
         )
 
 data class ReviseCommentRes (

@@ -20,6 +20,7 @@
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".BoardActivity"/>
         <activity android:name=".PostActivity"/>
+        <activity android:name=".BoardDetailActivity"/>
     </application>
 
 </manifest>

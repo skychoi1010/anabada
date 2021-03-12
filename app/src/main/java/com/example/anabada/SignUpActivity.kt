@@ -77,8 +77,6 @@ class SignUpActivity: AppCompatActivity() {
                 api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
                     override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
                         Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@SignUpActivity, BoardActivity::class.java)
-                        startActivity(intent)
                     }
 
                     override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) {

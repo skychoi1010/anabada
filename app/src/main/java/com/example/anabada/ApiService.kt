@@ -1,6 +1,7 @@
 package com.example.anabada
 
 import okhttp3.Interceptor
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -31,11 +32,64 @@ interface ApiService {
             @Field("nickname") nickname:String
     ): Call<SignUpRes>
 
-    @GET("board?page=")
+    @GET("board?page={page}")
     fun reqBoard(
-            @Query("success") success:Boolean,
-            @Query("resultCode") resultCode:String
+            @Query("page") page:Int
     ): Call<BoardPageRes>
+
+    @GET("board/{id}")
+    fun reqBoardDetail(
+        @Query("id") id:Int
+    ): Call<BoardDetailRes>
+
+    @Multipart
+    @POST("image")
+    fun reqPostImage(
+        @Part image:MultipartBody.Part
+    ): Call<PostImageRes>
+
+    @FormUrlEncoded
+    @POST("board")
+    fun reqPostContent(
+        @Field("title") title: String,
+        @Field("price") price: Int,
+        @Field("contents") contents: String,
+        @Field("imgId") imgId: Int
+    ): Call<PostContentRes>
+
+    @FormUrlEncoded
+    @PUT("board/{id}")
+    fun reqReviseContent(
+        @Field("title") title: String,
+        @Field("price") price: Int,
+        @Field("contents") contents: String,
+        @Field("imgId") imgId: Int //TODO not confirmed
+    ): Call<ReviseContentRes>
+
+    @FormUrlEncoded
+    @DELETE("board/{id}")
+    fun reqDeleteContent(
+        @Field("id") id: Int
+    ): Call<DeleteContentRes>
+
+    @FormUrlEncoded
+    @POST("coment")
+    fun reqPostComment(
+        @Field("boardId") boardId: Int,
+        @Field("contents") contents: String
+    ): Call<PostCommentRes>
+
+    @FormUrlEncoded
+    @PUT("coment/{id}")
+    fun reqReviseComment(
+        @Field("contents") contents: String
+    ): Call<ReviseCommentRes>
+
+    @FormUrlEncoded
+    @DELETE("coment/{id}")
+    fun reqDeleteComment(
+        @Field("id") id: Int
+    ): Call<DeleteCommentRes>
 
     companion object {
         private const val BASE_URL = "https://anabada.du.r.appspot.com/api/"
