@@ -32,14 +32,14 @@ interface ApiService {
             @Field("nickname") nickname:String
     ): Call<SignUpRes>
 
-    @GET("board?page={page}")
+    @GET("board")
     fun reqBoard(
             @Query("page") page:Int
     ): Call<BoardPageRes>
 
     @GET("board/{id}")
     fun reqBoardDetail(
-        @Query("id") id:Int
+        @Path("id") id:Int
     ): Call<BoardDetailRes>
 
     @Multipart
@@ -60,6 +60,7 @@ interface ApiService {
     @FormUrlEncoded
     @PUT("board/{id}")
     fun reqReviseContent(
+        @Path("id") id: Int,
         @Field("title") title: String,
         @Field("price") price: Int,
         @Field("contents") contents: String,
@@ -82,13 +83,13 @@ interface ApiService {
     @FormUrlEncoded
     @PUT("coment/{id}")
     fun reqReviseComment(
-        @Field("contents") contents: String
+        @Path("contents") contents: String
     ): Call<ReviseCommentRes>
 
     @FormUrlEncoded
     @DELETE("coment/{id}")
     fun reqDeleteComment(
-        @Field("id") id: Int
+        @Path("id") id: Int
     ): Call<DeleteCommentRes>
 
     companion object {

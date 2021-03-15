@@ -16,8 +16,28 @@ import retrofit2.Response
 
 class BoardActivity: AppCompatActivity() {
 
-    private val boardRecyclerAdapter = BoardRecyclerAdapter()
-    val boardsData: BoardsData? = null
+    var boardPageRes: BoardPageRes? = null
+    private var boardsDataList: ArrayList<BoardsData>? = arrayListOf(BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(2, "title", "2020/03/15", 2000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
+        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null")) //erase later
+    private var boardRecyclerAdapter : BoardRecyclerAdapter? = boardsDataList?.let {
+        BoardRecyclerAdapter(
+            it
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,30 +47,31 @@ class BoardActivity: AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityBoardBinding) {
+        val api = ApiService.create()
+        api.reqBoard(1).enqueue(object : Callback<BoardPageRes> {
+            override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
+                Toast.makeText(this@BoardActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardPageRes>) {
+                boardPageRes = response.body()
+                Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
+                        "\nresult code: " + boardPageRes?.resultCode, Toast.LENGTH_SHORT).show()
+                //boardsDataList = boardPageRes?.boards
+                boardRecyclerAdapter = boardsDataList?.let { BoardRecyclerAdapter(it) }
+            }
+        })
         binding.rvBoard.adapter = boardRecyclerAdapter
         binding.rvBoard.layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration = DividerItemDecoration(this@BoardActivity, LinearLayoutManager.VERTICAL)
         ContextCompat.getDrawable(this@BoardActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoard.addItemDecoration(dividerItemDecoration)
-        val api = ApiService.create()
-        api.reqBoard(1).enqueue(object : Callback<BoardPageRes> {
-            override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
-                Toast.makeText(this@BoardActivity, "Failed connection", Toast.LENGTH_SHORT).show()
-            }
 
-            override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardsPageRes>) {
-                boardsData = response.body()
-                val dialog = AlertDialog.Builder(this@BoardActivity)
-                dialog.setTitle("success: " + signup?.success.toString())
-                dialog.setMessage("result code: " + signup?.resultCode)
-                dialog.show()
-
-            }
-        })
-
-        boardRecyclerAdapter.setItemClickListener( object : BoardRecyclerAdapter.ItemClickListener{
-            override fun onClick(view: View, position: Int) {
-                Toast.makeText(this@BoardActivity, "dummy item " + (position+1).toString() + " !!", Toast.LENGTH_SHORT).show()
+        boardRecyclerAdapter?.setItemClickListener( object : BoardRecyclerAdapter.ItemClickListener{
+            override fun onClick(view: View, id: Int) {
+                val intent = Intent(this@BoardActivity, BoardDetailActivity::class.java)
+                intent.putExtra("id", id)
+                startActivity(intent)
             }
         })
 
@@ -58,5 +79,7 @@ class BoardActivity: AppCompatActivity() {
             val intent = Intent(this@BoardActivity, PostActivity::class.java)
             startActivity(intent)
         }
+
     }
+
 }

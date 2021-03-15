@@ -33,13 +33,13 @@ class MainActivity : AppCompatActivity() {
             service.reqLogin(uid, upw).enqueue(object : Callback<LoginRes>{
                 override fun onFailure(call: Call<LoginRes>, t: Throwable) {
                     val dialog = AlertDialog.Builder(this@MainActivity)
-                    dialog.setTitle("Failed connection")
+                    dialog.setTitle("login api\nFailed connection")
                     dialog.show()
                 }
 
                 override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
                     login = response.body()
-                    Toast.makeText(this@MainActivity, "success: " + login?.success.toString() +
+                    Toast.makeText(this@MainActivity, "login api\nsuccess: " + login?.success.toString() +
                             "\nresult code: " + login?.resultCode + "\nid: " + login?.id.toString() +
                             "\nnickname: " + login?.nickname, Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@MainActivity, BoardActivity::class.java)

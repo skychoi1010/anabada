@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BoardDetailActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_board_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="title"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_board_detail_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="author"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
+
+            <TextView
+                android:id="@+id/tv_board_detail_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="price"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_author"/>
+
+            <TextView
+                android:id="@+id/tv_board_detail_contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="contents\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_price"/>
+
+            <!--TODO comment section-->
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways">
+
+            <ImageView
+                android:id="@+id/iv_board_detail_img"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:src="@mipmap/ic_launcher"/>
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="pin">
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
