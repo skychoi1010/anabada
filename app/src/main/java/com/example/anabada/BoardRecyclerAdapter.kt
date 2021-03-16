@@ -3,12 +3,9 @@ package com.example.anabada
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ListitemBoardBinding
+import java.util.ArrayList
 
 class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
 
@@ -31,21 +28,24 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
 
     override fun onBindViewHolder(holder: BoardRecyclerViewHolder, position: Int) {
         holder.bind(boardsDataList[position])
+    }
 
-        holder.itemView.setOnClickListener{
-            itemClickListener.onClick(it, position)
-        }
+    fun setDataNotify(boardsDataList: ArrayList<BoardsData>) {
+        this.boardsDataList = boardsDataList
+        notifyDataSetChanged()
     }
 
     inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(listBinding.root) {
         fun bind(item: BoardsData) {
+            /*
             Glide.with(listBinding.root)
                     .load(item.thumbImg)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
                     .into(listBinding.ivBoardThumbnail)
+             */
             listBinding.tvBoardTitle.text = item.title
-            listBinding.tvBoardWriter.text = item.author
-            listBinding.tvBoardDate.text = item.date
+            listBinding.tvBoardWriter.text = item.userId
+            listBinding.tvBoardDate.text = item.updatedAt
             listBinding.tvBoardPrice.text = item.price.toString()
             listBinding.root.setOnClickListener {
                 itemClickListener.onClick(it, item.id)

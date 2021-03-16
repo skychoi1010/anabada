@@ -25,11 +25,16 @@ data class BoardPageRes (
 
 data class BoardsData (
         var id: Int,
-        var title: String,
-        var date: String,
-        var price: Int,
         var author: String,
-        var thumbImg: String
+        var title: String,
+        var contents: String,
+        var price: Int,
+        var thumbImg: String,
+        var isDel: Boolean,
+        var createdAt: String,
+        var updatedAt: String,
+        var imageId: String,
+        var userId: String
         )
 
 data class BoardDetailRes (

@@ -31,6 +31,38 @@ class SignUpActivity: AppCompatActivity() {
 
         val api = ApiService.create()
 
+        binding.id.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                setError(binding.id, null)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (!binding.id.text.isNullOrEmpty()){
+                    if (!isValidId(binding.id, binding.id.text.toString())){
+                        setError(binding.id, ID_POLICY)
+                    }
+                }
+            }
+        })
+
+        binding.nickname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                setError(binding.nickname, null)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (!binding.nickname.text.isNullOrEmpty()){
+                    if (!isValidNick(binding.nickname, binding.nickname.text.toString())){
+                        setError(binding.nickname, NICKNAME_POLICY)
+                    }
+                }
+            }
+        })
+
         binding.confirmPw.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 setError(binding.confirmPw, null)
@@ -59,6 +91,9 @@ class SignUpActivity: AppCompatActivity() {
                     if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
                         setError(binding.confirmPw, MATCH_PASSWORD)
                     }
+                    if (!isValidPassword(binding.pw, binding.pw.text.toString())){
+                        setError(binding.pw, PASSWORD_POLICY)
+                    }
                 }
             }
         })
@@ -71,9 +106,8 @@ class SignUpActivity: AppCompatActivity() {
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
             val nickname = binding.nickname.text.toString()
-            val cpw = binding.confirmPw.text.toString()
 
-            if(isValidId(binding.id, uid) and isValidPassword(binding.pw, upw) and isValidNick(binding.nickname, nickname)) {
+            if(isValidId(binding.id, uid) && isValidPassword(binding.pw, upw) && isValidNick(binding.nickname, nickname) && (binding.confirmPw.text.toString() != binding.pw.text.toString())) {
                 api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
                     override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
                         Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
@@ -81,10 +115,6 @@ class SignUpActivity: AppCompatActivity() {
 
                     override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) {
                         signup = response.body()
-                        val dialog = AlertDialog.Builder(this@SignUpActivity)
-                        dialog.setTitle("success: " + signup?.success.toString())
-                        dialog.setMessage("result code: " + signup?.resultCode)
-                        dialog.show()
                         Toast.makeText(this@SignUpActivity, "success: " + signup?.success.toString() +
                                 "\nresult code: " + signup?.resultCode, Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@SignUpActivity, BoardActivity::class.java)
@@ -127,7 +157,6 @@ class SignUpActivity: AppCompatActivity() {
             }
         } else valid = false
 
-        // Set error if required
         if (!valid) {
             setError(data, PASSWORD_POLICY)
         }
@@ -147,7 +176,6 @@ class SignUpActivity: AppCompatActivity() {
             valid = false
         }
 
-        // Set error if required
         if (!valid) {
             setError(data, ID_POLICY)
         }
@@ -167,7 +195,6 @@ class SignUpActivity: AppCompatActivity() {
             valid = false
         }
 
-        // Set error if required
         if (!valid) {
             setError(data, NICKNAME_POLICY)
         }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,28 +15,10 @@ import retrofit2.Response
 
 class BoardActivity: AppCompatActivity() {
 
-    var boardPageRes: BoardPageRes? = null
-    private var boardsDataList: ArrayList<BoardsData>? = arrayListOf(BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(2, "title", "2020/03/15", 2000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null"),
-        BoardsData(1, "title", "2020/03/15", 1000, "하늘", "null")) //erase later
-    private var boardRecyclerAdapter : BoardRecyclerAdapter? = boardsDataList?.let {
-        BoardRecyclerAdapter(
-            it
-        )
-    }
+    private var boardPageRes: BoardPageRes? = null
+    private var boardsDataList = ArrayList<BoardsData>()
+    //mutableListOf(BoardsData(2,"skyy", "testtitle1", "contents\nnewline\nend\n", 1000, "1", false, "2020/03/16", "2020/03/16", "1", "skyyy"))
+    private var boardRecyclerAdapter = BoardRecyclerAdapter(boardsDataList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +37,14 @@ class BoardActivity: AppCompatActivity() {
             override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardPageRes>) {
                 boardPageRes = response.body()
                 Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
-                        "\nresult code: " + boardPageRes?.resultCode, Toast.LENGTH_SHORT).show()
-                //boardsDataList = boardPageRes?.boards
-                boardRecyclerAdapter = boardsDataList?.let { BoardRecyclerAdapter(it) }
+                        "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()
+                boardPageRes?.boards.also {
+                    if (it != null) {
+                        boardsDataList = it
+                    }
+                }
+                Toast.makeText(this@BoardActivity, "board api hhh\n" + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()
+                boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
             }
         })
         binding.rvBoard.adapter = boardRecyclerAdapter

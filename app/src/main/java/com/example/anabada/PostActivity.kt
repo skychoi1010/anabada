@@ -2,11 +2,11 @@ package com.example.anabada
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.databinding.ActivityPostBinding
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,19 +32,25 @@ class PostActivity: AppCompatActivity() {
             val price = binding.tvPostContentPrice.text.toString().toInt()
             val contents = binding.tvPostContentContents.text.toString()
 
-            service.reqPostContent(title, price, contents, 0).enqueue(object : Callback<PostContentRes> {
-                override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
-                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                }
+            //TODO 비로그인시 예외처리
+            if (!title.isNullOrEmpty() && !contents.isNullOrEmpty()){
+                service.reqPostContent(title, price, contents, 1).enqueue(object : Callback<PostContentRes> {
+                    override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
+                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                    }
 
-                override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
-                    postContentRes = response.body()
-                    Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.result.toString() +
-                            "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@PostActivity, BoardActivity::class.java)
-                    startActivity(intent)
-                }
-            })
+                    override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
+                        postContentRes = response.body()
+                        Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.result.toString() +
+                                "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@PostActivity, BoardActivity::class.java)
+                        startActivity(intent)
+                    }
+                })
+            } else {
+                Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 
