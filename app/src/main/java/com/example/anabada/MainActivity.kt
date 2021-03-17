@@ -26,6 +26,30 @@ class MainActivity : AppCompatActivity() {
 
         val service: ApiService = retrofit.create(ApiService::class.java)
 
+        // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
+        if(MySharedPreferences.getUserId(this).isNullOrBlank()
+                || MySharedPreferences.getUserPass(this).isNullOrBlank()) {
+            Login(binding, service)
+        }
+        else { // SharedPreferences 안에 값이 저장되어 있을 때 -> 게시판로 이동
+            Toast.makeText(this, "${MySharedPreferences.getUserId(this)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, BoardActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.signupBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.skipBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, BoardActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    fun Login(binding: ActivityMainBinding, service: ApiService) {
         binding.loginBtn.setOnClickListener {
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
@@ -47,16 +71,5 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-
-        binding.signupBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, SignUpActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.skipBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, BoardActivity::class.java)
-            startActivity(intent)
-        }
     }
-
 }
