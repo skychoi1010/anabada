@@ -46,6 +46,6 @@ object MySharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.clear()
-        editor.commit()
+        editor.apply()
     }
 }

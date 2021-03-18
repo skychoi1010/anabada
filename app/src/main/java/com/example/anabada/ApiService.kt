@@ -51,10 +51,10 @@ interface ApiService {
     @FormUrlEncoded
     @POST("board")
     fun reqPostContent(
-        @Field("title") title: String,
-        @Field("price") price: Int,
-        @Field("contents") contents: String,
-        @Field("imgId") imgId: Int
+        @Query("title") title: String,
+        @Query("price") price: Int,
+        @Query("contents") contents: String,
+        @Query("imgId") imgId: Int
     ): Call<PostContentRes>
 
     @FormUrlEncoded

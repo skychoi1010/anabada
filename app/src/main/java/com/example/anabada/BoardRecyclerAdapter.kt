@@ -37,15 +37,15 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
 
     inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(listBinding.root) {
         fun bind(item: BoardsData) {
-            /*
+            /* //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
             Glide.with(listBinding.root)
                     .load(item.thumbImg)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
                     .into(listBinding.ivBoardThumbnail)
              */
             listBinding.tvBoardTitle.text = item.title
-            listBinding.tvBoardWriter.text = item.userId
-            listBinding.tvBoardDate.text = item.updatedAt
+            listBinding.tvBoardWriter.text = item.author
+            listBinding.tvBoardDate.text = item.createdAt
             listBinding.tvBoardPrice.text = item.price.toString()
             listBinding.root.setOnClickListener {
                 itemClickListener.onClick(it, item.id)
