@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.anabada.databinding.ActivityMainBinding
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,16 +17,11 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://anabada.du.r.appspot.com/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service: ApiService = retrofit.create(ApiService::class.java)
+        val api = ApiService.create()
 
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if(MySharedPreferences.getUserNick(this).isBlank()) {
-            login(binding, service)
+            login(binding, api)
         }
         else { // SharedPreferences 안에 값이 저장되어 있을 때 -> 게시판으로 이동s
             Toast.makeText(this, "${MySharedPreferences.getUserNick(this)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
@@ -69,6 +62,8 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "login api\nsuccess: " + loginRes?.success.toString() +
                                 "\nresult code: " + loginRes?.resultCode + "\nid: " + loginRes?.id.toString() +
                                 "\nnickname: " + loginRes?.nickname, Toast.LENGTH_SHORT).show()
+                        MySharedPreferences.setUserId(this@MainActivity, uid)
+                        MySharedPreferences.setUserPass(this@MainActivity, upw)
                         MySharedPreferences.setUserNick(this@MainActivity, loginRes?.nickname.toString())
                         val intent = Intent(this@MainActivity, BoardActivity::class.java)
                         startActivity(intent)

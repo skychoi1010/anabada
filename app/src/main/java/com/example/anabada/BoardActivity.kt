@@ -36,41 +36,7 @@ class BoardActivity: AppCompatActivity() {
             }
         }
         val api = ApiService.create()
-        var i = true
-        var pageNum = 1
-        loop@ while (pageNum < 9) {
-            api.reqBoard(pageNum).enqueue(object : Callback<BoardPageRes> {
-                override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
-                    Toast.makeText(this@BoardActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
-                    i = false
-                }
-
-                override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardPageRes>) {
-                    boardPageRes = response.body()
-                    when {
-                        boardPageRes?.success == null -> {
-                            i = false
-                            Toast.makeText(this@BoardActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
-                        }
-                        boardPageRes?.boards?.isEmpty() == true -> {
-                            i = false
-                        }
-                        else -> {
-                            Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
-                                    "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()
-                            boardPageRes?.boards.also {
-                                if (it != null) {
-                                    boardsDataList.addAll(it)
-                                }
-                            }
-                            boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
-                        }
-                    }
-                }
-
-            })
-            pageNum += 1
-        }
+        val pageNum = callBoard(1, api)
 
         binding.rvBoard.adapter = boardRecyclerAdapter
         binding.rvBoard.layoutManager = LinearLayoutManager(this)
@@ -87,11 +53,26 @@ class BoardActivity: AppCompatActivity() {
             }
         })
 
+        binding.lSwipeRefresh.setOnRefreshListener{
+            boardsDataList.clear()
+            callBoard(1, api)
+            boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+            binding.lSwipeRefresh.isRefreshing = false
+        }
+
         binding.appbar.tvAppbarLoginLogout.setOnClickListener {
-            MySharedPreferences.clearUser(this)
-            Intent(this@BoardActivity, MainActivity::class.java).apply {
-                startActivity(this)
-            }
+            api.reqLogout().enqueue(object : Callback<LogoutRes> {
+                override fun onFailure(call: Call<LogoutRes>, t: Throwable) {
+                    Toast.makeText(this@BoardActivity, "logout api\nFailed connection", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(call: Call<LogoutRes>, response: Response<LogoutRes>) {
+                    MySharedPreferences.clearUser(this@BoardActivity)
+                    Intent(this@BoardActivity, MainActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                }
+            })
         }
 
         binding.floatingActionButton.setOnClickListener{
@@ -100,6 +81,41 @@ class BoardActivity: AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun callBoard(pageNum: Int, api: ApiService): Int {
+        api.reqBoard(pageNum).enqueue(object : Callback<BoardPageRes> {
+            override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
+                Toast.makeText(this@BoardActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+                //end
+            }
+
+            override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardPageRes>) {
+                boardPageRes = response.body()
+                when {
+                    boardPageRes?.success == null -> {
+                        //end
+                        Toast.makeText(this@BoardActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    boardPageRes?.boards?.isEmpty() == true -> {
+                        //end
+                        boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+                    }
+                    else -> {
+                        /*Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
+                                "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
+                        boardPageRes?.boards.also {
+                            if (it != null) {
+                                boardsDataList.addAll(it)
+                            }
+                        }
+                        //boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+                        callBoard(pageNum + 1, api)
+                    }
+                }
+            }
+        })
+        return pageNum
     }
 
 }

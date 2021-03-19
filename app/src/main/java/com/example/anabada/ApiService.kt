@@ -1,6 +1,7 @@
 package com.example.anabada
 
 import okhttp3.Interceptor
+import okhttp3.JavaNetCookieJar
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,6 +9,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.net.CookieManager
 
 interface ApiService {
 
@@ -19,10 +21,7 @@ interface ApiService {
     ): Call<LoginRes>
 
     @GET("user/logout")
-    fun reqLogout(
-            @Query("success") success:Boolean,
-            @Query("resultCode") resultCode:String
-    ): Call<LogoutRes>
+    fun reqLogout(): Call<LogoutRes>
 
     @FormUrlEncoded
     @POST("user/signup")
@@ -51,10 +50,10 @@ interface ApiService {
     @FormUrlEncoded
     @POST("board")
     fun reqPostContent(
-        @Query("title") title: String,
-        @Query("price") price: Int,
-        @Query("contents") contents: String,
-        @Query("imgId") imgId: Int
+        @Field("title") title: String,
+        @Field("price") price: Int,
+        @Field("contents") contents: String,
+        @Field("imgId") imgId: Int
     ): Call<PostContentRes>
 
     @FormUrlEncoded
@@ -99,15 +98,8 @@ interface ApiService {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
-            val headerInterceptor = Interceptor {
-                val request = it.request()
-                        .newBuilder()
-                        .build()
-                return@Interceptor it.proceed(request)
-            }
-
             val client = OkHttpClient.Builder()
-                    .addInterceptor(headerInterceptor)
+                    .cookieJar(JavaNetCookieJar(CookieManager()))
                     .addInterceptor(httpLoggingInterceptor)
                     .build()
 

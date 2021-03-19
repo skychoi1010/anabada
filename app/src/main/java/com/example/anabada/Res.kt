@@ -69,7 +69,7 @@ data class PostImageRes (
         )
 
 data class PostContentRes (
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
 

@@ -14,37 +14,65 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp">
 
             <TextView
                 android:id="@+id/tv_board_detail_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:text="title"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/tv_board_detail_author"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
                 android:text="author"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tv_board_detail_dot"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
+
+            <TextView
+                android:id="@+id/tv_board_detail_dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="|"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@id/tv_board_detail_author"
+                app:layout_constraintRight_toLeftOf="@id/tv_board_detail_date"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
+
+            <TextView
+                android:id="@+id/tv_board_detail_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="date"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@id/tv_board_detail_dot"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
 
             <TextView
                 android:id="@+id/tv_board_detail_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="30dp"
                 android:text="price"
+                android:textColor="@color/black"
+                android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_author"/>
@@ -53,14 +81,19 @@
                 android:id="@+id/tv_board_detail_contents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
-                android:text="contents\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="contents;fd\na;lskdjfalkjsd;fklad\na;sa;klsdf\nalsjdf;ald\nalsdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjfnasdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lsk"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_price"/>
+            <!--\nklaksjdfdffalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj-->
 
-            <!--TODO comment section-->
+            <!--TODO comment section
+            <TextView
+                android:id=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"-->
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -80,7 +113,7 @@
                 android:id="@+id/iv_board_detail_img"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:src="@mipmap/ic_launcher"/>
+                android:src="@color/gray"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
