@@ -47,7 +47,7 @@ class BoardActivity: AppCompatActivity() {
         boardRecyclerAdapter.setItemClickListener( object : BoardRecyclerAdapter.ItemClickListener{
             override fun onClick(view: View, id: Int) {
                 Intent(this@BoardActivity, BoardDetailActivity::class.java).apply {
-                    putExtra("id", id)
+                    putExtra("board id", id)
                     startActivity(this)
                 }
             }
