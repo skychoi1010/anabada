@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.anabada.databinding.ActivityBoardBinding
 import com.example.anabada.databinding.ActivityBoardDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,6 +17,9 @@ class BoardDetailActivity: AppCompatActivity() {
 
     private var boardDetailRes: BoardDetailRes? = null
     val id = 0
+    //ArrayList<CommentData>
+    private var commentsPrevDataList = arrayListOf<CommentData>(CommentData(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentData(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
+    private var commentsPrevRecyclerAdapter = CommentsPrevRecyclerAdapter(commentsPrevDataList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,29 +41,49 @@ class BoardDetailActivity: AppCompatActivity() {
             override fun onResponse(call: Call<BoardDetailRes>, response: Response<BoardDetailRes>) {
                 boardDetailRes = response.body()
                 when {
-                    boardDetailRes?.result == null -> {
+                    boardDetailRes?.resultCode == null -> {
                         //end
-                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.\n" + intent.getIntExtra("board id", id), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
-                    boardDetailRes?.board?.isEmpty() == true -> {
+                    boardDetailRes?.board == null -> {
                         //end
+                        Toast.makeText(this@BoardDetailActivity, "게시글이 존재하지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        Toast.makeText(this@BoardDetailActivity, "board api\nsuccess: " + boardDetailRes?.board.toString(), Toast.LENGTH_SHORT).show()
-
+                        binding.tvBoardDetailTitle.text = boardDetailRes?.board?.dataValues?.title
+                        binding.tvBoardDetailAuthor.text = boardDetailRes?.board?.dataValues?.author
+                        binding.tvBoardDetailDate.text = boardDetailRes?.board?.dataValues?.createdAt
+                        binding.tvBoardDetailPrice.text = boardDetailRes?.board?.dataValues?.price.toString() + "원"
+                        binding.tvBoardDetailContents.text = boardDetailRes?.board?.dataValues?.contents
                     }
                 }
             }
         })
 
+        binding.rvBoardDetailCommentsPrev.adapter = commentsPrevRecyclerAdapter
+        binding.rvBoardDetailCommentsPrev.layoutManager = LinearLayoutManager(this)
+        val dividerItemDecoration = DividerItemDecoration(this@BoardDetailActivity, LinearLayoutManager.VERTICAL)
+        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
+        binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
+
+        commentsPrevRecyclerAdapter.setItemClickListener( object : CommentsPrevRecyclerAdapter.ItemClickListener{
+            override fun onClick(view: View, id: Int) {
+                Intent(this@BoardDetailActivity, BoardDetailActivity::class.java).apply {
+                    putExtra("comment id", id)
+                    startActivity(this)
+                }
+            }
+        })
+
+
+
         /*
         binding.floatingActionButton.setOnClickListener{
-            Intent(this@BoardDetailActivity, PostActivity::class.java).apply {
+            Intent(this@BoardActivity, PostActivity::class.java).apply {
                 startActivity(this)
             }
         }
-        */
-
+         */
 
     }
 }

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.anabada.databinding.ListitemBoardBinding
 import java.util.ArrayList
-
 class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
 
     interface ItemClickListener {

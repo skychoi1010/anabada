@@ -15,15 +15,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp">
+            android:background="@color/gray">
 
             <TextView
                 android:id="@+id/tv_board_detail_title"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:text="title"
+                android:background="@color/white"
+                tools:text="title"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -31,70 +33,105 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
-                android:id="@+id/tv_board_detail_author"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_author_date"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
-                android:text="author"
-                app:layout_constraintHorizontal_bias="0.0"
+                android:paddingVertical="10dp"
+                android:background="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/tv_board_detail_dot"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title">
 
-            <TextView
-                android:id="@+id/tv_board_detail_dot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="|"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toRightOf="@id/tv_board_detail_author"
-                app:layout_constraintRight_toLeftOf="@id/tv_board_detail_date"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
+                <TextView
+                    android:id="@+id/tv_board_detail_author"
+                    android:paddingLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="author"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/tv_board_detail_dot"
+                    app:layout_constraintTop_toTopOf="@id/cl_author_date"/>
 
-            <TextView
-                android:id="@+id/tv_board_detail_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:text="date"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toRightOf="@id/tv_board_detail_dot"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title"/>
+                <TextView
+                    android:id="@+id/tv_board_detail_dot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="|"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toRightOf="@id/tv_board_detail_author"
+                    app:layout_constraintRight_toLeftOf="@id/tv_board_detail_date"
+                    app:layout_constraintTop_toTopOf="@id/cl_author_date"/>
+
+                <TextView
+                    android:id="@+id/tv_board_detail_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    tools:text="date"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toRightOf="@id/tv_board_detail_dot"
+                    app:layout_constraintTop_toTopOf="@id/cl_author_date"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_board_detail_price"
+                android:paddingHorizontal="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:text="price"
+                android:background="@color/white"
+                android:paddingBottom="15dp"
+                tools:text="price"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_author"/>
+                app:layout_constraintTop_toBottomOf="@id/cl_author_date"
+                app:layout_constraintBottom_toTopOf="@id/tv_board_detail_contents"/>
 
             <TextView
                 android:id="@+id/tv_board_detail_contents"
+                android:padding="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="contents;fd\na;lskdjfalkjsd;fklad\na;sa;klsdf\nalsjdf;ald\nalsdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjfnasdkf;alksdjfalkj\nalksjdflkajsdlfkaj;fd\na;lsk"
+                android:background="@color/white"
+                android:paddingBottom="50dp"
+                android:layout_marginTop="1dp"
+                tools:text="contents;fd\na;;lfkajssjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajs
+                dlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjfnasdkf;alksdjfalkj\nalksa;lsk\nend!!"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_price"/>
-            <!--\nklaksjdfdffalkj\nalksjdflkajsdlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjflaksjd;lfkajsldkfja;sjdaf\n\nklaksjdflkajsdlkfja;lskdfja;klsdf\nalskdjfaklsjdf;ald\nalskdjfalksjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajsdlfkaj-->
 
-            <!--TODO comment section
             <TextView
-                android:id=""
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"-->
+                android:id="@+id/tv_board_detail_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:paddingTop="10dp"
+                android:paddingHorizontal="20dp"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:text="댓글 >"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_contents"/>
 
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_board_detail_comments_prev"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_comment"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="10dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

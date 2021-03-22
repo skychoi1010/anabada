@@ -38,20 +38,25 @@ data class BoardsData (
         )
 
 data class BoardDetailRes (
-        var result: String,
-        var board: ArrayList<BoardDetail>,
+        var resultCode: String,
+        var board: DataValues,
         var comments: ArrayList<CommentData>
         )
+
+data class DataValues (var dataValues: BoardDetail)
 
 data class BoardDetail (
         var id: Int,
         var title: String,
-        var date: String,
+        var createdAt: String,
+        var updatedAt: String,
         var price: Int,
         var author: String,
         var isMyBoard: Boolean,
         var contents: String,
-        var detailImg: String
+        var detailImg: String,
+        var isDel: Boolean,
+        var userId: String
         )
 
 data class CommentData (
@@ -64,7 +69,7 @@ data class CommentData (
 
 data class PostImageRes (
         var success: Boolean,
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
 
@@ -74,26 +79,26 @@ data class PostContentRes (
         )
 
 data class ReviseContentRes (
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
 
 data class DeleteContentRes (
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
 
 data class PostCommentRes (
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
 
 data class ReviseCommentRes (
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
 
 data class DeleteCommentRes (
-        var result: String,
+        var resultCode: String,
         var id: Int
         )
