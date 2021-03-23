@@ -60,6 +60,8 @@ class BoardDetailActivity: AppCompatActivity() {
             }
         })
 
+        val pageNum = callComments(1, api)
+
         binding.rvBoardDetailCommentsPrev.adapter = commentsPrevRecyclerAdapter
         binding.rvBoardDetailCommentsPrev.layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration = DividerItemDecoration(this@BoardDetailActivity, LinearLayoutManager.VERTICAL)
@@ -85,5 +87,40 @@ class BoardDetailActivity: AppCompatActivity() {
         }
          */
 
+    }
+
+    private fun callComments(pageNum: Int, api: ApiService): Int {
+        api.reqBoard(pageNum).enqueue(object : Callback<BoardPageRes> {
+            override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
+                Toast.makeText(this@BoardActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+                //end
+            }
+
+            override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardPageRes>) {
+                boardPageRes = response.body()
+                when {
+                    boardPageRes?.success == null -> {
+                        //end
+                        Toast.makeText(this@BoardActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    boardPageRes?.boards?.isEmpty() == true -> {
+                        //end
+                        boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+                    }
+                    else -> {
+                        /*Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
+                                "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
+                        boardPageRes?.boards.also {
+                            if (it != null) {
+                                boardsDataList.addAll(it)
+                            }
+                        }
+                        //boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+                        callComments(pageNum + 1, api)
+                    }
+                }
+            }
+        })
+        return pageNum
     }
 }

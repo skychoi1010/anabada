@@ -39,8 +39,7 @@ data class BoardsData (
 
 data class BoardDetailRes (
         var resultCode: String,
-        var board: DataValues,
-        var comments: ArrayList<CommentData>
+        var board: DataValues
         )
 
 data class DataValues (var dataValues: BoardDetail)
@@ -60,11 +59,17 @@ data class BoardDetail (
         )
 
 data class CommentData (
+        var success: Boolean,
+        var resultCode: String,
+        var comments: ArrayList<CommentDetail>
+        )
+
+data class CommentDetail (
         var id: Int,
         var author: String,
         var contents: String,
-        var date: String,
-        var isMyComment: Boolean
+        var createdAt: String,
+        var isMine: Boolean
         )
 
 data class PostImageRes (

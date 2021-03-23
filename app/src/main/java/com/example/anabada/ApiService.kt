@@ -41,6 +41,12 @@ interface ApiService {
         @Path("id") id:Int
     ): Call<BoardDetailRes>
 
+    @GET("board/{id}/comment")
+    fun reqComment(
+        @Path("id") id:Int,
+        @Query("page") page: Int
+    ): Call<CommentData>
+
     @Multipart
     @POST("image")
     fun reqPostImage(
