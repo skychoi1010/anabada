@@ -8,7 +8,7 @@ import com.example.anabada.databinding.ListitemBoardBinding
 import com.example.anabada.databinding.ListitemCommentsPrevBinding
 import java.util.ArrayList
 
-class CommentsPrevRecyclerAdapter(private var commentsPrevDataList: ArrayList<CommentData>): RecyclerView.Adapter<CommentsPrevRecyclerAdapter.CommentsPrevViewHolder>() {
+class CommentsPrevRecyclerAdapter(private var commentsPrevDataList: ArrayList<CommentDetail>): RecyclerView.Adapter<CommentsPrevRecyclerAdapter.CommentsPrevViewHolder>() {
     interface ItemClickListener {
         fun onClick(view: View, id: Int)
     }
@@ -30,13 +30,13 @@ class CommentsPrevRecyclerAdapter(private var commentsPrevDataList: ArrayList<Co
         holder.bind(commentsPrevDataList[position])
     }
 
-    fun setDataNotify(commentsPrevDataList: ArrayList<CommentData>) {
+    fun setDataNotify(commentsPrevDataList: ArrayList<CommentDetail>) {
         this.commentsPrevDataList = commentsPrevDataList
         notifyDataSetChanged()
     }
 
     inner class CommentsPrevViewHolder(private val listitemCommentsPrevBinding: ListitemCommentsPrevBinding): RecyclerView.ViewHolder(listitemCommentsPrevBinding.root) {
-        fun bind(item: CommentData) {
+        fun bind(item: CommentDetail) {
             /* //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
             Glide.with(listBinding.root)
                     .load(item.thumbImg)

@@ -17,6 +17,15 @@
             android:layout_height="wrap_content"
             android:background="@color/gray">
 
+            <ImageView
+                android:id="@+id/iv_board_detail_img"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:src="@color/gray"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <TextView
                 android:id="@+id/tv_board_detail_title"
                 android:paddingHorizontal="20dp"
@@ -26,12 +35,12 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 tools:text="title"
+                android:fontFamily="@font/font_bold"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/iv_board_detail_img"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_author_date"
@@ -50,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="author"
+                    android:fontFamily="@font/font_regular"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/tv_board_detail_dot"
@@ -59,6 +69,7 @@
                     android:id="@+id/tv_board_detail_dot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/font_bold"
                     android:text="|"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toRightOf="@id/tv_board_detail_author"
@@ -70,6 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/font_regular"
                     tools:text="date"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toRightOf="@id/tv_board_detail_dot"
@@ -84,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingBottom="15dp"
+                android:fontFamily="@font/font_medium"
                 tools:text="price"
                 android:textColor="@color/black"
                 android:textSize="14sp"
@@ -100,8 +113,12 @@
                 android:background="@color/white"
                 android:paddingBottom="50dp"
                 android:layout_marginTop="1dp"
+                android:fontFamily="@font/font_regular"
+                android:textSize="17sp"
+                android:textColor="@color/black"
                 tools:text="contents;fd\na;;lfkajssjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajs
                 dlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjfnasdkf;alksdjfalkj\nalksa;lsk\nend!!"
+                android:lineSpacingExtra="3dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_price"/>
@@ -115,7 +132,7 @@
                 android:paddingHorizontal="20dp"
                 android:background="@color/white"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:fontFamily="@font/font_bold"
                 android:textSize="15dp"
                 android:text="댓글 >"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -139,25 +156,18 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
+            android:background="@color/transparent">
 
-            <ImageView
-                android:id="@+id/iv_board_detail_img"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@color/gray"/>
-
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_collapseMode="pin">
-
-            </androidx.appcompat.widget.Toolbar>
+            <include
+                layout="@layout/layout_app_bar_image"
+                android:id="@+id/appbar_image" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

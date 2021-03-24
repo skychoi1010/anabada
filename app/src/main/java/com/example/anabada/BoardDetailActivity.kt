@@ -18,7 +18,7 @@ class BoardDetailActivity: AppCompatActivity() {
     private var boardDetailRes: BoardDetailRes? = null
     val id = 0
     //ArrayList<CommentData>
-    private var commentsPrevDataList = arrayListOf<CommentData>(CommentData(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentData(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
+    private var commentsPrevDataList = arrayListOf<CommentDetail>(CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
     private var commentsPrevRecyclerAdapter = CommentsPrevRecyclerAdapter(commentsPrevDataList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,7 @@ class BoardDetailActivity: AppCompatActivity() {
             }
         })
 
-        val pageNum = callComments(1, api)
+        //val pageNum = callComments(1, api)
 
         binding.rvBoardDetailCommentsPrev.adapter = commentsPrevRecyclerAdapter
         binding.rvBoardDetailCommentsPrev.layoutManager = LinearLayoutManager(this)
@@ -89,6 +89,7 @@ class BoardDetailActivity: AppCompatActivity() {
 
     }
 
+    /*
     private fun callComments(pageNum: Int, api: ApiService): Int {
         api.reqBoard(pageNum).enqueue(object : Callback<BoardPageRes> {
             override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
@@ -123,4 +124,6 @@ class BoardDetailActivity: AppCompatActivity() {
         })
         return pageNum
     }
+
+     */
 }
