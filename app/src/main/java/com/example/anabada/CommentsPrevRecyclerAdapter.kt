@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.anabada.databinding.ListitemBoardBinding
 import com.example.anabada.databinding.ListitemCommentsPrevBinding
 import java.util.ArrayList
 

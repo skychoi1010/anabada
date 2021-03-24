@@ -58,7 +58,7 @@ data class BoardDetail (
         var userId: String
         )
 
-data class CommentData (
+data class CommentRes (
         var success: Boolean,
         var resultCode: String,
         var comments: ArrayList<CommentDetail>

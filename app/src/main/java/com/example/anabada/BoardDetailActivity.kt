@@ -16,23 +16,26 @@ import retrofit2.Response
 class BoardDetailActivity: AppCompatActivity() {
 
     private var boardDetailRes: BoardDetailRes? = null
-    val id = 0
+    private var commentRes: CommentRes? = null
+    var intentRes = 0
     //ArrayList<CommentData>
-    private var commentsPrevDataList = arrayListOf<CommentDetail>(CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
+    private var commentsPrevDataList = arrayListOf<CommentDetail>()
+            //CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
     private var commentsPrevRecyclerAdapter = CommentsPrevRecyclerAdapter(commentsPrevDataList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityBoardDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initView(binding)
+        val id = intent.getIntExtra("board id", intentRes)
+        initView(binding, id)
     }
 
-    private fun initView(binding: ActivityBoardDetailBinding) {
+    private fun initView(binding: ActivityBoardDetailBinding, id: Int) {
 
         val api = ApiService.create()
 
-        api.reqBoardDetail(intent.getIntExtra("board id", id)).enqueue(object : Callback<BoardDetailRes> {
+        api.reqBoardDetail(id).enqueue(object : Callback<BoardDetailRes> {
             override fun onFailure(call: Call<BoardDetailRes>, t: Throwable) {
                 Toast.makeText(this@BoardDetailActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
                 //end
@@ -60,7 +63,7 @@ class BoardDetailActivity: AppCompatActivity() {
             }
         })
 
-        //val pageNum = callComments(1, api)
+        val pageNum = callComments(1, api, id)
 
         binding.rvBoardDetailCommentsPrev.adapter = commentsPrevRecyclerAdapter
         binding.rvBoardDetailCommentsPrev.layoutManager = LinearLayoutManager(this)
@@ -70,7 +73,7 @@ class BoardDetailActivity: AppCompatActivity() {
 
         commentsPrevRecyclerAdapter.setItemClickListener( object : CommentsPrevRecyclerAdapter.ItemClickListener{
             override fun onClick(view: View, id: Int) {
-                Intent(this@BoardDetailActivity, BoardDetailActivity::class.java).apply {
+                Intent(this@BoardDetailActivity, BoardDetailActivity::class.java).apply { //TODO comment detail activity
                     putExtra("comment id", id)
                     startActivity(this)
                 }
@@ -89,41 +92,42 @@ class BoardDetailActivity: AppCompatActivity() {
 
     }
 
-    /*
-    private fun callComments(pageNum: Int, api: ApiService): Int {
-        api.reqBoard(pageNum).enqueue(object : Callback<BoardPageRes> {
-            override fun onFailure(call: Call<BoardPageRes>, t: Throwable) {
-                Toast.makeText(this@BoardActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+
+    private fun callComments(pageNum: Int, api: ApiService, id: Int): Int {
+        api.reqComment(id, pageNum).enqueue(object : Callback<CommentRes> {
+            override fun onFailure(call: Call<CommentRes>, t: Throwable) {
+                Toast.makeText(this@BoardDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
                 //end
             }
 
-            override fun onResponse(call: Call<BoardPageRes>, response: Response<BoardPageRes>) {
-                boardPageRes = response.body()
+            override fun onResponse(call: Call<CommentRes>, response: Response<CommentRes>) {
+                commentRes = response.body()
                 when {
-                    boardPageRes?.success == null -> {
+                    commentRes?.success == null -> {
                         //end
-                        Toast.makeText(this@BoardActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
-                    boardPageRes?.boards?.isEmpty() == true -> {
+                    commentRes?.comments?.isEmpty() == true -> {
                         //end
-                        boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+                        commentsPrevDataList.let { commentsPrevRecyclerAdapter.setDataNotify(it) }
+                    }
+                    pageNum > 3 -> {
+                        //end
                     }
                     else -> {
                         /*Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
                                 "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
-                        boardPageRes?.boards.also {
+                        commentRes?.comments.also {
                             if (it != null) {
-                                boardsDataList.addAll(it)
+                                commentsPrevDataList.addAll(it)
                             }
                         }
                         //boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
-                        callComments(pageNum + 1, api)
+                        callComments(pageNum + 1, api, id)
                     }
                 }
             }
         })
         return pageNum
     }
-
-     */
 }

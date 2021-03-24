@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.MaterialToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_image_menu"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/transparent"
-        android:fitsSystemWindows="true"
-        app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"
-        app:elevation="0dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?toolbarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:fitsSystemWindows="true"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    android:background="@color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -19,13 +17,15 @@
 
             <ImageView
                 android:id="@+id/toolbar_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:padding="8dp"
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/abc_vector_test"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:srcCompat="@drawable/abc_vector_test" />
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -76,5 +76,5 @@
                 tools:src="@drawable/divider_gray_ececec" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.Toolbar>
-</merge>
+
+</com.google.android.material.appbar.MaterialToolbar>

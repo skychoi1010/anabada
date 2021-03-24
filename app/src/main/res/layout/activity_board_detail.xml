@@ -154,23 +154,16 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent">
+    <include
+        layout="@layout/layout_app_bar_image"
+        android:id="@+id/appbar_image" >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways"
-            android:background="@color/transparent">
+            android:background="@color/transparent"/>
 
-            <include
-                layout="@layout/layout_app_bar_image"
-                android:id="@+id/appbar_image" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    </include>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

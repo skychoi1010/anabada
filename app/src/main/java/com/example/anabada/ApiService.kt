@@ -1,6 +1,5 @@
 package com.example.anabada
 
-import okhttp3.Interceptor
 import okhttp3.JavaNetCookieJar
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -45,7 +44,7 @@ interface ApiService {
     fun reqComment(
         @Path("id") id:Int,
         @Query("page") page: Int
-    ): Call<CommentData>
+    ): Call<CommentRes>
 
     @Multipart
     @POST("image")
