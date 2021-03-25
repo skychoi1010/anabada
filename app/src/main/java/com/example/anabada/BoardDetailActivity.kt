@@ -1,11 +1,13 @@
 package com.example.anabada
 
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.anabada.databinding.ActivityBoardDetailBinding
@@ -27,11 +29,21 @@ class BoardDetailActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityBoardDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val id = intent.getIntExtra("board id", intentRes)
-        initView(binding, id)
+        val title = initView(binding, id)
+
+        val toolbar = binding.toolbar
+        toolbar.title = title
+        setSupportActionBar(toolbar)
+        if (supportActionBar != null) {
+            //supportActionBar!!.setDisplayShowTitleEnabled(false)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true) //툴바에 백키(<-) 보이게할거면 이거 사용
+        }
+
     }
 
-    private fun initView(binding: ActivityBoardDetailBinding, id: Int) {
+    private fun initView(binding: ActivityBoardDetailBinding, id: Int): CharSequence? {
 
         val api = ApiService.create()
 
@@ -71,7 +83,7 @@ class BoardDetailActivity: AppCompatActivity() {
         ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
 
-        commentsPrevRecyclerAdapter.setItemClickListener( object : CommentsPrevRecyclerAdapter.ItemClickListener{
+        commentsPrevRecyclerAdapter.setItemClickListener(object : CommentsPrevRecyclerAdapter.ItemClickListener {
             override fun onClick(view: View, id: Int) {
                 Intent(this@BoardDetailActivity, BoardDetailActivity::class.java).apply { //TODO comment detail activity
                     putExtra("comment id", id)
@@ -90,6 +102,7 @@ class BoardDetailActivity: AppCompatActivity() {
         }
          */
 
+        return binding.tvBoardDetailTitle.text
     }
 
 

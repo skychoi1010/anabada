@@ -60,7 +60,7 @@
         android:id="@+id/tv_prev_comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="가격"
+        android:text="댓글 내용"
         android:textSize="14sp"
         android:fontFamily="@font/font_regular"
         app:layout_constraintHorizontal_bias="0.0"
