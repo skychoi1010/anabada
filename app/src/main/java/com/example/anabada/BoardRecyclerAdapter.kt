@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.anabada.databinding.ListitemBoardBinding
-import java.util.ArrayList
+import java.util.*
+
+
 class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
 
     interface ItemClickListener {
@@ -21,7 +23,11 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
     override fun getItemCount(): Int = boardsDataList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardRecyclerViewHolder {
-        val binding = ListitemBoardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ListitemBoardBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return BoardRecyclerViewHolder(binding)
     }
 
@@ -34,7 +40,9 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
         notifyDataSetChanged()
     }
 
-    inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(listBinding.root) {
+    inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(
+        listBinding.root
+    ) {
         fun bind(item: BoardsData) {
             /* //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
             Glide.with(listBinding.root)
@@ -51,5 +59,4 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
             }
         }
     }
-
 }

@@ -6,11 +6,23 @@ import android.content.SharedPreferences
 object MySharedPreferences {
     private val MY_ACCOUNT : String = "MY_ACCOUNT"
 
+    fun setCookie(context: Context, input: HashSet<String>) {
+        val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putStringSet("MY_COOKIE", input)
+        editor.apply()
+    }
+
+    fun getCookie(context: Context): HashSet<String> {
+        val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
+        return prefs.getStringSet("MY_COOKIE", HashSet<String>()) as HashSet<String>
+    }
+
     fun setUserId(context: Context, input: String) {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.putString("MY_ID", input)
-        editor.commit()
+        editor.apply()
     }
 
     fun getUserId(context: Context): String {
@@ -22,7 +34,7 @@ object MySharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences(MY_ACCOUNT, Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = prefs.edit()
         editor.putString("MY_PASS", input)
-        editor.commit()
+        editor.apply()
     }
 
     fun getUserPass(context: Context): String {

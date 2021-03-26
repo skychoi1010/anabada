@@ -11,6 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.anabada.databinding.ActivityBoardDetailBinding
+import com.google.android.material.appbar.AppBarLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,8 +33,25 @@ class BoardDetailActivity: AppCompatActivity() {
 
         val id = intent.getIntExtra("board id", intentRes)
         val title = initView(binding, id)
+        val toolbar = binding.lCollapsingToolbar
+        toolbar.title = "titlee!"
+        binding.appBarLayout.addOnOffsetChangedListener(object :
+            AppBarLayout.OnOffsetChangedListener {
+            var isShow = true
+            var scrollRange = -1
+            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+                if (scrollRange == -1) scrollRange = appBarLayout.totalScrollRange
 
-        val toolbar = binding.toolbar
+                if (scrollRange + verticalOffset == 0) {
+                    binding.toolbar.title = "Title"
+                    isShow = true
+                } else if (isShow) {
+                    binding.toolbar.title = " " //These quote " " with _ space is intended
+                    isShow = false
+                }
+            }
+        })
+        /*
         toolbar.title = title
         setSupportActionBar(toolbar)
         if (supportActionBar != null) {
@@ -41,11 +59,13 @@ class BoardDetailActivity: AppCompatActivity() {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true) //툴바에 백키(<-) 보이게할거면 이거 사용
         }
 
+         */
+
     }
 
     private fun initView(binding: ActivityBoardDetailBinding, id: Int): CharSequence? {
 
-        val api = ApiService.create()
+        val api = ApiService.create(this)
 
         api.reqBoardDetail(id).enqueue(object : Callback<BoardDetailRes> {
             override fun onFailure(call: Call<BoardDetailRes>, t: Throwable) {

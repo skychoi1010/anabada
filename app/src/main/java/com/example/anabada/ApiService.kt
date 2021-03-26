@@ -1,5 +1,7 @@
 package com.example.anabada
 
+import android.content.Context
+import android.util.Log
 import okhttp3.JavaNetCookieJar
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -9,14 +11,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.net.CookieManager
+import java.net.CookiePolicy
+
 
 interface ApiService {
 
     @FormUrlEncoded
     @POST("user/login")
     fun reqLogin(
-        @Field("uid") uid:String,
-        @Field("upw") upw:String
+        @Field("uid") uid: String,
+        @Field("upw") upw: String
     ): Call<LoginRes>
 
     @GET("user/logout")
@@ -25,31 +29,31 @@ interface ApiService {
     @FormUrlEncoded
     @POST("user/signup")
     fun reqSignUp(
-            @Field("uid") uid:String,
-            @Field("upw") upw:String,
-            @Field("nickname") nickname:String
+        @Field("uid") uid: String,
+        @Field("upw") upw: String,
+        @Field("nickname") nickname: String
     ): Call<SignUpRes>
 
     @GET("board")
     fun reqBoard(
-            @Query("page") page:Int
+        @Query("page") page: Int
     ): Call<BoardPageRes>
 
     @GET("board/{id}")
     fun reqBoardDetail(
-        @Path("id") id:Int
+        @Path("id") id: Int
     ): Call<BoardDetailRes>
 
     @GET("board/{id}/comment")
     fun reqComment(
-        @Path("id") id:Int,
+        @Path("id") id: Int,
         @Query("page") page: Int
     ): Call<CommentRes>
 
     @Multipart
     @POST("image")
     fun reqPostImage(
-        @Part image:MultipartBody.Part
+        @Part image: MultipartBody.Part
     ): Call<PostImageRes>
 
     @FormUrlEncoded
@@ -99,21 +103,33 @@ interface ApiService {
     companion object {
         private const val BASE_URL = "https://anabada.du.r.appspot.com/api/"
 
-        fun create(): ApiService {
-            val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
+        fun create(context: Context): ApiService {
+            val httpLoggingInterceptor =
+                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            val cookieManager = CookieManager()
+            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
             val client = OkHttpClient.Builder()
-                    .cookieJar(JavaNetCookieJar(CookieManager()))
-                    .addInterceptor(httpLoggingInterceptor)
-                    .build()
-
+                .cookieJar(JavaNetCookieJar(cookieManager))
+                .addInterceptor(AddCookiesInterceptor(context))
+                .addInterceptor(ReceivedCookiesInterceptor(context))
+                .addInterceptor(httpLoggingInterceptor)
+                .build()
             return Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ApiService::class.java)
+/*
+            val cookieJar: CookieJar = PersistentCookieJar(SetCookieCache(),
+                    SharedPrefsCookiePersistor(this))
+            val client = OkHttpClient.Builder().cookieJar(cookieJar).build()
+
+            mRetrofit = Retrofit.Builder().baseUrl()
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                    .create(ApiService::class.java)
+                    .addConverterFactory(GsonConverterFactory.create()).build()
+            service = mRetrofit.create(RetrofitAPI::class.java)
+  */
         }
     }
 }

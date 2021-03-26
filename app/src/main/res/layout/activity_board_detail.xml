@@ -26,35 +26,32 @@
             app:expandedTitleTextAppearance="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:title="hello"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <include
+                layout="@layout/layout_app_bar_image"
+                android:id="@+id/appbar_image" >
 
-                <include
-                    layout="@layout/layout_app_bar_image"
-                    android:id="@+id/appbar_image"/>
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:title="toollbar"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            </androidx.appcompat.widget.Toolbar>
-
-
+            </include>
 
             <ImageView
                 android:id="@+id/iv_board_detail_img"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -70,7 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gray">
-
 
             <TextView
                 android:id="@+id/tv_board_detail_title"

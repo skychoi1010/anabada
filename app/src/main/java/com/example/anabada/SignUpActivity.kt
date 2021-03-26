@@ -31,7 +31,7 @@ class SignUpActivity: AppCompatActivity() {
         val binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val api = ApiService.create()
+        val api = ApiService.create(this)
 
         binding.id.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

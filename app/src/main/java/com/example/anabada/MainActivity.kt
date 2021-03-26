@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val api = ApiService.create()
+        val api = ApiService.create(this)
 
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if(MySharedPreferences.getUserNick(this).isBlank()) {
