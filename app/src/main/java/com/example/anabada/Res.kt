@@ -1,5 +1,8 @@
 package com.example.anabada
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 data class LoginRes (
         var success: Boolean,
         var resultCode: String,
@@ -23,6 +26,7 @@ data class BoardPageRes (
         var boards: ArrayList<BoardsData>
         )
 
+@Parcelize
 data class BoardsData (
         var id: Int,
         var author: String,
@@ -30,12 +34,13 @@ data class BoardsData (
         var contents: String,
         var price: Int,
         var thumbImg: String,
-        var isDel: Boolean,
+        var detailImg: String,
+        val isDel: Boolean,
         var createdAt: String,
         var updatedAt: String,
         var imageId: String,
         var userId: String
-        )
+        ) : Parcelable
 
 data class BoardDetailRes (
         var resultCode: String,

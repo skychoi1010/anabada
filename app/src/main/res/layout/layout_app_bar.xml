@@ -22,7 +22,6 @@
             android:padding="15dp"
             android:textSize="17sp"
             android:fontFamily="@font/font_bold"
-            android:textColor="@color/black"
             android:layout_marginRight="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/tv_appbar_user_nickname"

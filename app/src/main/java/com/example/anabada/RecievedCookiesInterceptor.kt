@@ -13,7 +13,7 @@ class ReceivedCookiesInterceptor     // AddCookiesInterceptor()
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalResponse = chain.proceed(chain.request())
         if (originalResponse.headers("Set-Cookie").isNotEmpty()) {
-            var cookies = MySharedPreferences.getCookie(context)
+            val cookies = MySharedPreferences.getCookie(context)
             for (header in originalResponse.headers("Set-Cookie")) {
                 cookies.add(header)
             }

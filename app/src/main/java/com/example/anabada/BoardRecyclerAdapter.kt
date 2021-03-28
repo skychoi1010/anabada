@@ -11,7 +11,7 @@ import java.util.*
 class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
 
     interface ItemClickListener {
-        fun onClick(view: View, id: Int)
+        fun onClick(view: View, id: BoardsData)
     }
 
     private lateinit var itemClickListener: ItemClickListener
@@ -54,8 +54,10 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
             listBinding.tvBoardWriter.text = item.author
             listBinding.tvBoardDate.text = item.createdAt
             listBinding.tvBoardPrice.text = item.price.toString()
+            item.userId = "api" //TODO delete after api updated
+            item.imageId = "1" //TODO delete after api updated
             listBinding.root.setOnClickListener {
-                itemClickListener.onClick(it, item.id)
+                itemClickListener.onClick(it, item)
             }
         }
     }
