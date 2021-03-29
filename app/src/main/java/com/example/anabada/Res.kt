@@ -29,38 +29,31 @@ data class BoardPageRes (
 @Parcelize
 data class BoardsData (
         var id: Int,
-        var author: String,
         var title: String,
-        var contents: String,
         var price: Int,
+        var author: String,
         var thumbImg: String,
         var detailImg: String,
-        val isDel: Boolean,
-        var createdAt: String,
-        var updatedAt: String,
-        var imageId: String,
-        var userId: String
+        val isMine: Boolean,
+        var date: String,
+        var commentCount: Int
         ) : Parcelable
 
 data class BoardDetailRes (
         var resultCode: String,
-        var board: DataValues
+        var board: BoardDetail
         )
-
-data class DataValues (var dataValues: BoardDetail)
 
 data class BoardDetail (
         var id: Int,
         var title: String,
-        var createdAt: String,
-        var updatedAt: String,
+        var contents: String,
         var price: Int,
         var author: String,
-        var isMyBoard: Boolean,
-        var contents: String,
         var detailImg: String,
-        var isDel: Boolean,
-        var userId: String
+        var isMine: Boolean,
+        var date: String,
+        var commentCount: Int
         )
 
 data class CommentRes (

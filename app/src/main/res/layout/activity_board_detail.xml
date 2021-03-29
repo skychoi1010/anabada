@@ -6,17 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".BoardDetailActivity">
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nsv_board_detail"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Light">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/l_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray">
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/white"
+            app:collapsedTitleTextAppearance="@color/transparent"
+            app:expandedTitleTextAppearance="@android:color/transparent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways">
+
+            <include
+                layout="@layout/layout_app_bar_image"
+                android:id="@+id/appbar_image" >
+
+            </include>
 
             <ImageView
                 android:id="@+id/iv_board_detail_img"
@@ -28,6 +39,22 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_board_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray">
 
             <TextView
                 android:id="@+id/tv_board_detail_title"
@@ -43,7 +70,7 @@
                 android:textSize="20sp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_board_detail_img"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_author_date"
@@ -176,7 +203,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <include layout="@layout/layout_app_bar_image" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

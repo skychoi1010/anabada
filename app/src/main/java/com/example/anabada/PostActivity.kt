@@ -18,7 +18,6 @@ import androidx.viewbinding.BuildConfig
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ActivityPostBinding
-import com.franmontiel.persistentcookiejar.BuildConfig.APPLICATION_ID
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
@@ -100,7 +99,7 @@ class PostActivity : AppCompatActivity() {
             }
         }
     }
-
+/*
     private fun selectCamera() {
         var permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
         if (permission == PackageManager.PERMISSION_DENIED) {
@@ -182,5 +181,7 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
+
+ */
 
 }

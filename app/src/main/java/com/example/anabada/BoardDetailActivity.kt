@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ActivityBoardDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,10 +38,8 @@ class BoardDetailActivity : AppCompatActivity() {
         val title = intentRes?.let { initView(binding, it.id) }
         binding.tvBoardDetailTitle.text = intentRes?.title
         binding.tvBoardDetailAuthor.text = intentRes?.author
-        binding.tvBoardDetailDate.text = intentRes?.createdAt
-        binding.tvBoardDetailContents.text = intentRes?.contents
+        binding.tvBoardDetailDate.text = intentRes?.date
         binding.tvBoardDetailPrice.text = intentRes?.price.toString() + "원"
-
         /*binding.toolbar.title = "titlee!"
         binding.appBarLayout.addOnOffsetChangedListener(object :
                 AppBarLayout.OnOffsetChangedListener {
@@ -94,7 +94,12 @@ class BoardDetailActivity : AppCompatActivity() {
                         Toast.makeText(this@BoardDetailActivity, "게시글이 존재하지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        binding.tvBoardDetailContents.text = boardDetailRes?.board?.dataValues?.contents
+                        binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
+                        Glide.with(this@BoardDetailActivity)
+                            .load(boardDetailRes?.board?.detailImg)
+                            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
+                            .into(binding.ivBoardDetailImg)
+                        binding.tvBoardDetailComment.text = "댓글 " + boardDetailRes?.board?.commentCount.toString() + " > "
                     }
                 }
             }

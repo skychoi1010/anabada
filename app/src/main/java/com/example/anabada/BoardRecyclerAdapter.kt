@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ListitemBoardBinding
 import java.util.*
 
@@ -44,18 +46,19 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
         listBinding.root
     ) {
         fun bind(item: BoardsData) {
-            /* //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
-            Glide.with(listBinding.root)
+             //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
+            Glide.with(itemView)
                     .load(item.thumbImg)
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
                     .into(listBinding.ivBoardThumbnail)
-             */
             listBinding.tvBoardTitle.text = item.title
             listBinding.tvBoardWriter.text = item.author
-            listBinding.tvBoardDate.text = item.createdAt
+            listBinding.tvBoardDate.text = item.date
             listBinding.tvBoardPrice.text = item.price.toString()
-            item.userId = "api" //TODO delete after api updated
-            item.imageId = "1" //TODO delete after api updated
+            listBinding.tvBoardCommentNum.text = item.commentCount.toString()
+            if (item.detailImg.isNullOrEmpty()) {
+                item.detailImg = "1"
+            }
             listBinding.root.setOnClickListener {
                 itemClickListener.onClick(it, item)
             }
