@@ -65,6 +65,28 @@ class SignUpActivity: AppCompatActivity() {
             }
         })
 
+        binding.pw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                setError(binding.pw, null)
+                setError(binding.confirmPw, null)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (!binding.pw.text.isNullOrEmpty()){
+                    if (!binding.confirmPw.text.isNullOrEmpty()) {
+                        if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
+                            setError(binding.confirmPw, MATCH_PASSWORD)
+                        }
+                    }
+                    if (!isValidPassword(binding.pw, binding.pw.text.toString())){
+                        setError(binding.pw, PASSWORD_POLICY)
+                    }
+                }
+            }
+        })
+
         binding.confirmPw.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 setError(binding.confirmPw, null)
@@ -76,25 +98,6 @@ class SignUpActivity: AppCompatActivity() {
                 if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()){
                     if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
                         setError(binding.confirmPw, MATCH_PASSWORD)
-                    }
-                }
-            }
-        })
-
-        binding.pw.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                setError(binding.confirmPw, null)
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if (!binding.pw.text.isNullOrEmpty() && !binding.confirmPw.text.isNullOrEmpty()){
-                    if (binding.confirmPw.text.toString() != binding.pw.text.toString()){
-                        setError(binding.confirmPw, MATCH_PASSWORD)
-                    }
-                    if (!isValidPassword(binding.pw, binding.pw.text.toString())){
-                        setError(binding.pw, PASSWORD_POLICY)
                     }
                 }
             }
