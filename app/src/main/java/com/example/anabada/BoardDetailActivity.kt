@@ -1,6 +1,9 @@
 package com.example.anabada
 
+import android.R
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.View.*
@@ -12,9 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ActivityBoardDetailBinding
+import kotlinx.android.synthetic.main.activity_board_detail.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+
 
 class BoardDetailActivity : AppCompatActivity() {
 
@@ -41,8 +47,7 @@ class BoardDetailActivity : AppCompatActivity() {
         binding.tvBoardDetailDate.text = intentRes?.date
         binding.tvBoardDetailPrice.text = intentRes?.price.toString() + "원"
         /*binding.toolbar.title = "titlee!"
-        binding.appBarLayout.addOnOffsetChangedListener(object :
-                AppBarLayout.OnOffsetChangedListener {
+        binding.appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             var isShow = true
             var scrollRange = -1
             override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
@@ -55,21 +60,34 @@ class BoardDetailActivity : AppCompatActivity() {
                     binding.toolbar.title = " " //These quote " " with _ space is intended
                     isShow = false
                 }
-            }
+            }2
         })
-
          */
 
-        /*binding.toolbar.title = title
         setSupportActionBar(binding.toolbar)
         if (supportActionBar != null) {
             //supportActionBar!!.setDisplayShowTitleEnabled(false)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true) //툴바에 백키(<-) 보이게할거면 이거 사용
+            Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            supportActionBar!!.title = title
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                binding.toolbar.elevation = 1F
+                toolbar.setBackgroundColor(Color.GRAY)
+            }
+            val statusBarHeight = getStatusBarHeight()
+            binding.nsvBoardDetail.setPadding(1, 180 + statusBarHeight, 1, 0)
+            val params = toolbar.layoutParams
+            params.height = statusBarHeight
+            toolbar.layoutParams = params
         }
 
-         */
+    }
 
-
+    fun getStatusBarHeight(): Int {
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return if (resourceId > 0) resources.getDimensionPixelSize(resourceId)
+        else Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }.top
     }
 
     private fun initView(binding: ActivityBoardDetailBinding, id: Int): CharSequence? {
@@ -97,7 +115,7 @@ class BoardDetailActivity : AppCompatActivity() {
                         binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
                         Glide.with(this@BoardDetailActivity)
                             .load(boardDetailRes?.board?.detailImg)
-                            .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
+                            .apply(RequestOptions().placeholder(R.drawable.ic_dialog_alert))
                             .into(binding.ivBoardDetailImg)
                         binding.tvBoardDetailComment.text = "댓글 " + boardDetailRes?.board?.commentCount.toString() + " > "
                     }
@@ -108,8 +126,11 @@ class BoardDetailActivity : AppCompatActivity() {
         callComments(1, api, id, binding)
         binding.rvBoardDetailCommentsPrev.adapter = commentsPrevRecyclerAdapter
         binding.rvBoardDetailCommentsPrev.layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration = DividerItemDecoration(this@BoardDetailActivity, LinearLayoutManager.VERTICAL)
-        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
+        val dividerItemDecoration = DividerItemDecoration(
+            this@BoardDetailActivity,
+            LinearLayoutManager.VERTICAL
+        )
+        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_horizontal_bright)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
 
         commentsPrevRecyclerAdapter.setItemClickListener(object : CommentsPrevRecyclerAdapter.ItemClickListener {
