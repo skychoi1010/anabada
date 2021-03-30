@@ -7,14 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".BoardDetailActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:elevation="0dp"
-        app:titleTextColor="@color/black"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Light">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:title="hello"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsv_board_detail"
