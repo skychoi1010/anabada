@@ -2,9 +2,7 @@ package com.example.anabada
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -64,6 +62,20 @@ class BoardActivity : AppCompatActivity() {
         }
 
     }
+    /*
+    public  void onBackPressed()  {
+        long tempTime  =  System.currentTimeMillis();   
+        long intervalTime  =  tempTime - backPressedTime;   
+        if (0 <= intervalTime  &&  FINISH_INTERVAL_TIME >= intervalTime)   {       
+            super.onBackPressed();   
+        }   else {            
+            backPressedTime  =  tempTime;     
+            Toast.makeText(getApplicationContext(),  "한번 더 누르면 종료됩니다.",  Toast.LENGTH_SHORT).show();   
+        }
+    }
+
+     */
+
 
     private fun initView(binding: ActivityBoardBinding) {
 
@@ -79,11 +91,7 @@ class BoardActivity : AppCompatActivity() {
                 this@BoardActivity,
                 LinearLayoutManager.VERTICAL
         )
-        ContextCompat.getDrawable(this@BoardActivity, R.drawable.divider_gray_ececec)?.let {
-            dividerItemDecoration.setDrawable(
-                    it
-            )
-        }
+        ContextCompat.getDrawable(this@BoardActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoard.addItemDecoration(dividerItemDecoration)
 
         boardRecyclerAdapter.setItemClickListener(object : BoardRecyclerAdapter.ItemClickListener {
@@ -119,6 +127,7 @@ class BoardActivity : AppCompatActivity() {
                 super.onScrollStateChanged(recyclerView, newState)
                 temp = 1
             }
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (temp == 1) {
                     super.onScrolled(recyclerView, dx, dy)
