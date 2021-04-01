@@ -12,7 +12,7 @@
     android:background="@color/transparent"
     android:theme="@style/Theme.Anabada.Image"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    tools:background="@color/cardview_dark_background">
+    tools:background="@drawable/gradient">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

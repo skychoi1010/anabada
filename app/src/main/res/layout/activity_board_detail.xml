@@ -28,6 +28,7 @@
                 app:layout_constraintDimensionRatio="1:1"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
                 android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -186,8 +187,36 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:title="hello"
-        android:background="@color/transparent"
+        android:background="@drawable/gradient"
+        android:theme="@style/Theme.Anabada.Image"
         android:fadeScrollbars="true"
         app:layout_collapseMode="pin"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_comment_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="35dp"
+        android:background="@color/gray"
+        android:fontFamily="@font/font_regular"
+        android:textSize="15dp"
+        android:text="아직 댓글이 없습니다.\n첫 댓글을 남겨보세요!"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_board_detail_comment"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
