@@ -11,5 +11,20 @@
         <item name="colorControlActivated">@color/white</item>
         <item name="colorControlNormal">@color/white</item>
     </style>
+    <!-- API level 23 미만일 때.. -->
+    <style name="Toolbar" parent="AppTheme.Transparent">
+        <!-- Toolbar Title Color -->
+        <item name="android:textColorPrimary">@android:color/white</item>
 
+        <!-- Toolbar Up Button Color -->
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+    <!-- API level 23 이상일 때.. -->
+    <!--
+    <style name="Toolbar" parent="AppTheme">
+        <item name="android:titleTextColor">@android:color/white</item>
+        <item name="android:colorControlNormal">@android:color/white</item>
+    </style>
+    -->
 </resources>

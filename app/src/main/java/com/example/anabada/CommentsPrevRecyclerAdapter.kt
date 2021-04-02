@@ -42,8 +42,13 @@ class CommentsPrevRecyclerAdapter(private var commentsPrevDataList: ArrayList<Co
                     .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
                     .into(listBinding.ivBoardThumbnail)
              */
-            //listitemCommentsPrevBinding.tvPrevCommentAuthor.text = item.author
-            //listitemCommentsPrevBinding.tvPrevCommentDate.text = item.date
+            if (item.isMine) {
+                listitemCommentsPrevBinding.tvPrevCommentAuthor.text = "!! isMine !!" //TODO 버튼 등 처리 동작 구체화 !!
+            } else {
+
+                listitemCommentsPrevBinding.tvPrevCommentAuthor.text = item.author
+            }
+            listitemCommentsPrevBinding.tvPrevCommentDate.text = item.date
             listitemCommentsPrevBinding.tvPrevComment.text = item.contents
             listitemCommentsPrevBinding.root.setOnClickListener {
                 itemClickListener.onClick(it, item.id)

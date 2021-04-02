@@ -66,8 +66,8 @@ data class CommentDetail (
         var id: Int,
         var author: String,
         var contents: String,
-        var createdAt: String,
-        var isMine: Boolean
+        var isMine: Boolean,
+        var date: String
         )
 
 data class PostImageRes (

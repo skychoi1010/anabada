@@ -14,6 +14,7 @@ import com.example.anabada.databinding.ActivityBoardBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.system.exitProcess
 
 
 class BoardActivity : AppCompatActivity() {
@@ -76,6 +77,17 @@ class BoardActivity : AppCompatActivity() {
 
      */
 
+    private var time: Long = 0
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - time >= 1000) {
+            time = System.currentTimeMillis()
+            Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        } else if (System.currentTimeMillis() - time < 1000) {
+            finishAffinity()
+            System.runFinalization()
+            exitProcess(0)
+        }
+    }
 
     private fun initView(binding: ActivityBoardBinding) {
 

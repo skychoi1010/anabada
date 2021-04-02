@@ -82,20 +82,20 @@ interface ApiService {
     ): Call<DeleteContentRes>
 
     @FormUrlEncoded
-    @POST("coment")
+    @POST("comment")
     fun reqPostComment(
         @Field("boardId") boardId: Int,
         @Field("contents") contents: String
     ): Call<PostCommentRes>
 
     @FormUrlEncoded
-    @PUT("coment/{id}")
+    @PUT("comment/{id}")
     fun reqReviseComment(
         @Path("contents") contents: String
     ): Call<ReviseCommentRes>
 
     @FormUrlEncoded
-    @DELETE("coment/{id}")
+    @DELETE("comment/{id}")
     fun reqDeleteComment(
         @Path("id") id: Int
     ): Call<DeleteCommentRes>
