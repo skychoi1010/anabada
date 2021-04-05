@@ -1,7 +1,6 @@
 package com.example.anabada
 
 import android.R
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -12,7 +11,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -35,14 +33,12 @@ class BoardDetailActivity : AppCompatActivity() {
 
     private var boardDetailRes: BoardDetailRes? = null
     private var commentRes: CommentRes? = null
-    private var postCommentRes: PostCommentRes? = null
     var intentRes: BoardsData? = null
-
-    //ArrayList<CommentData>
     private var commentsPrevDataList = arrayListOf<CommentDetail>()
 
     //CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
-    private var commentsPrevRecyclerAdapter = CommentsPrevRecyclerAdapter(commentsPrevDataList)
+    //TODO CommentsDetail과 어댑터 같이 사용중..
+    private var commentsPrevRecyclerAdapter = CommentsRecyclerAdapter(commentsPrevDataList)
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,41 +59,30 @@ class BoardDetailActivity : AppCompatActivity() {
         intentRes = intent.getParcelableExtra("board item")
         intentRes?.let { initView(binding, it.id) }
 
-        binding.tvCommentInput.minHeight = getNavigationBarHeight()
+        //binding.tvCommentInput.minHeight = getNavigationBarHeight()
         binding.tvBoardDetailTitle.text = intentRes?.title
         Log.d("////////intent///", intentRes?.title.toString())
         binding.tvBoardDetailAuthor.text = intentRes?.author
         binding.tvBoardDetailDate.text = intentRes?.date
         binding.tvBoardDetailPrice.text = intentRes?.price.toString() + "원"
 
-
         //binding.toolbar.setTitleTextColor(Color.WHITE)
         //binding.toolbar.title = "titlee!"
 
-        val toolbar = binding.toolbar
-        val h = toolbar.height
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
-
-        toolbar.elevation = 0f // required or it will overlap linear layout
+        binding.toolbar.elevation = 0f // required or it will overlap linear layout
 
         //toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
-        val scroller = binding.nsvBoardDetail
         Log.d("status bar height", getStatusBarHeight().toString())
-
-        scroller.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
+        //TODO status bar + toolbar gradient animation code refactoring
+        binding.nsvBoardDetail.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
             @RequiresApi(Build.VERSION_CODES.P)
-            override fun onScrollChange(
-                v: NestedScrollView?,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
+            override fun onScrollChange(v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
                 if (scrollY > 0) {
                     binding.toolbar.setBackgroundColor(Color.WHITE)
                     binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
-                    toolbar.elevation = 4f // required or it will overlap linear layout
+                    binding.toolbar.elevation = 4f // required or it will overlap linear layout
                 }
                 val headerHeight = binding.ivBoardDetailImg.height - binding.toolbar.height
                 val ratio = Math.min(Math.max(scrollY, 0), headerHeight).toFloat() / headerHeight
@@ -124,7 +109,7 @@ class BoardDetailActivity : AppCompatActivity() {
                 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 //                    window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                 //                }
-                val v: View = toolbar.getChildAt(1)
+                val v: View = binding.toolbar.getChildAt(1)
 
                 //Step 1 : Changing the color of back button (or open drawer button).
 
@@ -202,27 +187,16 @@ class BoardDetailActivity : AppCompatActivity() {
                 //end
             }
 
-            override fun onResponse(
-                call: Call<BoardDetailRes>,
-                response: Response<BoardDetailRes>
-            ) {
+            override fun onResponse(call: Call<BoardDetailRes>, response: Response<BoardDetailRes>) {
                 boardDetailRes = response.body()
                 when {
                     boardDetailRes?.resultCode == null -> {
                         //end
-                        Toast.makeText(
-                                this@BoardDetailActivity,
-                                "페이지를 불러오는 데 실패했습니다.",
-                                Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                     boardDetailRes?.board == null -> {
                         //end
-                        Toast.makeText(
-                                this@BoardDetailActivity,
-                                "게시글이 존재하지 않습니다",
-                                Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@BoardDetailActivity, "게시글이 존재하지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
                         binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
@@ -243,45 +217,20 @@ class BoardDetailActivity : AppCompatActivity() {
                 this@BoardDetailActivity,
                 LinearLayoutManager.VERTICAL
         )
-        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_horizontal_dim_dark)
-                ?.let { dividerItemDecoration.setDrawable(it) }
+        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_horizontal_dim_dark)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
 
-        commentsPrevRecyclerAdapter.setItemClickListener(object :
-            CommentsPrevRecyclerAdapter.ItemClickListener {
-            override fun onClick(view: View, id: Int) {
-                Intent(
-                        this@BoardDetailActivity,
-                        BoardDetailActivity::class.java
-                ).apply { //TODO comment detail activity
-                    putExtra("comment id", id)
-                    startActivity(this)
-                }
-            }
-        })
-
-
-        binding.btnPostComment.setOnClickListener {
-            binding.postComment.visibility = VISIBLE
-            binding.btnPostComment.visibility = GONE
-            binding.tvCommentInput.requestFocus()
-
-            window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            val imm: InputMethodManager = getSystemService(
-                    Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(binding.tvCommentInput, 0)
-
-
-            binding.btnSendComment.setOnClickListener{
-                val input = binding.tvCommentInput.text.toString()
-
-                postComments(api, id, binding, input)
+        binding.tvBoardDetailComment.setOnClickListener {
+            Intent(this@BoardDetailActivity, CommentsDetailActivity::class.java).apply {
+                putExtra("board id", id)
+                startActivity(this)
             }
         }
+
     }
 
-    private fun callComments(pageNum: Int, api: ApiService, id: Int, binding: ActivityBoardDetailBinding) {
-        api.reqComment(id, pageNum).enqueue(object : Callback<CommentRes> {
+    private fun callComments(callNum: Int, api: ApiService, id: Int, binding: ActivityBoardDetailBinding) {
+        api.reqComment(id, callNum).enqueue(object : Callback<CommentRes> {
             override fun onFailure(call: Call<CommentRes>, t: Throwable) {
                 Toast.makeText(this@BoardDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
                 //end
@@ -309,32 +258,6 @@ class BoardDetailActivity : AppCompatActivity() {
                         }
                         commentsPrevDataList.let { commentsPrevRecyclerAdapter.setDataNotify(it) }
                         //callComments(pageNum + 1, api, id)
-                    }
-                }
-            }
-        })
-    }
-
-    private fun postComments(api: ApiService, id: Int, binding: ActivityBoardDetailBinding, input: String) {
-        api.reqPostComment(id, input).enqueue(object : Callback<PostCommentRes> {
-            override fun onFailure(call: Call<PostCommentRes>, t: Throwable) {
-                Toast.makeText(this@BoardDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<PostCommentRes>, response: Response<PostCommentRes>) {
-                postCommentRes = response.body()
-                when {
-                    postCommentRes?.resultCode == null -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    postCommentRes?.resultCode == "OK" -> {
-                        //end
-                        commentsPrevRecyclerAdapter.notifyDataSetChanged()
-                        Toast.makeText(this@BoardDetailActivity, "comment post api\n" + postCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
                     }
                 }
             }

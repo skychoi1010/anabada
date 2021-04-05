@@ -99,10 +99,7 @@ class BoardActivity : AppCompatActivity() {
 
         binding.rvBoard.adapter = boardRecyclerAdapter
         binding.rvBoard.layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration = DividerItemDecoration(
-                this@BoardActivity,
-                LinearLayoutManager.VERTICAL
-        )
+        val dividerItemDecoration = DividerItemDecoration(this@BoardActivity, LinearLayoutManager.VERTICAL)
         ContextCompat.getDrawable(this@BoardActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoard.addItemDecoration(dividerItemDecoration)
 
@@ -177,11 +174,7 @@ class BoardActivity : AppCompatActivity() {
                 when {
                     boardPageRes?.success == null -> {
                         //end
-                        Toast.makeText(
-                                this@BoardActivity,
-                                "페이지를 불러오는 데 실패했습니다.",
-                                Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@BoardActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                     boardPageRes?.boards?.isEmpty() == true -> {
                         //end

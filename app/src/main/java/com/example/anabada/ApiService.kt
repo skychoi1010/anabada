@@ -100,8 +100,15 @@ interface ApiService {
         @Path("id") id: Int
     ): Call<DeleteCommentRes>
 
+    @Multipart
+    @POST("echo")
+    fun reqHealthCheck(
+        @Part image: MultipartBody.Part
+    ): Call<HealthCheckRes>
+
     companion object {
         private const val BASE_URL = "https://anabada.du.r.appspot.com/api/"
+        private const val BASE_URL_IMG = "http://175.113.223.199:8080/api/"
 
         fun create(context: Context): ApiService {
             val httpLoggingInterceptor =
@@ -120,16 +127,22 @@ interface ApiService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(ApiService::class.java)
-/*
-            val cookieJar: CookieJar = PersistentCookieJar(SetCookieCache(),
-                    SharedPrefsCookiePersistor(this))
-            val client = OkHttpClient.Builder().cookieJar(cookieJar).build()
+        }
 
-            mRetrofit = Retrofit.Builder().baseUrl()
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create()).build()
-            service = mRetrofit.create(RetrofitAPI::class.java)
-  */
+        fun createImg(context: Context): ApiService {
+            val httpLoggingInterceptor =
+                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            val cookieManager = CookieManager()
+            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+            val client = OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .build()
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL_IMG)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ApiService::class.java)
         }
     }
 }

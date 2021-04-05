@@ -105,3 +105,9 @@ data class DeleteCommentRes (
         var resultCode: String,
         var id: Int
         )
+
+data class HealthCheckRes (
+        var success: Boolean,
+        var resultCode: String,
+        var echo: PostImageRes
+        )

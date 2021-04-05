@@ -11,23 +11,52 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    
     var loginRes: LoginRes? = null
+    private val api = ApiService.create(this)
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val api = ApiService.create(this)
-
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
         if(MySharedPreferences.getUserNick(this).isBlank()) {
-            login(binding, api)
+            initView(binding)
+        } else { // SharedPreferences 안에 값이 저장되어 있을 때 -> 게시판으로 이동s
+            val uid = MySharedPreferences.getUserId(this)
+            val upw = MySharedPreferences.getUserPass(this)
+
+            api.reqLogin(uid, upw).enqueue(object : Callback<LoginRes>{
+                override fun onFailure(call: Call<LoginRes>, t: Throwable) {
+                    val dialog = AlertDialog.Builder(this@MainActivity)
+                    dialog.setTitle("login api\nFailed connection")
+                    dialog.show()
+                }
+
+                override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
+                    loginRes = response.body()
+                    if (loginRes?.success == null) {
+                        Toast.makeText(this@MainActivity, "아이디와 비밀번호를 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, "${MySharedPreferences.getUserNick(this@MainActivity)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+                        Intent(this@MainActivity, BoardActivity::class.java).apply {
+                            startActivity(this)
+                        }
+                        finish()
+                    }
+                }
+            })
         }
-        else { // SharedPreferences 안에 값이 저장되어 있을 때 -> 게시판으로 이동s
-            Toast.makeText(this, "${MySharedPreferences.getUserNick(this)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, BoardActivity::class.java)
-            startActivity(intent)
-            finish()
+
+
+    }
+
+    private fun initView(binding: ActivityMainBinding) {
+        binding.loginBtn.setOnClickListener {
+            val uid = binding.id.text.toString()
+            val upw = binding.pw.text.toString()
+            login(uid, upw)
         }
 
         binding.signupBtn.setOnClickListener {
@@ -40,36 +69,39 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, BoardActivity::class.java)
             startActivity(intent)
         }
+
     }
 
-    private fun login(binding: ActivityMainBinding, service: ApiService) {
-        binding.loginBtn.setOnClickListener {
-            val uid = binding.id.text.toString()
-            val upw = binding.pw.text.toString()
+    private fun login(uid: String, upw: String) {
+        api.reqLogin(uid, upw).enqueue(object : Callback<LoginRes> {
+            override fun onFailure(call: Call<LoginRes>, t: Throwable) {
+                val dialog = AlertDialog.Builder(this@MainActivity)
+                dialog.setTitle("login api\nFailed connection")
+                dialog.show()
+            }
 
-            service.reqLogin(uid, upw).enqueue(object : Callback<LoginRes>{
-                override fun onFailure(call: Call<LoginRes>, t: Throwable) {
-                    val dialog = AlertDialog.Builder(this@MainActivity)
-                    dialog.setTitle("login api\nFailed connection")
-                    dialog.show()
-                }
-
-                override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
-                    loginRes = response.body()
-                    if (loginRes?.success == null) {
-                        Toast.makeText(this@MainActivity, "아이디와 비밀번호를 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@MainActivity, "login api\nsuccess: " + loginRes?.success.toString() +
+            override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
+                loginRes = response.body()
+                if (loginRes?.success == null) {
+                    Toast.makeText(this@MainActivity, "아이디와 비밀번호를 다시 확인해주세요.", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(
+                        this@MainActivity, "login api\nsuccess: " + loginRes?.success.toString() +
                                 "\nresult code: " + loginRes?.resultCode + "\nid: " + loginRes?.id.toString() +
-                                "\nnickname: " + loginRes?.nickname, Toast.LENGTH_SHORT).show()
-                        MySharedPreferences.setUserId(this@MainActivity, uid)
-                        MySharedPreferences.setUserPass(this@MainActivity, upw)
-                        MySharedPreferences.setUserNick(this@MainActivity, loginRes?.nickname.toString())
-                        val intent = Intent(this@MainActivity, BoardActivity::class.java)
-                        startActivity(intent)
+                                "\nnickname: " + loginRes?.nickname, Toast.LENGTH_SHORT
+                    ).show()
+                    MySharedPreferences.setUserId(this@MainActivity, uid)
+                    MySharedPreferences.setUserPass(this@MainActivity, upw)
+                    MySharedPreferences.setUserNick(
+                        this@MainActivity,
+                        loginRes?.nickname.toString()
+                    )
+                    Intent(this@MainActivity, BoardActivity::class.java).apply {
+                        startActivity(this)
                     }
                 }
-            })
-        }
+            }
+        })
     }
 }

@@ -4,16 +4,38 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/title_post_activity"
-        android:layout_width="wrap_content"
+    <include layout="@layout/layout_app_bar_image"
+        android:id="@+id/appbar"
+        app:layout_constraintTop_toBottomOf="@id/ll_image"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_image"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="post activity"
-        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tv_post_content_title"
-        android:layout_marginTop="50dp"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_post_content_title">
+
+        <Button
+            android:id="@+id/btn_pick_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:text="0/5"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_post_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            app:shapeAppearanceOverlay="@style/circleImageView" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <EditText
         android:id="@+id/tv_post_content_title"
@@ -22,7 +44,7 @@
         android:layout_marginHorizontal="20dp"
         android:hint="title"
         android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@id/title_post_activity"
+        app:layout_constraintTop_toBottomOf="@id/ll_image"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -46,22 +68,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_post_content_price"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_post_content"
-        android:layout_marginBottom="20dp"/>
-
-    <Button
-        android:id="@+id/btn_post_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="post"
-        android:backgroundTint="@color/cardview_dark_background"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_post_content_contents"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp" />
-
-
+        android:layout_marginBottom="50dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

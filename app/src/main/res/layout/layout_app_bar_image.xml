@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:fitsSystemWindows="true"
-        app:contentInsetEnd="0dp"
-        app:contentInsetStart="0dp"
-        android:background="@drawable/gradient"
-        android:theme="@style/Theme.Anabada.Image"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:fitsSystemWindows="true"
+    app:contentInsetEnd="0dp"
+    app:contentInsetStart="0dp"
+    android:background="@drawable/gradient"
+    android:theme="@style/Theme.Anabada.Image"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,15 +32,31 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Title"
+                android:textColor="@color/black"
+                android:fontFamily="@font/font_bold"
+                android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="TITLE" />
+
+
+            <TextView
+                android:id="@+id/toolbar_fin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:fontFamily="@font/font_regular"
+                android:textSize="16dp"
+                android:text="완료"
+                android:layout_marginRight="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/toolbar_title"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                tools:text="완료" />
 
             <ImageView
                 android:id="@+id/toolbar_news_title"
@@ -80,5 +94,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.appcompat.widget.Toolbar>
-</merge>
+</androidx.appcompat.widget.Toolbar>
