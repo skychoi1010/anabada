@@ -35,6 +35,7 @@ class PostActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
     private var binding: ActivityPostBinding? = null
     private var body : MultipartBody.Part? = null
+    var imageId: Int = 0
 
     val CROP_FROM_IMAGE = 1000
 
@@ -65,7 +66,7 @@ class PostActivity : AppCompatActivity() {
             } else { //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
 
                 if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
-                    api.reqPostContent(title, price.toInt(), contents, 1)
+                    api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
                         .enqueue(object : Callback<PostContentRes> {
                             override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
                                 Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
@@ -73,33 +74,14 @@ class PostActivity : AppCompatActivity() {
 
                             override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
                                 postContentRes = response.body()
-                                Toast.makeText(
-                                        this@PostActivity,
-                                        "post content api\nresult: " + postContentRes?.resultCode.toString() +
-                                                "\nid: " + postContentRes?.id.toString(),
-                                        Toast.LENGTH_SHORT
-                                ).show()
-                                /*Intent(this@PostActivity, BoardActivity::class.java).apply {
-                                    startActivity(this)
-                                }
-                                */
-                            }
-                        })
-                    apiImg.reqPostImage(body!!)
-                        .enqueue(object : Callback<PostImageRes> {
-                            override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                                Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                                postImageRes = response.body()
-                                Toast.makeText(this@PostActivity, "post image api\nresult: " + postContentRes?.resultCode.toString() +
-                                        "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                                 Intent(this@PostActivity, BoardActivity::class.java).apply {
                                     startActivity(this)
                                 }
+                                
                             }
                         })
+
                 } else { // missing contents
                     Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
@@ -114,37 +96,39 @@ class PostActivity : AppCompatActivity() {
         if (resultCode == CROP_FROM_IMAGE) {
             val bundle = data?.extras!!
             val test = bundle.getParcelable<Bitmap>("data")
+
         }
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            imageUri?.let { resize(this, it, 20) }
+            imageUri?.let { resize(this, it, 300) }
+            cropImage(imageUri)
+
+            ///
             binding!!.sivPostImg.setImageURI(imageUri)
-            val photoUri = data?.data
-            cropImage(photoUri)
             binding!!.btnPickImage.text = "1/5"
             //creating a file
 
-            val file = File(saveBitmapToJpeg(resize(this, imageUri!!, 20)!!, "image").absolutePath)
+            val file = File(saveBitmapToJpeg(resize(this, imageUri!!, 300)!!, "image").absolutePath)
             val requestBody : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
             body = MultipartBody.Part.createFormData("image", file.name, requestBody)
-            getPath(imageUri!!)?.let { Log.d("imgid", it) }
-            /*
+
             apiImg.reqPostImage(body!!)
-                    .enqueue(object : Callback<PostImageRes> {
-                        override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                            Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                        }
+                .enqueue(object : Callback<PostImageRes> {
+                    override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                    }
 
-                        override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                            postImageRes = response.body()
-                            Toast.makeText(this@PostActivity, "post image api\nresult: " + postContentRes?.resultCode.toString() +
-                                    "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                            Intent(this@PostActivity, BoardActivity::class.java).apply {
-                                startActivity(this)
-                            }
-                        }
-                    })
+                    override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+                        postImageRes = response.body()
+                        this@PostActivity.imageId = postImageRes?.id!!
+                        Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+                                "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                })
 
+
+            ///
+            /*
             apiImg.reqHealthCheck(body!!)
                 .enqueue(object : Callback<HealthCheckRes> {
                     override fun onFailure(call: Call<HealthCheckRes>, t: Throwable) {
@@ -162,6 +146,7 @@ class PostActivity : AppCompatActivity() {
 
         }
     }
+
     private fun saveBitmapToJpeg(bitmap: Bitmap, name: String): File {
 
         //내부저장소 캐시 경로를 받아옵니다.
@@ -193,27 +178,28 @@ class PostActivity : AppCompatActivity() {
         return tempFile
     }
 
-    fun getPath(uri: Uri?): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = managedQuery(uri, projection, null, null, null)
-        val column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        return cursor.getString(column_index)
-    }
-    private fun getRealPathFromURI(contentURI: Uri): String? {
-        val filePath: String?
-        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
-        if (cursor == null) {
-            filePath = contentURI.path
-        } else {
-            cursor.moveToFirst()
-            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            filePath = cursor.getString(idx)
-            cursor.close()
-        }
-        return filePath
-    }
+//    fun getPath(uri: Uri?): String? {
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = managedQuery(uri, projection, null, null, null)
+//        val column_index = cursor
+//                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        cursor.moveToFirst()
+//        return cursor.getString(column_index)
+//    }
+
+//    private fun getRealPathFromURI(contentURI: Uri): String? {
+//        val filePath: String?
+//        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
+//        if (cursor == null) {
+//            filePath = contentURI.path
+//        } else {
+//            cursor.moveToFirst()
+//            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+//            filePath = cursor.getString(idx)
+//            cursor.close()
+//        }
+//        return filePath
+//    }
 
     private fun cropImage(imageUri: Uri?) {
         val intent = getCropIntent(imageUri)
@@ -225,9 +211,9 @@ class PostActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         intent.setDataAndType(inputUri, "image/*")
-        intent.putExtra("aspectX", 4)
-        intent.putExtra("aspectY", 3)
-        intent.putExtra("outputX", 400)
+        intent.putExtra("aspectX", 5)
+        intent.putExtra("aspectY", 5)
+        intent.putExtra("outputX", 300)
         intent.putExtra("outputY", 300)
         intent.putExtra("scale", true)
 
@@ -243,7 +229,7 @@ class PostActivity : AppCompatActivity() {
             BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, options) // 이미지의 크기를 options 에 담아줌
             var width = options.outWidth
             var height = options.outHeight
-            var samplesize = 4 // 숫자가 클수록 용량이 작아짐, 4 라고 하면 4픽셀을 1픽셀로 만들어줌
+            var samplesize = 1 // 숫자가 클수록 용량이 작아짐, 4 라고 하면 4픽셀을 1픽셀로 만들어줌
             while (true) { //가로세로 크기를 리사이즈크기에 최대한 맞춰서 작을때까지 반복함.
                 if (width / 2 < resize || height / 2 < resize) break
                 width /= 2
