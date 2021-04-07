@@ -1,16 +1,29 @@
 package com.example.anabada
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ActivityPostBinding
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -32,26 +45,39 @@ class PostActivity : AppCompatActivity() {
     private val api = ApiService.create(this)
     private val apiImg = ApiService.createImg(this)
     private val pickImage = 100
+    private var imagePath: String? = null
     private var imageUri: Uri? = null
     private var binding: ActivityPostBinding? = null
     private var body : MultipartBody.Part? = null
+    var imageId: Int = 0
 
-    val CROP_FROM_IMAGE = 1000
+    private val CROP_FROM_IMAGE = 1000
+
+    private val REQ_CAMERA_PERMISSION = 111
+    private val REQ_GALLERY = 112
+    private val REQ_IMAGE_CAPTURE = 113
+    private val REQ_STORAGE_PERMISSION = 114
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPostBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         initView(binding!!)
-
-        binding!!.btnPickImage.setOnClickListener {
-            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI).apply {
-                startActivityForResult(this, pickImage)
-            }
-        }
     }
 
+
     private fun initView(binding: ActivityPostBinding) {
+
+        binding.btnCamera.setOnClickListener {
+            selectCamera()
+        }
+
+        binding.btnPickImage.setOnClickListener {
+//            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI).apply {
+//                startActivityForResult(this, pickImage)
+//            }
+            selectGallery()
+        }
 
         binding.appbar.toolbarFin.setOnClickListener {
             val title = binding.tvPostContentTitle.text.toString()
@@ -65,7 +91,7 @@ class PostActivity : AppCompatActivity() {
             } else { //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
 
                 if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
-                    api.reqPostContent(title, price.toInt(), contents, 1)
+                    api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
                         .enqueue(object : Callback<PostContentRes> {
                             override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
                                 Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
@@ -73,78 +99,63 @@ class PostActivity : AppCompatActivity() {
 
                             override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
                                 postContentRes = response.body()
-                                Toast.makeText(
-                                        this@PostActivity,
-                                        "post content api\nresult: " + postContentRes?.resultCode.toString() +
-                                                "\nid: " + postContentRes?.id.toString(),
-                                        Toast.LENGTH_SHORT
-                                ).show()
-                                /*Intent(this@PostActivity, BoardActivity::class.java).apply {
-                                    startActivity(this)
-                                }
-                                */
-                            }
-                        })
-                    apiImg.reqPostImage(body!!)
-                        .enqueue(object : Callback<PostImageRes> {
-                            override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                                Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                                postImageRes = response.body()
-                                Toast.makeText(this@PostActivity, "post image api\nresult: " + postContentRes?.resultCode.toString() +
-                                        "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                                 Intent(this@PostActivity, BoardActivity::class.java).apply {
                                     startActivity(this)
                                 }
+
                             }
                         })
+
                 } else { // missing contents
                     Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
 
             }
         }
+
     }
 
 
+    /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == CROP_FROM_IMAGE) {
             val bundle = data?.extras!!
             val test = bundle.getParcelable<Bitmap>("data")
+
         }
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            imageUri?.let { resize(this, it, 20) }
+            imageUri?.let { resize(this, it, 300) }
+            cropImage(imageUri)
+
+            ///
             binding!!.sivPostImg.setImageURI(imageUri)
-            val photoUri = data?.data
-            cropImage(photoUri)
             binding!!.btnPickImage.text = "1/5"
             //creating a file
 
-            val file = File(saveBitmapToJpeg(resize(this, imageUri!!, 20)!!, "image").absolutePath)
+            val file = File(saveBitmapToJpeg(resize(this, imageUri!!, 300)!!, "image").absolutePath)
             val requestBody : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
             body = MultipartBody.Part.createFormData("image", file.name, requestBody)
-            getPath(imageUri!!)?.let { Log.d("imgid", it) }
-            /*
+
             apiImg.reqPostImage(body!!)
-                    .enqueue(object : Callback<PostImageRes> {
-                        override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                            Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                        }
+                .enqueue(object : Callback<PostImageRes> {
+                    override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                    }
 
-                        override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                            postImageRes = response.body()
-                            Toast.makeText(this@PostActivity, "post image api\nresult: " + postContentRes?.resultCode.toString() +
-                                    "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                            Intent(this@PostActivity, BoardActivity::class.java).apply {
-                                startActivity(this)
-                            }
-                        }
-                    })
+                    override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+                        postImageRes = response.body()
+                        this@PostActivity.imageId = postImageRes?.id!!
+                        Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+                                "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                })
 
+
+            ///
+            /*
             apiImg.reqHealthCheck(body!!)
                 .enqueue(object : Callback<HealthCheckRes> {
                     override fun onFailure(call: Call<HealthCheckRes>, t: Throwable) {
@@ -162,6 +173,9 @@ class PostActivity : AppCompatActivity() {
 
         }
     }
+
+ */
+
     private fun saveBitmapToJpeg(bitmap: Bitmap, name: String): File {
 
         //내부저장소 캐시 경로를 받아옵니다.
@@ -193,48 +207,49 @@ class PostActivity : AppCompatActivity() {
         return tempFile
     }
 
-    fun getPath(uri: Uri?): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = managedQuery(uri, projection, null, null, null)
-        val column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        return cursor.getString(column_index)
-    }
-    private fun getRealPathFromURI(contentURI: Uri): String? {
-        val filePath: String?
-        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
-        if (cursor == null) {
-            filePath = contentURI.path
-        } else {
-            cursor.moveToFirst()
-            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            filePath = cursor.getString(idx)
-            cursor.close()
-        }
-        return filePath
-    }
+//    fun getPath(uri: Uri?): String? {
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = managedQuery(uri, projection, null, null, null)
+//        val column_index = cursor
+//                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        cursor.moveToFirst()
+//        return cursor.getString(column_index)
+//    }
 
-    private fun cropImage(imageUri: Uri?) {
-        val intent = getCropIntent(imageUri)
-        startActivityForResult(intent, CROP_FROM_IMAGE)
-    }
+//    private fun getRealPathFromURI(contentURI: Uri): String? {
+//        val filePath: String?
+//        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
+//        if (cursor == null) {
+//            filePath = contentURI.path
+//        } else {
+//            cursor.moveToFirst()
+//            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+//            filePath = cursor.getString(idx)
+//            cursor.close()
+//        }
+//        return filePath
+//    }
 
-    private fun getCropIntent(inputUri: Uri?): Intent {
-        val intent = Intent("com.android.camera.action.CROP")
-        intent.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        intent.setDataAndType(inputUri, "image/*")
-        intent.putExtra("aspectX", 4)
-        intent.putExtra("aspectY", 3)
-        intent.putExtra("outputX", 400)
-        intent.putExtra("outputY", 300)
-        intent.putExtra("scale", true)
-
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
-        intent.putExtra("return-data", true)
-        return intent
-    }
+//    private fun cropImage(imageUri: Uri?) {
+//        val intent = getCropIntent(imageUri)
+//        startActivityForResult(intent, CROP_FROM_IMAGE)
+//    }
+//
+//    private fun getCropIntent(inputUri: Uri?): Intent {
+//        val intent = Intent("com.android.camera.action.CROP")
+//        intent.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+//        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+//        intent.setDataAndType(inputUri, "image/*")
+//        intent.putExtra("aspectX", 5)
+//        intent.putExtra("aspectY", 5)
+//        intent.putExtra("outputX", 300)
+//        intent.putExtra("outputY", 300)
+//        intent.putExtra("scale", true)
+//
+//        //intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+//        intent.putExtra("return-data", true)
+//        return intent
+//    }
 
     private fun resize(context: Context, uri: Uri, resize: Int): Bitmap? {
         var resizeBitmap: Bitmap? = null
@@ -243,7 +258,7 @@ class PostActivity : AppCompatActivity() {
             BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, options) // 이미지의 크기를 options 에 담아줌
             var width = options.outWidth
             var height = options.outHeight
-            var samplesize = 4 // 숫자가 클수록 용량이 작아짐, 4 라고 하면 4픽셀을 1픽셀로 만들어줌
+            var samplesize = 1 // 숫자가 클수록 용량이 작아짐, 4 라고 하면 4픽셀을 1픽셀로 만들어줌
             while (true) { //가로세로 크기를 리사이즈크기에 최대한 맞춰서 작을때까지 반복함.
                 if (width / 2 < resize || height / 2 < resize) break
                 width /= 2
@@ -259,46 +274,55 @@ class PostActivity : AppCompatActivity() {
         return resizeBitmap
     }
 
-/*
     private fun selectCamera() {
+
         var permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
         if (permission == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                REQ_CAMERA_PERMISSION
-            )
+            // 권한 없어서 요청
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), REQ_CAMERA_PERMISSION)
         } else {
+            // 권한 있음
             var state = Environment.getExternalStorageState()
-            if (TextUtils.equals(
-                    state,
-                    Environment.MEDIA_MOUNTED
-                )
-            ) {
-                var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                intent.resolveActivity(packageManager)?.let {
-                    var photoFile: File? = createImageFile()
-                    photoFile?.let {
-                        var photoUri = FileProvider.getUriForFile(
-                            this,
-                            BuildConfig.APPLICATION_ID + ".provider",
-                            it
-                        )
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                        startActivityForResult(intent, REQ_IMAGE_CAPTURE)
+            if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
+//                var intent1 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                intent1.resolveActivity(packageManager)?.let {
+//                    val photoFile: File? = createImageFile()
+//                    photoFile?.let {
+//                        val photoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", it)
+//                        Log.d("camera intent2", photoUri.toString())
+//                        intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+//                        startActivityForResult(intent1, REQ_IMAGE_CAPTURE)
+//                    }
+//                }
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                if (takePictureIntent.resolveActivity(packageManager) != null) {
+                    var photoFile: File? = null
+                    try {
+                        photoFile = createImageFile()
+                    } catch (ex: IOException) {
+                        // Error occurred while creating the File
+                    }
+                    if (photoFile != null) {
+                        imageUri = FileProvider.getUriForFile(this, packageName, photoFile)
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                        startActivityForResult(takePictureIntent, REQ_IMAGE_CAPTURE)
                     }
                 }
             }
         }
     }
 
-    private fun createImageFile(): File { // 사진이 저장될 폴더 있는지 체크
+    private fun createImageFile(): File {
+        // 사진이 저장될 폴더 있는지 체크
         var file = File(Environment.getExternalStorageDirectory(), "/path/")
         if (!file.exists()) file.mkdir()
         var imageName = "fileName.jpeg"
-        var imageFile =
-            File("${Environment.getExternalStorageDirectory().absoluteFile}/path/", "$imageName")
-        imagePath = imageFile.absolutePath return imageFile
+        var imageFile = File("${Environment.getExternalStorageDirectory().absolutePath}/path/", "$imageName")
+        this.imagePath = imageFile.absolutePath
+        this.imageUri = Uri.fromFile(imageFile)
+        Log.d("camera intent1", imageUri.toString())
+        Log.d("camera intent1", imagePath.toString())
+        return imageFile
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -306,42 +330,185 @@ class PostActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQ_IMAGE_CAPTURE -> {
-                    imagePath?.apply {
-                        ctSelectImage.visibility = View.VISIBLE
-                        GlideUtil.loadImage(this,
-                            RequestOptions()
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true),
-                            imagePath,
-                            imageView = ivSelectImage,
-                            requestListener = object : RequestListener<Drawable> {
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    hideLoading()
-                                    return false
+                    Log.d("camera intent", "passed")
+                    Log.d("camera intent", imagePath.toString())
+                    data?.data?.let {
+                        Glide.with(this@PostActivity)
+                            .load(it)
+                            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
+                            .into(binding?.sivPostImg!!)
+                    }
+                    val file = File(saveBitmap(getResizePicture(imagePath!!)!!))
+                    val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                    body = MultipartBody.Part.createFormData("image", file.name, requestBody)
+
+                    apiImg.reqPostImage(body!!)
+                        .enqueue(object : Callback<PostImageRes> {
+                            override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+                                Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                            }
+
+                            override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+                                postImageRes = response.body()
+                                this@PostActivity.imageId = postImageRes?.id!!
+                                Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+                                        "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                            }
+                        })
+                }
+
+                REQ_GALLERY -> {
+                    data?.data?.let { it ->
+                        //showLoading()
+                        imagePath = getRealPathFromURI(it)
+                        Glide.with(this)
+                            .load(it)
+                            .apply(RequestOptions())
+                            .into(binding?.sivPostImg!!)
+
+                        val file = File(saveBitmapToJpeg(resize(this, it, 300)!!, "image").absolutePath)
+                        val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                        body = MultipartBody.Part.createFormData("image", file.name, requestBody)
+
+                        apiImg.reqPostImage(body!!)
+                            .enqueue(object : Callback<PostImageRes> {
+                                override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+                                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
                                 }
 
-                                override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    hideLoading() return false
+                                override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+                                    postImageRes = response.body()
+                                    this@PostActivity.imageId = postImageRes?.id!!
+                                    Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+                                            "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
                                 }
-                            }) checkInput ()
+                            })
+
                     }
+
                 }
             }
+
         }
     }
 
 
- */
+    private fun selectGallery() {
+
+        var writePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        var readPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
+            // 권한 없어서 요청
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), REQ_STORAGE_PERMISSION)
+        } else {
+            // 권한 있음
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI).apply {
+                data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                type = "image/*"
+                startActivityForResult(this, REQ_GALLERY)
+            }
+        }
+
+    }
+
+    private fun getRealPathFromURI(uri: Uri): String? {
+
+        var buildName = Build.MANUFACTURER
+        if (buildName.equals("Xiaomi")) {
+            return uri.path
+        }
+
+        var columnIndex = 0
+        var proj = arrayOf(MediaStore.Images.Media.DATA)
+        var cursor = contentResolver.query(uri, proj, null, null, null)
+        if (cursor!!.moveToFirst()) {
+            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        }
+        return cursor.getString(columnIndex)
+    }
+
+    private fun getResizePicture(imagePath: String): Bitmap? {
+        var options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(imagePath, options)
+
+        var resize = 1000
+        var width = options.outWidth
+        var height = options.outHeight
+        var sampleSize = 1
+        while (true) {
+            if (width / 2 < resize || height / 2 < resize)
+                break
+            width /= 2
+            height /= 2
+            sampleSize *= 2
+
+        }
+        options.inSampleSize = sampleSize
+        options.inJustDecodeBounds = false
+
+        var resizeBitmap = BitmapFactory.decodeFile(imagePath, options)
+
+        // 회전값 조정
+        var exit = ExifInterface(imagePath)
+        var exifDegree = 0
+        exit?.let {
+            var exifOrientation = it.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            exifDegree = exifOrientationToDegrees(exifOrientation)
+        }
+
+        return rotateBitmap(resizeBitmap, exifDegree.toFloat())
+    }
+
+//    private fun getRealPathFromURI(contentUri: Uri): String? {
+//        var column_index = 0
+//        val proj = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor: Cursor? = contentResolver.query(contentUri, proj, null, null, null)
+//        if (cursor.moveToFirst()) {
+//            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//        }
+//        return cursor.getString(column_index)
+//    }
+
+    private fun exifOrientationToDegrees(exifOrientation: Int): Int {
+        return when (exifOrientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> {
+                90
+            }
+            ExifInterface.ORIENTATION_ROTATE_180 -> {
+                180
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 -> {
+                270
+            }
+            else -> 0
+        }
+    }
+
+    private fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
+        // Matrix 객체 생성
+        val matrix = Matrix()
+        // 회전 각도 셋팅
+        matrix.postRotate(degree)
+        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+        return Bitmap.createBitmap(src, 0, 0, src.width,
+            src.height, matrix, true)
+    }
+
+    private fun saveBitmap(bitmap: Bitmap): String {
+        var folderPath = Environment.getExternalStorageDirectory().absolutePath + "/path/"
+        var fileName = System.currentTimeMillis().toString() + ".jpeg"
+        var imagePath = folderPath + fileName
+
+        var folder = File(folderPath)
+        if (!folder.isDirectory) folder.mkdirs()
+
+        var out = FileOutputStream(folderPath + fileName)
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+
+        return imagePath
+    }
 
 }

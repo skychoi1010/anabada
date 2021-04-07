@@ -13,7 +13,6 @@ import retrofit2.http.*
 import java.net.CookieManager
 import java.net.CookiePolicy
 
-
 interface ApiService {
 
     @FormUrlEncoded

@@ -74,7 +74,6 @@ class BoardActivity : AppCompatActivity() {
             Toast.makeText(getApplicationContext(),  "한번 더 누르면 종료됩니다.",  Toast.LENGTH_SHORT).show();   
         }
     }
-
      */
 
     private var time: Long = 0
