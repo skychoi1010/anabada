@@ -21,6 +21,12 @@
         app:layout_constraintBottom_toTopOf="@id/tv_post_content_title">
 
         <Button
+            android:id="@+id/btn_camera"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"/>
+
+        <Button
             android:id="@+id/btn_pick_image"
             android:layout_width="50dp"
             android:layout_height="50dp"

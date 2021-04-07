@@ -334,43 +334,15 @@ class PostActivity : AppCompatActivity() {
                     Log.d("camera intent", imagePath.toString())
                     data?.data?.let {
                         Glide.with(this@PostActivity)
-                            .load(it)
-                            .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
-                            .into(binding?.sivPostImg!!)
+                                .load(it)
+                                .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true))
+                                .into(binding?.sivPostImg!!)
                     }
                     val file = File(saveBitmap(getResizePicture(imagePath!!)!!))
                     val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
                     body = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
                     apiImg.reqPostImage(body!!)
-                        .enqueue(object : Callback<PostImageRes> {
-                            override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                                Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                                postImageRes = response.body()
-                                this@PostActivity.imageId = postImageRes?.id!!
-                                Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
-                                        "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                            }
-                        })
-                }
-
-                REQ_GALLERY -> {
-                    data?.data?.let { it ->
-                        //showLoading()
-                        imagePath = getRealPathFromURI(it)
-                        Glide.with(this)
-                            .load(it)
-                            .apply(RequestOptions())
-                            .into(binding?.sivPostImg!!)
-
-                        val file = File(saveBitmapToJpeg(resize(this, it, 300)!!, "image").absolutePath)
-                        val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-                        body = MultipartBody.Part.createFormData("image", file.name, requestBody)
-
-                        apiImg.reqPostImage(body!!)
                             .enqueue(object : Callback<PostImageRes> {
                                 override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
                                     Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
@@ -383,6 +355,34 @@ class PostActivity : AppCompatActivity() {
                                             "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
                                 }
                             })
+                }
+
+                REQ_GALLERY -> {
+                    data?.data?.let { it ->
+                        //showLoading()
+                        imagePath = getRealPathFromURI(it)
+                        Glide.with(this)
+                                .load(it)
+                                .apply(RequestOptions())
+                                .into(binding?.sivPostImg!!)
+
+                        val file = File(saveBitmapToJpeg(resize(this, it, 300)!!, "image").absolutePath)
+                        val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                        body = MultipartBody.Part.createFormData("image", file.name, requestBody)
+
+                        apiImg.reqPostImage(body!!)
+                                .enqueue(object : Callback<PostImageRes> {
+                                    override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+                                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                    override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+                                        postImageRes = response.body()
+                                        this@PostActivity.imageId = postImageRes?.id!!
+                                        Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+                                                "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                                    }
+                                })
 
                     }
 
@@ -493,7 +493,7 @@ class PostActivity : AppCompatActivity() {
         matrix.postRotate(degree)
         // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
         return Bitmap.createBitmap(src, 0, 0, src.width,
-            src.height, matrix, true)
+                src.height, matrix, true)
     }
 
     private fun saveBitmap(bitmap: Bitmap): String {
