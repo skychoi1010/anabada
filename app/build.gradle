@@ -67,4 +67,21 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     implementation 'com.google.android.material:material:1.0.0'
+
+    // Koin for Kotlin
+    implementation "org.koin:koin-core:2.1.0-alpha-7"
+    // Koin extended & experimental features
+    implementation "org.koin:koin-core-ext:2.1.0-alpha-7"
+    // Koin for Unit tests
+    testImplementation "org.koin:koin-test:2.1.0-alpha-7"
+
+
+    // Koin AndroidX Scope features
+    implementation "org.koin:koin-androidx-scope:2.1.0-alpha-7"
+    // Koin AndroidX ViewModel features
+    implementation "org.koin:koin-androidx-viewmodel:2.1.0-alpha-7"
+    // Koin AndroidX Fragment features
+    implementation "org.koin:koin-androidx-fragment:2.1.0-alpha-7"
+    // Koin AndroidX Experimental features
+    implementation "org.koin:koin-androidx-ext:2.1.0-alpha-7"
 }
