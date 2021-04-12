@@ -42,9 +42,7 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
         notifyDataSetChanged()
     }
 
-    inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(
-        listBinding.root
-    ) {
+    inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(listBinding.root) {
         fun bind(item: BoardsData) {
              //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
             Glide.with(itemView)

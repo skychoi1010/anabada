@@ -15,13 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_appbar_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="아나바다"
+        <ImageView
+            android:id="@+id/iv_appbar_logo"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/anabada"
+            android:scaleType="centerCrop"
             android:padding="15dp"
-            android:textSize="17sp"
             android:fontFamily="@font/font_bold"
             android:layout_marginRight="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="nickname"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:fontFamily="@font/font_medium"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="logout"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:fontFamily="@font/font_bold"
             android:textColor="@color/black"
             app:layout_constraintHorizontal_bias="1.0"

@@ -35,6 +35,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import kotlin.system.exitProcess
 
 
 class PostActivity : AppCompatActivity() {
@@ -43,7 +44,7 @@ class PostActivity : AppCompatActivity() {
     var postContentRes: PostContentRes? = null
     var postImageRes: PostImageRes? = null
     private val api = ApiService.create(this)
-    private val apiImg = ApiService.createImg(this)
+    private val apiImg = ApiService.createImg()
     private val pickImage = 100
     private var imagePath: String? = null
     private var imageUri: Uri? = null
@@ -79,39 +80,48 @@ class PostActivity : AppCompatActivity() {
             selectGallery()
         }
 
+        var time: Long = 0
         binding.appbar.toolbarFin.setOnClickListener {
-            val title = binding.tvPostContentTitle.text.toString()
-            val price = binding.tvPostContentPrice.text.toString()
-            val contents = binding.tvPostContentContents.text.toString()
-            if (MySharedPreferences.getUserId(this) == "no") { // need to login
-                Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                Intent(this@PostActivity, MainActivity::class.java).apply {
-                    startActivity(this)
+            if (System.currentTimeMillis() - time >= 10000) {
+                time = System.currentTimeMillis()
+                Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+                val title = binding.tvPostContentTitle.text.toString()
+                val price = binding.tvPostContentPrice.text.toString()
+                val contents = binding.tvPostContentContents.text.toString()
+                if (MySharedPreferences.getUserId(this) == "no") { // need to login
+                    Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                    Intent(this@PostActivity, MainActivity::class.java).apply {
+                        startActivity(this)
+                    }
+                } else { //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
+
+                    if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
+                        api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
+                                .enqueue(object : Callback<PostContentRes> {
+                                    override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
+                                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                    override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
+                                        postContentRes = response.body()
+                                        Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                                        Intent(this@PostActivity, BoardActivity::class.java).apply {
+                                            startActivity(this)
+                                        }
+
+                                    }
+                                })
+
+                    } else { // missing contents
+                        Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
-            } else { //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
 
-                if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
-                    api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
-                        .enqueue(object : Callback<PostContentRes> {
-                            override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
-                                Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                            }
-
-                            override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
-                                postContentRes = response.body()
-                                Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                                Intent(this@PostActivity, BoardActivity::class.java).apply {
-                                    startActivity(this)
-                                }
-
-                            }
-                        })
-
-                } else { // missing contents
-                    Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
-                }
-
+            } else {
+                //
             }
+
         }
 
     }
@@ -450,15 +460,17 @@ class PostActivity : AppCompatActivity() {
 
         var resizeBitmap = BitmapFactory.decodeFile(imagePath, options)
 
-        // 회전값 조정
-        var exit = ExifInterface(imagePath)
-        var exifDegree = 0
-        exit?.let {
-            var exifOrientation = it.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-            exifDegree = exifOrientationToDegrees(exifOrientation)
-        }
+//        // 회전값 조정
+//        var exit = ExifInterface(imagePath)
+//        var exifDegree = 0
+//        exit?.let {
+//            var exifOrientation = it.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+//            exifDegree = exifOrientationToDegrees(exifOrientation)
+//        }
+//
+//        return rotateBitmap(resizeBitmap, exifDegree.toFloat())
 
-        return rotateBitmap(resizeBitmap, exifDegree.toFloat())
+        return resizeBitmap
     }
 
 //    private fun getRealPathFromURI(contentUri: Uri): String? {
@@ -471,30 +483,30 @@ class PostActivity : AppCompatActivity() {
 //        return cursor.getString(column_index)
 //    }
 
-    private fun exifOrientationToDegrees(exifOrientation: Int): Int {
-        return when (exifOrientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> {
-                90
-            }
-            ExifInterface.ORIENTATION_ROTATE_180 -> {
-                180
-            }
-            ExifInterface.ORIENTATION_ROTATE_270 -> {
-                270
-            }
-            else -> 0
-        }
-    }
-
-    private fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
-        // Matrix 객체 생성
-        val matrix = Matrix()
-        // 회전 각도 셋팅
-        matrix.postRotate(degree)
-        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
-        return Bitmap.createBitmap(src, 0, 0, src.width,
-                src.height, matrix, true)
-    }
+//    private fun exifOrientationToDegrees(exifOrientation: Int): Int {
+//        return when (exifOrientation) {
+//            ExifInterface.ORIENTATION_ROTATE_90 -> {
+//                90
+//            }
+//            ExifInterface.ORIENTATION_ROTATE_180 -> {
+//                180
+//            }
+//            ExifInterface.ORIENTATION_ROTATE_270 -> {
+//                270
+//            }
+//            else -> 0
+//        }
+//    }
+//
+//    private fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
+//        // Matrix 객체 생성
+//        val matrix = Matrix()
+//        // 회전 각도 셋팅
+//        matrix.postRotate(degree)
+//        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+//        return Bitmap.createBitmap(src, 0, 0, src.width,
+//                src.height, matrix, true)
+//    }
 
     private fun saveBitmap(bitmap: Bitmap): String {
         var folderPath = Environment.getExternalStorageDirectory().absolutePath + "/path/"

@@ -24,7 +24,7 @@ class CommentsDetailActivity : AppCompatActivity() {
     private var commentRes: CommentRes? = null
     private var postCommentRes: PostCommentRes? = null
     private var commentsDataList = ArrayList<CommentDetail>()
-    private var commentsRecyclerAdapter = CommentsRecyclerAdapter(commentsDataList)
+    private var commentsRecyclerAdapter: CommentsRecyclerAdapter? = null
     var pageNum = 1
     var isPageCallable = true
     private val api = ApiService.create(this)
@@ -33,7 +33,8 @@ class CommentsDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityCommentsDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val temp: Int = 0
+        commentsRecyclerAdapter = CommentsRecyclerAdapter(commentsDataList, false, this)
+        val temp = 0
         val id = intent.getIntExtra("board id", temp)
         Log.d("***id", id.toString())
         initView(binding, id)
@@ -61,7 +62,7 @@ class CommentsDetailActivity : AppCompatActivity() {
             isPageCallable = true
             pageNum = 1
             commentsDataList.clear()
-            commentsDataList.let { commentsRecyclerAdapter.setDataNotify(it) }
+            commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
             Log.d("//////////swipe////////", pageNum.toString())
             callComments(pageNum, id, binding)
             binding.lSwipeRefresh.isRefreshing = false
@@ -97,7 +98,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                     super.onScrolled(recyclerView, dx, dy)
                     val layoutManager = binding.rvComments.layoutManager
                     val lastVisibleItem =
-                        (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                            (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                     val itemTotalCount = layoutManager.itemCount - 1 // 어댑터에 등록된 아이템의 총 개수 -1
 
                     // 스크롤이 끝에 도달했는지 확인
@@ -138,7 +139,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                         Toast.makeText(this@CommentsDetailActivity, "end of page", Toast.LENGTH_SHORT).show()
                         //boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
                         this@CommentsDetailActivity.isPageCallable = false
-                        commentsDataList.let { commentsRecyclerAdapter.setDataNotify(it) }
+                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
                     }
                     else -> {
                         /*Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
@@ -148,7 +149,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                                 commentsDataList.addAll(it)
                             }
                         }
-                        commentsDataList.let { commentsRecyclerAdapter.setDataNotify(it) }
+                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
                         //callComments(pageNum + 1, api, id)
                         this@CommentsDetailActivity.isPageCallable = true
                         this@CommentsDetailActivity.pageNum = callNum + 1
@@ -165,10 +166,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                 //end
             }
 
-            override fun onResponse(
-                call: Call<PostCommentRes>,
-                response: Response<PostCommentRes>
-            ) {
+            override fun onResponse(call: Call<PostCommentRes>, response: Response<PostCommentRes>) {
                 postCommentRes = response.body()
                 when (postCommentRes?.resultCode) {
                     null -> {
@@ -180,7 +178,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                         binding.tvCommentInput.text.clear()
                         inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
                         commentsDataList.clear()
-                        commentsDataList.let { commentsRecyclerAdapter.setDataNotify(it) }
+                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
                         binding.rvComments.visibility = View.VISIBLE
                         binding.tvBoardDetailNoComment.visibility = View.GONE
                         callComments(1, id, binding)
