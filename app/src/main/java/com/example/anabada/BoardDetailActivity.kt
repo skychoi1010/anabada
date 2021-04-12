@@ -37,7 +37,7 @@ class BoardDetailActivity : AppCompatActivity() {
 
     //CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
     //TODO CommentsDetail과 어댑터 같이 사용중..
-    private var commentsPrevRecyclerAdapter = CommentsRecyclerAdapter(commentsPrevDataList, true, null)
+    private var commentsPrevRecyclerAdapter = CommentsRecyclerAdapter(commentsPrevDataList, true, this)
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {

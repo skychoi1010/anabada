@@ -3,8 +3,11 @@ package com.example.anabada
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.anabada.databinding.ActivityCommentsDetailBinding
+import com.example.anabada.databinding.ListitemCommentsBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,11 +27,14 @@ class CommentsDetailActivity : AppCompatActivity() {
 
     private var commentRes: CommentRes? = null
     private var postCommentRes: PostCommentRes? = null
+    private var editCommentRes: EditCommentRes? = null
+    private var deleteCommentRes: DeleteCommentRes? = null
     private var commentsDataList = ArrayList<CommentDetail>()
     private var commentsRecyclerAdapter: CommentsRecyclerAdapter? = null
     var pageNum = 1
     var isPageCallable = true
     private val api = ApiService.create(this)
+    var id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +42,7 @@ class CommentsDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         commentsRecyclerAdapter = CommentsRecyclerAdapter(commentsDataList, false, this)
         val temp = 0
-        val id = intent.getIntExtra("board id", temp)
+        id = intent.getIntExtra("board id", temp)
         Log.d("***id", id.toString())
         initView(binding, id)
         initScrollListener(binding, id)
@@ -82,6 +89,59 @@ class CommentsDetailActivity : AppCompatActivity() {
                 postComments(input, id, binding, inputMethodManager)
             }
         }
+
+        commentsRecyclerAdapter?.setItemClickListener(object : CommentsRecyclerAdapter.ItemClickListener {
+            override fun onClick(view: View, id: CommentDetail, listitemCommentsBinding: ListitemCommentsBinding) {
+                //creating a popup menu
+                val popup = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    PopupMenu(listitemCommentsBinding.root.context, listitemCommentsBinding.tvPrevCommentOptions, Gravity.END, 0, R.style.MyPopupMenu)
+                } else {
+                    PopupMenu(listitemCommentsBinding.root.context, listitemCommentsBinding.tvPrevCommentOptions)
+                }
+                //inflating menu from xml resource
+                popup.menuInflater.inflate(R.menu.menu_comments, popup.menu)
+                //adding click listener
+                popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                    override fun onMenuItemClick(item: MenuItem?): Boolean {
+                        return when (item?.itemId) {
+                            R.id.edit -> {
+//                                listitemCommentsBinding.tvPrevComment.visibility = View.INVISIBLE
+//                                listitemCommentsBinding.etCommentEdit.visibility = View.VISIBLE
+//                                listitemCommentsBinding.etCommentEdit.setText(listitemCommentsBinding.tvPrevComment.text)
+//                                listitemCommentsBinding.etCommentEdit.requestFocus()
+                                binding.tvCommentInput.setText(listitemCommentsBinding.tvPrevComment.text)
+                                inputMethodManager.showSoftInput(binding.tvCommentInput, 0)
+                                binding.postComment.setOnClickListener {
+                                    if (MySharedPreferences.getUserId(this@CommentsDetailActivity) == "no") { // need to login
+                                        Toast.makeText(this@CommentsDetailActivity, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                                        Intent(this@CommentsDetailActivity, MainActivity::class.java).apply {
+                                            startActivity(this)
+                                        }
+                                    } else {
+                                        val input = binding.tvCommentInput.text.toString()
+                                        editComments(input, id.id, binding, inputMethodManager)
+                                    }
+                                }
+//                                commentsDetailBinding?.tvCommentInput?.requestFocus()
+//                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                                    commentsDetailBinding?.tvCommentInput?.showSoftInputOnFocus
+//                                }
+                                //listitemCommentsBinding.etCommentEdit.text
+                                true
+                            }
+                            R.id.delete -> {
+                                deleteComments(id.id, binding)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                })
+                //displaying the popup
+                popup.show()
+
+            }
+        })
 
     }
 
@@ -181,8 +241,72 @@ class CommentsDetailActivity : AppCompatActivity() {
                         commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
                         binding.rvComments.visibility = View.VISIBLE
                         binding.tvBoardDetailNoComment.visibility = View.GONE
-                        callComments(1, id, binding)
+                        initView(binding, this@CommentsDetailActivity.id)
                         Toast.makeText(this@CommentsDetailActivity, "comment post api\n" + postCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        //
+                    }
+                }
+            }
+        })
+    }
+
+    private fun editComments(input: String, id: Int, binding: ActivityCommentsDetailBinding, inputMethodManager: InputMethodManager) {
+        api.reqEditComment(id, input).enqueue(object : Callback<EditCommentRes> {
+            override fun onFailure(call: Call<EditCommentRes>, t: Throwable) {
+                Toast.makeText(this@CommentsDetailActivity, "comment edit api\nFailed connection", Toast.LENGTH_SHORT).show()
+                //end
+            }
+
+            override fun onResponse(call: Call<EditCommentRes>, response: Response<EditCommentRes>) {
+                editCommentRes = response.body()
+                when (editCommentRes?.resultCode) {
+                    null -> {
+                        //end
+                        Toast.makeText(this@CommentsDetailActivity, "댓글 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    "OK" -> {
+                        //end
+                        binding.tvCommentInput.text.clear()
+                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
+                        commentsDataList.clear()
+                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+                        binding.rvComments.visibility = View.VISIBLE
+                        binding.tvBoardDetailNoComment.visibility = View.GONE
+                        initView(binding, this@CommentsDetailActivity.id)
+                        Toast.makeText(this@CommentsDetailActivity, "comment edit api\n" + editCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        //
+                    }
+                }
+            }
+        })
+    }
+
+    private fun deleteComments(id: Int, binding: ActivityCommentsDetailBinding) {
+        api.reqDeleteComment(id).enqueue(object : Callback<DeleteCommentRes> {
+            override fun onFailure(call: Call<DeleteCommentRes>, t: Throwable) {
+                Toast.makeText(this@CommentsDetailActivity, "comment delete api\nFailed connection", Toast.LENGTH_SHORT).show()
+                //end
+            }
+
+            override fun onResponse(call: Call<DeleteCommentRes>, response: Response<DeleteCommentRes>) {
+                deleteCommentRes = response.body()
+                when (deleteCommentRes?.resultCode) {
+                    null -> {
+                        //end
+                        Toast.makeText(this@CommentsDetailActivity, "댓글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    "OK" -> {
+                        //end
+                        commentsDataList.clear()
+                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+                        binding.rvComments.visibility = View.VISIBLE
+                        binding.tvBoardDetailNoComment.visibility = View.GONE
+                        initView(binding, this@CommentsDetailActivity.id)
+                        Toast.makeText(this@CommentsDetailActivity, "comment delete api\n" + deleteCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                     }
                     else -> {
                         //

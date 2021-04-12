@@ -96,7 +96,7 @@ data class PostCommentRes (
         var id: Int
         )
 
-data class ReviseCommentRes (
+data class EditCommentRes (
         var resultCode: String,
         var id: Int
         )

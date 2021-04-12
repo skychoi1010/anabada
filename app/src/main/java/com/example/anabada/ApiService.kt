@@ -89,12 +89,11 @@ interface ApiService {
 
     @FormUrlEncoded
     @PUT("comment/{id}")
-    fun reqReviseComment(
+    fun reqEditComment(
         @Path("id") id: Int,
         @Path("contents") contents: String
-    ): Call<ReviseCommentRes>
+    ): Call<EditCommentRes>
 
-    @FormUrlEncoded
     @DELETE("comment/{id}")
     fun reqDeleteComment(
         @Path("id") id: Int

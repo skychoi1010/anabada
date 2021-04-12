@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private val api = ApiService.create(this)
     
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Anabada)
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
-    <item>
+    <item android:top="500dp"
+        android:bottom="500dp">
         <bitmap
-            android:src="@drawable/anabada"
-            android:gravity="center"/>
+            android:src="@drawable/anabada"/>
     </item>
 </layer-list>
