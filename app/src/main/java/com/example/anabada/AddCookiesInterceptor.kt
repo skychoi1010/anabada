@@ -17,13 +17,13 @@ class AddCookiesInterceptor(
 
         // Use the following if you need everything in one line.
         // Some APIs die if you do it differently.
-//        String cookiestring = "";
-//        for (String cookie : preferences) {
-//            String[] parser = cookie.split(";");
-//            cookiestring = cookiestring + parser[0] + "; ";
-//        }
-//        builder.addHeader("Cookie", cookiestring);
-
+        /*String cookiestring = "";
+        for (String cookie : preferences) {
+            String[] parser = cookie.split(";");
+            cookiestring = cookiestring + parser[0] + "; ";
+        }
+        builder.addHeader("Cookie", cookiestring);
+        */
         for (cookie in preferences) {
             builder.addHeader("Cookie", cookie)
         }
