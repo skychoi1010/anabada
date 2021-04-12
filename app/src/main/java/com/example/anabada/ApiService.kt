@@ -18,10 +18,10 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("user/login")
-    fun reqLogin(
+    suspend fun reqLogin(
         @Field("uid") uid: String,
         @Field("upw") upw: String
-    ): Call<LoginRes>
+    ): LoginRes
 
     @GET("user/logout")
     fun reqLogout(): Call<LogoutRes>
@@ -129,7 +129,7 @@ interface ApiService {
                 .create(ApiService::class.java)
         }
 
-        fun createImg(context: Context): ApiService {
+        fun createImg(): ApiService {
             val httpLoggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             val cookieManager = CookieManager()

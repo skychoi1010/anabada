@@ -1,6 +1,7 @@
 package com.example.anabada
 
 import android.app.Application
+import android.content.Context
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,6 +22,9 @@ class AnabadaApp : Application() {
 }
 
 val appModule = module {
+
+    single { ApiService.create(androidContext()) }
+
     viewModel {
         PostViewModel()
     }

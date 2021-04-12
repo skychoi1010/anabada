@@ -43,7 +43,7 @@ class PostActivity : AppCompatActivity() {
     var postContentRes: PostContentRes? = null
     var postImageRes: PostImageRes? = null
     private val api = ApiService.create(this)
-    private val apiImg = ApiService.createImg(this)
+    private val apiImg = ApiService.createImg()
     private val pickImage = 100
     private var imagePath: String? = null
     private var imageUri: Uri? = null
