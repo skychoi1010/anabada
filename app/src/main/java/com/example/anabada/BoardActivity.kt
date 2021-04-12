@@ -91,6 +91,10 @@ class BoardActivity : AppCompatActivity() {
 
     private fun initView(binding: ActivityBoardBinding) {
 
+        binding.appbar.ivAppbarLogo.setOnClickListener {
+            binding.rvBoard.smoothScrollToPosition(0)
+        }
+
         if (isPageCallable) {
             pageNum = 1
             Log.d("//////////init////////", pageNum.toString())

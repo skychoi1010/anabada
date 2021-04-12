@@ -91,6 +91,7 @@ interface ApiService {
     @FormUrlEncoded
     @PUT("comment/{id}")
     fun reqReviseComment(
+        @Path("id") id: Int,
         @Path("contents") contents: String
     ): Call<ReviseCommentRes>
 

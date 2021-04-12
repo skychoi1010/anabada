@@ -1,6 +1,5 @@
 package com.example.anabada
 
-import android.R
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -38,7 +37,7 @@ class BoardDetailActivity : AppCompatActivity() {
 
     //CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
     //TODO CommentsDetail과 어댑터 같이 사용중..
-    private var commentsPrevRecyclerAdapter = CommentsRecyclerAdapter(commentsPrevDataList)
+    private var commentsPrevRecyclerAdapter = CommentsRecyclerAdapter(commentsPrevDataList, true, null)
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +78,7 @@ class BoardDetailActivity : AppCompatActivity() {
         binding.nsvBoardDetail.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
             @RequiresApi(Build.VERSION_CODES.P)
             override fun onScrollChange(v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
-                if (scrollY > 0) {
+                if (scrollY > 10) {
                     binding.toolbar.setBackgroundColor(Color.WHITE)
                     binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
                     binding.toolbar.elevation = 4f // required or it will overlap linear layout
@@ -202,7 +201,7 @@ class BoardDetailActivity : AppCompatActivity() {
                         binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
                         Glide.with(this@BoardDetailActivity)
                                 .load(boardDetailRes?.board?.detailImg)
-                                .apply(RequestOptions().placeholder(R.drawable.arrow_up_float))
+                                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
                                 .into(binding.ivBoardDetailImg)
                         binding.tvBoardDetailComment.text = "댓글 " + boardDetailRes?.board?.commentCount.toString() + " > "
                     }
@@ -217,7 +216,7 @@ class BoardDetailActivity : AppCompatActivity() {
                 this@BoardDetailActivity,
                 LinearLayoutManager.VERTICAL
         )
-        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_horizontal_dim_dark)?.let { dividerItemDecoration.setDrawable(it) }
+        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
 
         binding.tvBoardDetailComment.setOnClickListener {
