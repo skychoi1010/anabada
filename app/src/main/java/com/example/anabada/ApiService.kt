@@ -91,7 +91,7 @@ interface ApiService {
     @PUT("comment/{id}")
     fun reqEditComment(
         @Path("id") id: Int,
-        @Path("contents") contents: String
+        @Field("contents") contents: String
     ): Call<EditCommentRes>
 
     @DELETE("comment/{id}")

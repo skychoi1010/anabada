@@ -70,6 +70,7 @@ class BoardDetailActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
         binding.toolbar.elevation = 0f // required or it will overlap linear layout
 
         //toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
@@ -151,6 +152,17 @@ class BoardDetailActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        Intent(this, BoardActivity::class.java).apply {
+//            startActivity(this)
+//        }
+//    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     fun getStatusBarHeight(): Int {

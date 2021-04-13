@@ -1,6 +1,7 @@
 package com.example.anabada
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -36,6 +38,7 @@ class CommentsDetailActivity : AppCompatActivity() {
     private val api = ApiService.create(this)
     var id = 0
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityCommentsDetailBinding.inflate(layoutInflater)
@@ -48,6 +51,7 @@ class CommentsDetailActivity : AppCompatActivity() {
         initScrollListener(binding, id)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initView(binding: ActivityCommentsDetailBinding, id: Int) {
 
         if (isPageCallable) {
@@ -58,6 +62,8 @@ class CommentsDetailActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        binding.toolbar.elevation = 1f
         supportActionBar!!.title = "댓글 쓰기"
         binding.rvComments.adapter = commentsRecyclerAdapter
         binding.rvComments.layoutManager = LinearLayoutManager(this)
@@ -105,13 +111,15 @@ class CommentsDetailActivity : AppCompatActivity() {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
                         return when (item?.itemId) {
                             R.id.edit -> {
-//                                listitemCommentsBinding.tvPrevComment.visibility = View.INVISIBLE
-//                                listitemCommentsBinding.etCommentEdit.visibility = View.VISIBLE
-//                                listitemCommentsBinding.etCommentEdit.setText(listitemCommentsBinding.tvPrevComment.text)
-//                                listitemCommentsBinding.etCommentEdit.requestFocus()
+                                //                                listitemCommentsBinding.tvPrevComment.visibility = View.INVISIBLE
+                                //                                listitemCommentsBinding.etCommentEdit.visibility = View.VISIBLE
+                                //                                listitemCommentsBinding.etCommentEdit.setText(listitemCommentsBinding.tvPrevComment.text)
+                                //                                listitemCommentsBinding.etCommentEdit.requestFocus()
                                 binding.tvCommentInput.setText(listitemCommentsBinding.tvPrevComment.text)
                                 inputMethodManager.showSoftInput(binding.tvCommentInput, 0)
-                                binding.postComment.setOnClickListener {
+                                binding.btnPostComment.visibility = View.INVISIBLE
+                                binding.btnEditComment.visibility = View.VISIBLE
+                                binding.btnEditComment.setOnClickListener {
                                     if (MySharedPreferences.getUserId(this@CommentsDetailActivity) == "no") { // need to login
                                         Toast.makeText(this@CommentsDetailActivity, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
                                         Intent(this@CommentsDetailActivity, MainActivity::class.java).apply {
@@ -122,10 +130,10 @@ class CommentsDetailActivity : AppCompatActivity() {
                                         editComments(input, id.id, binding, inputMethodManager)
                                     }
                                 }
-//                                commentsDetailBinding?.tvCommentInput?.requestFocus()
-//                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//                                    commentsDetailBinding?.tvCommentInput?.showSoftInputOnFocus
-//                                }
+                                //                                commentsDetailBinding?.tvCommentInput?.requestFocus()
+                                //                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //                                    commentsDetailBinding?.tvCommentInput?.showSoftInputOnFocus
+                                //                                }
                                 //listitemCommentsBinding.etCommentEdit.text
                                 true
                             }
@@ -173,6 +181,21 @@ class CommentsDetailActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        Toast.makeText(this@CommentsDetailActivity, "back pressed", Toast.LENGTH_SHORT).show()
+//
+//        Intent(this@CommentsDetailActivity, BoardDetailActivity::class.java).apply {
+//            putExtra("board item", this@CommentsDetailActivity.id)
+//            startActivity(this)
+//        }
+//    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun callComments(callNum: Int, id: Int, binding: ActivityCommentsDetailBinding) {
@@ -239,9 +262,11 @@ class CommentsDetailActivity : AppCompatActivity() {
                         inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
                         commentsDataList.clear()
                         commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+                        this@CommentsDetailActivity.isPageCallable = true
                         binding.rvComments.visibility = View.VISIBLE
                         binding.tvBoardDetailNoComment.visibility = View.GONE
-                        initView(binding, this@CommentsDetailActivity.id)
+                        callComments(1, this@CommentsDetailActivity.id, binding)
+                        //                        initView(binding, this@CommentsDetailActivity.id)
                         Toast.makeText(this@CommentsDetailActivity, "comment post api\n" + postCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                     }
                     else -> {
@@ -270,11 +295,15 @@ class CommentsDetailActivity : AppCompatActivity() {
                         //end
                         binding.tvCommentInput.text.clear()
                         inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
+                        binding.btnEditComment.visibility = View.INVISIBLE
+                        binding.btnPostComment.visibility = View.VISIBLE
                         commentsDataList.clear()
                         commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                        binding.rvComments.visibility = View.VISIBLE
-                        binding.tvBoardDetailNoComment.visibility = View.GONE
-                        initView(binding, this@CommentsDetailActivity.id)
+                        this@CommentsDetailActivity.isPageCallable = true
+                        //                        binding.rvComments.visibility = View.VISIBLE
+                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
+                        callComments(1, this@CommentsDetailActivity.id, binding)
+                        //                        initView(binding, this@CommentsDetailActivity.id)
                         Toast.makeText(this@CommentsDetailActivity, "comment edit api\n" + editCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                     }
                     else -> {
@@ -303,9 +332,11 @@ class CommentsDetailActivity : AppCompatActivity() {
                         //end
                         commentsDataList.clear()
                         commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                        binding.rvComments.visibility = View.VISIBLE
-                        binding.tvBoardDetailNoComment.visibility = View.GONE
-                        initView(binding, this@CommentsDetailActivity.id)
+                        //                        binding.rvComments.visibility = View.VISIBLE
+                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
+                        this@CommentsDetailActivity.isPageCallable = true
+                        callComments(1, this@CommentsDetailActivity.id, binding)
+                        //                        initView(binding, this@CommentsDetailActivity.id)
                         Toast.makeText(this@CommentsDetailActivity, "comment delete api\n" + deleteCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                     }
                     else -> {

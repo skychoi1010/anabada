@@ -54,11 +54,13 @@ class CommentsRecyclerAdapter(private var commentsPrevDataList: ArrayList<Commen
              */
             if (!isPrev) { //comments detail page
                 if (item.isMine) {
+                    listitemCommentsBinding.tvPrevCommentOptions.visibility = View.VISIBLE
                     listitemCommentsBinding.tvPrevCommentAuthor.text = "내 댓글" //TODO 버튼 등 처리 동작 구체화 !!
                     listitemCommentsBinding.root.setBackgroundColor(Color.parseColor("#dcffe4"))
                 } else {
                     listitemCommentsBinding.tvPrevCommentOptions.visibility = View.INVISIBLE
                     listitemCommentsBinding.tvPrevCommentAuthor.text = item.author
+                    listitemCommentsBinding.root.setBackgroundColor(Color.WHITE)
                 }
                 listitemCommentsBinding.tvPrevCommentOptions.setOnClickListener{
                     itemClickListener.onClick(it, item, listitemCommentsBinding)
