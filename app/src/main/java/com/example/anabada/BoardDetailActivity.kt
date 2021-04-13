@@ -44,17 +44,17 @@ class BoardDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //window.statusBarColor = Color.TRANSPARENT
-       // window.insetsController?.hide(WindowInsets.Type.statusBars())
-    //    window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        // window.insetsController?.hide(WindowInsets.Type.statusBars())
+        //    window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
         val binding = ActivityBoardDetailBinding.inflate(layoutInflater)
-  //      window.statusBarColor = Color.WHITE
+        //      window.statusBarColor = Color.WHITE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
         setContentView(binding.root)
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
-       // window.insetsController?.hide(WindowInsets.Type.statusBars())
+        // window.insetsController?.hide(WindowInsets.Type.statusBars())
         intentRes = intent.getParcelableExtra("board item")
         intentRes?.let { initView(binding, it.id) }
 
@@ -79,87 +79,90 @@ class BoardDetailActivity : AppCompatActivity() {
         binding.nsvBoardDetail.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
             @RequiresApi(Build.VERSION_CODES.P)
             override fun onScrollChange(v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
-                if (scrollY > 10) {
+                if (scrollY < 80) {
+                    binding.toolbar.background = ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.gradient)
+                    window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
+                } else {
                     binding.toolbar.setBackgroundColor(Color.WHITE)
                     binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
                     binding.toolbar.elevation = 4f // required or it will overlap linear layout
-                }
-                val headerHeight = binding.ivBoardDetailImg.height - binding.toolbar.height
-                val ratio = Math.min(Math.max(scrollY, 0), headerHeight).toFloat() / headerHeight
-                val newAlpha = (ratio * 255).toInt()
-                val resultColor = ColorUtils.blendARGB(
-                        ContextCompat.getColor(applicationContext, R.color.white),
-                        ContextCompat.getColor(applicationContext, R.color.black), ratio)
-                Log.d("alphaaaaaa", newAlpha.toString())
-                if (newAlpha == 255) {
-                    //
+                    initToolbar(binding, scrollY)
                     window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
-                    window.statusBarColor = Color.WHITE
-                    window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-
                     window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                } else {
-                    binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
                 }
-                binding.toolbar.background.setAlpha(newAlpha)
-                binding.toolbar.setTitleTextColor(resultColor)
-                // window.setFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, WindowManager.LayoutParams.TYPE_STATUS_BAR)
-                window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
-                //window.statusBarColor = resultColor
-                //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                //                    window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                //                }
-                val v: View = binding.toolbar.getChildAt(1)
-
-                //Step 1 : Changing the color of back button (or open drawer button).
-
-                //Step 1 : Changing the color of back button (or open drawer button).
-                if (v is ImageButton) {
-                    //Action Bar back button
-                    (v as ImageButton).drawable.colorFilter = PorterDuffColorFilter(resultColor, PorterDuff.Mode.SRC_ATOP)
-                }
-                if (scrollY > headerHeight + binding.toolbar.height) {
-                    binding.toolbar.title = intentRes?.title
-                    binding.toolbar.setTitleTextColor(Color.BLACK)
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-                    window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
-                    window.statusBarColor = Color.WHITE
-                    window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-                    //window.insetsController?.show(WindowInsets.Type.statusBars())
-                    //                    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    //                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    //                            or View.SYSTEM_UI_FLAG_FULLSCREEN)
-                    //                    //window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                    //Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }
-
-                } else {
-                    binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
-                }
-                if (scrollY > headerHeight / 2) {
-                    window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                    //window.insetsController?.show(WindowInsets.Type.statusBars())
-                    //                    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    //                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    //                            or View.SYSTEM_UI_FLAG_FULLSCREEN)
-                    //                    //window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                    //Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }
-
-                }
-                Log.d("scrollY", scrollY.toString())
-
 
             }
         })
     }
 
-//    override fun onBackPressed() {
-//        super.onBackPressed()
-//        Intent(this, BoardActivity::class.java).apply {
-//            startActivity(this)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun initToolbar(binding: ActivityBoardDetailBinding, scrollY: Int) {
+        val headerHeight = binding.ivBoardDetailImg.height - binding.toolbar.height
+        val ratio = Math.min(Math.max(scrollY, 0), headerHeight).toFloat() / headerHeight
+        val newAlpha = (ratio * 255).toInt()
+        val resultColor = ColorUtils.blendARGB(
+                ContextCompat.getColor(applicationContext, R.color.white),
+                ContextCompat.getColor(applicationContext, R.color.black), ratio)
+        Log.d("alphaaaaaa", newAlpha.toString())
+        if (newAlpha == 255) {
+            //
+            window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            window.statusBarColor = Color.WHITE
+            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+
+            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
+        }
+        binding.toolbar.background.setAlpha(newAlpha)
+        binding.toolbar.setTitleTextColor(resultColor)
+        // window.setFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS, WindowManager.LayoutParams.TYPE_STATUS_BAR)
+        window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
+        //window.statusBarColor = resultColor
+        //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        //                    window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        //                }
+        val v: View = binding.toolbar.getChildAt(1)
+
+        //Step 1 : Changing the color of back button (or open drawer button).
+
+        //Step 1 : Changing the color of back button (or open drawer button).
+        if (v is ImageButton) {
+            //Action Bar back button
+            (v as ImageButton).drawable.colorFilter = PorterDuffColorFilter(resultColor, PorterDuff.Mode.SRC_ATOP)
+        }
+        if (scrollY > headerHeight + binding.toolbar.height) {
+            binding.toolbar.title = intentRes?.title
+            binding.toolbar.setTitleTextColor(Color.BLACK)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+            window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            window.statusBarColor = Color.WHITE
+            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            //window.insetsController?.show(WindowInsets.Type.statusBars())
+            //                    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            //                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            //                            or View.SYSTEM_UI_FLAG_FULLSCREEN)
+            //                    //window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            //Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }
+
+        } else {
+            binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
+        }
+//        if (scrollY > headerHeight / 2) { //status bar light theme
+//            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//            //window.insetsController?.show(WindowInsets.Type.statusBars())
+//            //                    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//            //                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//            //                            or View.SYSTEM_UI_FLAG_FULLSCREEN)
+//            //                    //window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//            //Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }
+//
 //        }
-//    }
+        Log.d("scrollY", scrollY.toString())
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
