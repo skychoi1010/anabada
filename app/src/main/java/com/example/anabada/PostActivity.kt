@@ -5,10 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
+import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,7 +32,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.system.exitProcess
 
 
 class PostActivity : AppCompatActivity() {
@@ -44,7 +40,7 @@ class PostActivity : AppCompatActivity() {
     var postContentRes: PostContentRes? = null
     var postImageRes: PostImageRes? = null
     private val api = ApiService.create(this)
-    private val apiImg = ApiService.createImg(this)
+    private val apiImg = ApiService.createImg()
     private val pickImage = 100
     private var imagePath: String? = null
     private var imageUri: Uri? = null
@@ -80,6 +76,11 @@ class PostActivity : AppCompatActivity() {
             selectGallery()
         }
 
+        binding.appbar.toolbarBack.colorFilter = PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
+        binding.appbar.toolbarBack.setOnClickListener{
+            onBackPressed()
+        }
+
         var time: Long = 0
         binding.appbar.toolbarFin.setOnClickListener {
             if (System.currentTimeMillis() - time >= 10000) {
@@ -90,7 +91,7 @@ class PostActivity : AppCompatActivity() {
                 val contents = binding.tvPostContentContents.text.toString()
                 if (MySharedPreferences.getUserId(this) == "no") { // need to login
                     Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                    Intent(this@PostActivity, MainActivity::class.java).apply {
+                    Intent(this@PostActivity, LoginActivity::class.java).apply {
                         startActivity(this)
                     }
                 } else { //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
@@ -125,7 +126,6 @@ class PostActivity : AppCompatActivity() {
         }
 
     }
-
 
     /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

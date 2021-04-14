@@ -68,7 +68,7 @@ class CommentsDetailActivity : AppCompatActivity() {
         binding.rvComments.adapter = commentsRecyclerAdapter
         binding.rvComments.layoutManager = LinearLayoutManager(this)
         val dividerItemDecoration = DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
-        ContextCompat.getDrawable(this, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
+        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
         binding.rvComments.addItemDecoration(dividerItemDecoration)
 
         binding.lSwipeRefresh.setOnRefreshListener {
@@ -87,7 +87,7 @@ class CommentsDetailActivity : AppCompatActivity() {
         binding.btnPostComment.setOnClickListener{
             if (MySharedPreferences.getUserId(this) == "no") { // need to login
                 Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                Intent(this@CommentsDetailActivity, MainActivity::class.java).apply {
+                Intent(this@CommentsDetailActivity, LoginActivity::class.java).apply {
                     startActivity(this)
                 }
             } else {
@@ -122,7 +122,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                                 binding.btnEditComment.setOnClickListener {
                                     if (MySharedPreferences.getUserId(this@CommentsDetailActivity) == "no") { // need to login
                                         Toast.makeText(this@CommentsDetailActivity, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                                        Intent(this@CommentsDetailActivity, MainActivity::class.java).apply {
+                                        Intent(this@CommentsDetailActivity, LoginActivity::class.java).apply {
                                             startActivity(this)
                                         }
                                     } else {

@@ -128,7 +128,7 @@ interface ApiService {
                 .create(ApiService::class.java)
         }
 
-        fun createImg(context: Context): ApiService {
+        fun createImg(): ApiService {
             val httpLoggingInterceptor =
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             val cookieManager = CookieManager()
