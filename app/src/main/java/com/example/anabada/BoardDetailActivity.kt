@@ -187,6 +187,7 @@ class BoardDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initView(binding: ActivityBoardDetailBinding, id: Int) {
 
         val api = ApiService.create(this)
@@ -231,7 +232,7 @@ class BoardDetailActivity : AppCompatActivity() {
                 this@BoardDetailActivity,
                 LinearLayoutManager.VERTICAL
         )
-        ContextCompat.getDrawable(this@BoardDetailActivity, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) }
+        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
         binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
 
         binding.tvBoardDetailComment.setOnClickListener {

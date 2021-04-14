@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:statusBarBackground="@drawable/gradient"
     tools:context=".BoardDetailActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient"
+        android:fadeScrollbars="true"
+        android:paddingTop="24dp"
+        android:theme="@style/Toolbar"
+        android:title="hello"
+        app:layout_collapseMode="pin"
+        app:titleTextColor="@color/transparent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsv_board_detail"
@@ -18,60 +29,129 @@
             android:id="@+id/cl_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="100dp"
-            android:background="@color/gray">
+            android:background="@color/gray"
+            android:paddingBottom="100dp">
 
             <ImageView
                 android:id="@+id/iv_board_detail_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintDimensionRatio="1:1"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_board_detail_title"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                tools:text="title"
                 android:fontFamily="@font/font_bold"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="5dp"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_board_detail_img"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_board_detail_img"
+                tools:text="title" />
+
+            <TextView
+                android:id="@+id/tv_board_detail_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:fontFamily="@font/font_medium"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="15dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_board_detail_contents"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_author_date"
+                tools:text="price" />
+
+            <TextView
+                android:id="@+id/tv_board_detail_contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:fontFamily="@font/font_regular"
+                android:lineSpacingExtra="3dp"
+                android:padding="20dp"
+                android:paddingBottom="50dp"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_price"
+                tools:text="contents;fd\na;;lfkajssjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajs
+                dlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjfnasdkf;alksdjfalkj\nalksa;lsk\nend!!" />
+
+            <TextView
+                android:id="@+id/tv_board_detail_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:fontFamily="@font/font_bold"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:text="댓글 >"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_contents" />
+
+            <TextView
+                android:id="@+id/tv_board_detail_no_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:fontFamily="@font/font_regular"
+                android:gravity="center_horizontal"
+                android:minHeight="500dp"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:text="아직 댓글이 없습니다.\n첫 댓글을 남겨보세요!"
+                android:textSize="15dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_comment"
+                tools:visibility="visible" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_author_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="10dp"
                 android:background="@color/white"
+                android:paddingVertical="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_title">
 
                 <TextView
                     android:id="@+id/tv_board_detail_author"
-                    android:paddingLeft="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    tools:text="author"
                     android:fontFamily="@font/font_regular"
+                    android:paddingLeft="20dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/tv_board_detail_dot"
-                    app:layout_constraintTop_toTopOf="@id/cl_author_date"/>
+                    app:layout_constraintTop_toTopOf="@id/cl_author_date"
+                    tools:text="author" />
 
                 <TextView
                     android:id="@+id/tv_board_detail_dot"
@@ -82,7 +162,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toRightOf="@id/tv_board_detail_author"
                     app:layout_constraintRight_toLeftOf="@id/tv_board_detail_date"
-                    app:layout_constraintTop_toTopOf="@id/cl_author_date"/>
+                    app:layout_constraintTop_toTopOf="@id/cl_author_date" />
 
                 <TextView
                     android:id="@+id/tv_board_detail_date"
@@ -90,110 +170,29 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:fontFamily="@font/font_regular"
-                    tools:text="date"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toRightOf="@id/tv_board_detail_dot"
-                    app:layout_constraintTop_toTopOf="@id/cl_author_date"/>
+                    app:layout_constraintTop_toTopOf="@id/cl_author_date"
+                    tools:text="date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/tv_board_detail_price"
-                android:paddingHorizontal="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingBottom="15dp"
-                android:fontFamily="@font/font_medium"
-                tools:text="price"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_author_date"
-                app:layout_constraintBottom_toTopOf="@id/tv_board_detail_contents"/>
-
-            <TextView
-                android:id="@+id/tv_board_detail_contents"
-                android:padding="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingBottom="50dp"
-                android:layout_marginTop="1dp"
-                android:fontFamily="@font/font_regular"
-                android:textSize="17sp"
-                android:textColor="@color/black"
-                tools:text="contents;fd\na;;lfkajssjdf;lkaj;sdkf;alksdjfalkj\nalksjdflkajs
-                dlfkaj;fd\na;lskdjfalkjsd;fklad\nalksdjfnasdkf;alksdjfalkj\nalksa;lsk\nend!!"
-                android:lineSpacingExtra="3dp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_price"/>
-
-            <TextView
-                android:id="@+id/tv_board_detail_comment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:paddingTop="10dp"
-                android:paddingHorizontal="20dp"
-                android:background="@color/white"
-                android:textColor="@color/black"
-                android:fontFamily="@font/font_bold"
-                android:textSize="15dp"
-                android:text="댓글 >"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_contents"/>
-
-            <TextView
-                android:id="@+id/tv_board_detail_no_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="35dp"
-                android:background="@color/white"
-                android:fontFamily="@font/font_regular"
-                android:textSize="15dp"
-                android:text="아직 댓글이 없습니다.\n첫 댓글을 남겨보세요!"
-                android:visibility="gone"
-                android:gravity="center_horizontal"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_comment"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_board_detail_comments_prev"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="500dp"
                 android:background="@color/white"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_comment"
-                android:paddingHorizontal="20dp"
+                android:minHeight="500dp"
+                android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                tools:visibility="visible"/>
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_board_detail_comment"
+                tools:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.core.widget.NestedScrollView>
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:title="hello"
-        android:paddingTop="24dp"
-        android:background="@drawable/gradient"
-        app:titleTextColor="@color/transparent"
-        android:theme="@style/Toolbar"
-        android:fadeScrollbars="true"
-        app:layout_collapseMode="pin"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

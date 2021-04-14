@@ -55,7 +55,7 @@ class BoardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<LogoutRes>, response: Response<LogoutRes>) {
                     MySharedPreferences.clearUser(this@BoardActivity)
-                    Intent(this@BoardActivity, MainActivity::class.java).apply {
+                    Intent(this@BoardActivity, LoginActivity::class.java).apply {
                         startActivity(this)
                     }
                 }
