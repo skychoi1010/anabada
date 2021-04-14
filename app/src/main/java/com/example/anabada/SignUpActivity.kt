@@ -31,7 +31,8 @@ class SignUpActivity: AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        supportActionBar!!.title = "Sign Up"
+        supportActionBar!!.setDisplayShowTitleEnabled(true)
 
         val api = ApiService.create(this)
 
@@ -106,9 +107,6 @@ class SignUpActivity: AppCompatActivity() {
         })
 
         binding.signupBtn.setOnClickListener {
-            setError(binding.id, null)
-            setError(binding.pw, null)
-            setError(binding.nickname, null)
 
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
