@@ -15,7 +15,6 @@
         android:fadeScrollbars="true"
         android:paddingTop="24dp"
         android:theme="@style/Toolbar"
-        android:title="hello"
         app:layout_collapseMode="pin"
         app:titleTextColor="@color/transparent" />
 
@@ -29,8 +28,7 @@
             android:id="@+id/cl_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray"
-            android:paddingBottom="100dp">
+            android:background="@color/gray">
 
             <ImageView
                 android:id="@+id/iv_board_detail_img"
@@ -39,11 +37,12 @@
                 android:adjustViewBounds="true"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"
+                android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_launcher_foreground"/>
 
             <TextView
                 android:id="@+id/tv_board_detail_title"
@@ -118,7 +117,7 @@
                 android:background="@color/white"
                 android:fontFamily="@font/font_regular"
                 android:gravity="center_horizontal"
-                android:minHeight="500dp"
+                android:minHeight="800dp"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="20dp"
                 android:text="아직 댓글이 없습니다.\n첫 댓글을 남겨보세요!"
@@ -182,7 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="500dp"
+                android:minHeight="800dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"

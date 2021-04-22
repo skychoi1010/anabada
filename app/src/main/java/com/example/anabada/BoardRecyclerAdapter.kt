@@ -6,11 +6,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.anabada.DateUtil.convertDateFullToTimestamp
+import com.example.anabada.DateUtil.convertTimestampToDateFull
 import com.example.anabada.databinding.ListitemBoardBinding
 import java.util.*
 
 
 class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): RecyclerView.Adapter<BoardRecyclerAdapter.BoardRecyclerViewHolder>() {
+
+    interface OptionsClickListener {
+        fun onOptionsClick(view: View, id: BoardsData, binding: ListitemBoardBinding)
+    }
+
+    private lateinit var optionsClickListener: OptionsClickListener
+
+    fun setOptionsClickListener(optionsClickListener: OptionsClickListener) {
+        this.optionsClickListener = optionsClickListener
+    }
 
     interface ItemClickListener {
         fun onClick(view: View, id: BoardsData)
@@ -47,11 +59,11 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
              //TODO 이미지 업로드 api 업데이트 이후 다시 복원.
             Glide.with(itemView)
                     .load(item.thumbImg)
-                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_background))
+                    .apply(RequestOptions().placeholder(R.drawable.ic_launcher_foreground))
                     .into(listBinding.ivBoardThumbnail)
             listBinding.tvBoardTitle.text = item.title
             listBinding.tvBoardWriter.text = item.author
-            listBinding.tvBoardDate.text = item.date
+            listBinding.tvBoardDate.text = item.date.convertDateFullToTimestamp().toString()
             listBinding.tvBoardPrice.text = item.price.toString()
             listBinding.tvBoardCommentNum.text = item.commentCount.toString()
             if (item.detailImg.isNullOrEmpty()) {
@@ -59,6 +71,9 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
             }
             listBinding.root.setOnClickListener {
                 itemClickListener.onClick(it, item)
+            }
+            listBinding.tvPrevCommentOptions.setOnClickListener{
+                optionsClickListener.onOptionsClick(it, item, listBinding)
             }
         }
     }

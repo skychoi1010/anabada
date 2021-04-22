@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.anabada.DateUtil.convertDateFullToTimestamp
+import com.example.anabada.DateUtil.convertTimestampToDateFull
 import com.example.anabada.databinding.ActivityCommentsDetailBinding
 import com.example.anabada.databinding.ListitemCommentsBinding
 import retrofit2.Call
@@ -64,7 +66,6 @@ class CommentsRecyclerAdapter(private var commentsPrevDataList: ArrayList<Commen
                 }
                 listitemCommentsBinding.tvPrevCommentOptions.setOnClickListener{
                     itemClickListener.onClick(it, item, listitemCommentsBinding)
-
                 }
             } else { //comments prev page
                 listitemCommentsBinding.tvPrevCommentOptions.visibility = View.GONE
@@ -75,7 +76,7 @@ class CommentsRecyclerAdapter(private var commentsPrevDataList: ArrayList<Commen
                 }
             }
 
-            listitemCommentsBinding.tvPrevCommentDate.text = item.date
+            listitemCommentsBinding.tvPrevCommentDate.text = item.date.convertDateFullToTimestamp().toString()
             listitemCommentsBinding.tvPrevComment.text = item.contents
         }
     }
