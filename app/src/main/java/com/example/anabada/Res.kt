@@ -81,7 +81,7 @@ data class PostContentRes (
         var id: Int
         )
 
-data class ReviseContentRes (
+data class EditContentRes (
         var resultCode: String,
         var id: Int
         )

@@ -9,6 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.DateUtil.convertDateFullToTimestamp
 import com.example.anabada.DateUtil.convertTimestampToDateFull
 import com.example.anabada.databinding.ListitemBoardBinding
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -63,7 +64,8 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
                     .into(listBinding.ivBoardThumbnail)
             listBinding.tvBoardTitle.text = item.title
             listBinding.tvBoardWriter.text = item.author
-            listBinding.tvBoardDate.text = item.date.convertDateFullToTimestamp().toString()
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")
+            listBinding.tvBoardDate.text = sdf.parse(item.date).toString()
             listBinding.tvBoardPrice.text = item.price.toString()
             listBinding.tvBoardCommentNum.text = item.commentCount.toString()
             if (item.detailImg.isNullOrEmpty()) {

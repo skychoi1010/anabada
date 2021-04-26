@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -24,9 +26,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.DateUtil.convertDateFullToTimestamp
 import com.example.anabada.DateUtil.convertTimestampToDateFull
 import com.example.anabada.databinding.ActivityBoardDetailBinding
+import com.example.anabada.databinding.ActivityCommentsDetailBinding
+import com.example.anabada.databinding.ListitemBoardBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -34,8 +39,10 @@ class BoardDetailActivity : AppCompatActivity() {
 
     private var boardDetailRes: BoardDetailRes? = null
     private var commentRes: CommentRes? = null
+    private var deleteContentRes: DeleteContentRes? = null
     var intentRes: BoardsData? = null
     private var commentsPrevDataList = arrayListOf<CommentDetail>()
+    private val api = ApiService.create(this)
 
     //CommentDetail(1, "me","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true), CommentDetail(2, "셔누","eotrmf 댓글 내용 랄라라랄 \n 랄라랄 hello", "2021/03/23", true))
     //TODO CommentsDetail과 어댑터 같이 사용중..
@@ -52,12 +59,15 @@ class BoardDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
         intentRes = intent.getParcelableExtra("board item")
+
+        //init View !!!
         intentRes?.let { initView(binding, it.id) }
 
         binding.tvBoardDetailTitle.text = intentRes?.title
         Log.d("////////intent///", intentRes?.title.toString())
         binding.tvBoardDetailAuthor.text = intentRes?.author
-        binding.tvBoardDetailDate.text = intentRes?.date?.convertDateFullToTimestamp().toString()
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")
+        binding.tvBoardDetailDate.text = sdf.parse(intentRes?.date).toString()
         binding.tvBoardDetailPrice.text = intentRes?.price.toString() + "원"
 
         setSupportActionBar(binding.toolbar)
@@ -160,8 +170,6 @@ class BoardDetailActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initView(binding: ActivityBoardDetailBinding, id: Int) {
 
-        val api = ApiService.create(this)
-
         api.reqBoardDetail(id).enqueue(object : Callback<BoardDetailRes> {
             override fun onFailure(call: Call<BoardDetailRes>, t: Throwable) {
                 Toast.makeText(
@@ -184,6 +192,10 @@ class BoardDetailActivity : AppCompatActivity() {
                         Toast.makeText(this@BoardDetailActivity, "게시글이 존재하지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
+                        if (boardDetailRes?.board?.isMine == true) {
+                            binding.tvBoardDetailAuthor.text = "내 글"
+                            binding.tvBoardDetailOptions.visibility = VISIBLE
+                        }
                         binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
                         Glide.with(this@BoardDetailActivity)
                                 .load(boardDetailRes?.board?.detailImg)
@@ -210,6 +222,38 @@ class BoardDetailActivity : AppCompatActivity() {
                 putExtra("board id", id)
                 startActivity(this)
             }
+        }
+
+        binding.tvBoardDetailOptions.setOnClickListener {
+            //creating a popup menu
+            val popup = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                PopupMenu(binding.root.context, binding.tvBoardDetailOptions, Gravity.END, 0, R.style.MyPopupMenu)
+            } else {
+                PopupMenu(binding.root.context, binding.tvBoardDetailOptions)
+            }
+            //inflating menu from xml resource
+            popup.menuInflater.inflate(R.menu.menu_comments, popup.menu)
+            //adding click listener
+            popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                override fun onMenuItemClick(item: MenuItem?): Boolean {
+                    return when (item?.itemId) {
+                        R.id.edit -> {
+                            Intent(this@BoardDetailActivity, PostActivity::class.java).apply {
+                                startActivity(this)
+                            }
+                            true
+                        }
+                        R.id.delete -> {
+                            Toast.makeText(this@BoardDetailActivity, "delete!", Toast.LENGTH_SHORT).show()
+                            deleteContent(id, binding)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            })
+            //displaying the popup
+            popup.show()
         }
 
     }
@@ -243,6 +287,72 @@ class BoardDetailActivity : AppCompatActivity() {
                         }
                         commentsPrevDataList.let { commentsPrevRecyclerAdapter.setDataNotify(it) }
                         //callComments(pageNum + 1, api, id)
+                    }
+                }
+            }
+        })
+    }
+
+//    private fun editComments(input: String, id: Int, binding: ActivityCommentsDetailBinding, inputMethodManager: InputMethodManager) {
+//        api.reqEditComment(id, input).enqueue(object : Callback<EditCommentRes> {
+//            override fun onFailure(call: Call<EditCommentRes>, t: Throwable) {
+//                Toast.makeText(this@CommentsDetailActivity, "comment edit api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<EditCommentRes>, response: Response<EditCommentRes>) {
+//                editCommentRes = response.body()
+//                when (editCommentRes?.resultCode) {
+//                    null -> {
+//                        //end
+//                        Toast.makeText(this@CommentsDetailActivity, "댓글 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    "OK" -> {
+//                        //end
+//                        binding.tvCommentInput.text.clear()
+//                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
+//                        binding.btnEditComment.visibility = View.INVISIBLE
+//                        binding.btnPostComment.visibility = View.VISIBLE
+//                        commentsDataList.clear()
+//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+//                        this@CommentsDetailActivity.isPageCallable = true
+//                        //                        binding.rvComments.visibility = View.VISIBLE
+//                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
+//                        callComments(1, this@CommentsDetailActivity.id, binding)
+//                        //                        initView(binding, this@CommentsDetailActivity.id)
+//                        Toast.makeText(this@CommentsDetailActivity, "comment edit api\n" + editCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                    }
+//                    else -> {
+//                        //
+//                    }
+//                }
+//            }
+//        })
+//    }
+
+    private fun deleteContent(id: Int, binding: ActivityBoardDetailBinding) {
+        api.reqDeleteContent(id).enqueue(object : Callback<DeleteContentRes> {
+            override fun onFailure(call: Call<DeleteContentRes>, t: Throwable) {
+                Toast.makeText(this@BoardDetailActivity, "delete content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                //end
+            }
+
+            override fun onResponse(call: Call<DeleteContentRes>, response: Response<DeleteContentRes>) {
+                deleteContentRes = response.body()
+                when (deleteContentRes?.resultCode) {
+                    null -> {
+                        //end
+                        Toast.makeText(this@BoardDetailActivity, "댓글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    "OK" -> {
+                        //end
+                        Toast.makeText(this@BoardDetailActivity, "delete content api\n" + deleteContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                        Intent(this@BoardDetailActivity, BoardActivity::class.java).apply {
+                            startActivity(this)
+                        }
+                    }
+                    else -> {
+                        //
                     }
                 }
             }

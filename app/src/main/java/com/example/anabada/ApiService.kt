@@ -66,13 +66,13 @@ interface ApiService {
 
     @FormUrlEncoded
     @PUT("board/{id}")
-    fun reqReviseContent(
+    fun reqEditContent(
         @Path("id") id: Int,
         @Field("title") title: String,
         @Field("price") price: Int,
         @Field("contents") contents: String,
         @Field("imgId") imgId: Int //TODO not confirmed
-    ): Call<ReviseContentRes>
+    ): Call<EditContentRes>
 
     @FormUrlEncoded
     @DELETE("board/{id}")
