@@ -2,19 +2,12 @@ package com.example.anabada
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
-import android.view.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.anabada.DateUtil.convertDateFullToTimestamp
-import com.example.anabada.DateUtil.convertTimestampToDateFull
-import com.example.anabada.databinding.ActivityCommentsDetailBinding
 import com.example.anabada.databinding.ListitemCommentsBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -76,7 +69,9 @@ class CommentsRecyclerAdapter(private var commentsPrevDataList: ArrayList<Commen
                 }
             }
 
-            listitemCommentsBinding.tvPrevCommentDate.text = item.date.convertDateFullToTimestamp().toString()
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")
+            val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            listitemCommentsBinding.tvPrevCommentDate.text = df.format(sdf.parse(item.date))
             listitemCommentsBinding.tvPrevComment.text = item.contents
         }
     }

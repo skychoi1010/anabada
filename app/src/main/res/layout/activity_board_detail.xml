@@ -136,7 +136,7 @@
                 android:gravity="center_horizontal"
                 android:minHeight="800dp"
                 android:paddingHorizontal="20dp"
-                android:paddingTop="20dp"
+                android:paddingTop="40dp"
                 android:text="아직 댓글이 없습니다.\n첫 댓글을 남겨보세요!"
                 android:textSize="15dp"
                 android:visibility="gone"

@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.anabada.DateUtil.convertDateFullToTimestamp
-import com.example.anabada.DateUtil.convertTimestampToDateFull
 import com.example.anabada.databinding.ListitemBoardBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,7 +63,8 @@ class BoardRecyclerAdapter(private var boardsDataList: ArrayList<BoardsData>): R
             listBinding.tvBoardTitle.text = item.title
             listBinding.tvBoardWriter.text = item.author
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")
-            listBinding.tvBoardDate.text = sdf.parse(item.date).toString()
+            val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            listBinding.tvBoardDate.text = df.format(sdf.parse(item.date))
             listBinding.tvBoardPrice.text = item.price.toString()
             listBinding.tvBoardCommentNum.text = item.commentCount.toString()
             if (item.detailImg.isNullOrEmpty()) {

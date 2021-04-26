@@ -74,10 +74,9 @@ interface ApiService {
         @Field("imgId") imgId: Int //TODO not confirmed
     ): Call<EditContentRes>
 
-    @FormUrlEncoded
     @DELETE("board/{id}")
     fun reqDeleteContent(
-        @Field("id") id: Int
+        @Path("id") id: Int
     ): Call<DeleteContentRes>
 
     @FormUrlEncoded

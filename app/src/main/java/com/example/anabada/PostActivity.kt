@@ -80,6 +80,7 @@ class PostActivity : AppCompatActivity() {
         binding.appbar.toolbarBack.setOnClickListener{
             onBackPressed()
         }
+        binding.appbar.toolbarTitle.text = "중고거래 글쓰기"
 
         var time: Long = 0
         binding.appbar.toolbarFin.setOnClickListener {

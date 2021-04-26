@@ -15,7 +15,9 @@
         android:src="@drawable/anabada_font"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/id"
+        app:layout_constraintVertical_chainStyle="packed"/>
 
     <EditText
         android:id="@+id/id"
@@ -29,7 +31,8 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+        app:layout_constraintTop_toBottomOf="@id/iv_logo"
+        app:layout_constraintBottom_toTopOf="@id/pw"/>
 
     <EditText
         android:id="@+id/pw"
@@ -43,7 +46,8 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id" />
+        app:layout_constraintTop_toBottomOf="@+id/id"
+        app:layout_constraintBottom_toTopOf="@id/login_btn"/>
 
     <Button
         android:id="@+id/login_btn"
@@ -57,7 +61,8 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pw" />
+        app:layout_constraintTop_toBottomOf="@+id/pw"
+        app:layout_constraintBottom_toTopOf="@id/signup_btn"/>
 
     <Button
         android:id="@+id/signup_btn"
@@ -71,7 +76,8 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/login_btn"
+        app:layout_constraintBottom_toTopOf="@id/skip_btn"/>
 
     <TextView
         android:id="@+id/skip_btn"
@@ -87,6 +93,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signup_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center_horizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

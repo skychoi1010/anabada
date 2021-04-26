@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -23,11 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.anabada.DateUtil.convertDateFullToTimestamp
-import com.example.anabada.DateUtil.convertTimestampToDateFull
 import com.example.anabada.databinding.ActivityBoardDetailBinding
-import com.example.anabada.databinding.ActivityCommentsDetailBinding
-import com.example.anabada.databinding.ListitemBoardBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,7 +62,8 @@ class BoardDetailActivity : AppCompatActivity() {
         Log.d("////////intent///", intentRes?.title.toString())
         binding.tvBoardDetailAuthor.text = intentRes?.author
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")
-        binding.tvBoardDetailDate.text = sdf.parse(intentRes?.date).toString()
+        val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        binding.tvBoardDetailDate.text = df.format(sdf.parse(intentRes?.date))
         binding.tvBoardDetailPrice.text = intentRes?.price.toString() + "원"
 
         setSupportActionBar(binding.toolbar)
@@ -113,7 +109,6 @@ class BoardDetailActivity : AppCompatActivity() {
         if (newAlpha == 255) {
             window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
             window.statusBarColor = Color.WHITE
-//            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
             window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
             binding.toolbar.setTitleTextColor(Color.TRANSPARENT)
@@ -121,8 +116,8 @@ class BoardDetailActivity : AppCompatActivity() {
         binding.toolbar.background.alpha = newAlpha
         binding.toolbar.setTitleTextColor(resultColor)
         window.decorView.systemUiVisibility = (SYSTEM_UI_FLAG_LAYOUT_STABLE)
-        val v: View = binding.toolbar.getChildAt(1)
 
+        val v: View = binding.toolbar.getChildAt(1)
         if (v is ImageButton) {
             //Action Bar back button
             v.drawable.colorFilter = PorterDuffColorFilter(resultColor, PorterDuff.Mode.SRC_ATOP)
@@ -154,11 +149,11 @@ class BoardDetailActivity : AppCompatActivity() {
         else Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }.top
     }
 
-    fun getNavigationBarHeight(): Int {
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        return if (resourceId > 0) resources.getDimensionPixelSize(resourceId)
-        else Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }.bottom
-    }
+//    fun getNavigationBarHeight(): Int {
+//        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+//        return if (resourceId > 0) resources.getDimensionPixelSize(resourceId)
+//        else Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }.bottom
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -172,11 +167,7 @@ class BoardDetailActivity : AppCompatActivity() {
 
         api.reqBoardDetail(id).enqueue(object : Callback<BoardDetailRes> {
             override fun onFailure(call: Call<BoardDetailRes>, t: Throwable) {
-                Toast.makeText(
-                        this@BoardDetailActivity,
-                        "board api\nFailed connection",
-                        Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@BoardDetailActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
                 //end
             }
 
@@ -201,7 +192,7 @@ class BoardDetailActivity : AppCompatActivity() {
                                 .load(boardDetailRes?.board?.detailImg)
                                 .apply(RequestOptions().placeholder(R.drawable.ic_launcher_foreground))
                                 .into(binding.ivBoardDetailImg)
-                        binding.tvBoardDetailComment.text = "댓글 " + boardDetailRes?.board?.commentCount.toString() + " > "
+                        binding.tvBoardDetailComment.text = "댓글 ${boardDetailRes?.board?.commentCount.toString()} > "
                     }
                 }
             }
@@ -214,7 +205,7 @@ class BoardDetailActivity : AppCompatActivity() {
                 this@BoardDetailActivity,
                 LinearLayoutManager.VERTICAL
         )
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
+        ContextCompat.getDrawable(this, R.drawable.divider)?.let { dividerItemDecoration.setDrawable(it) }
         binding.rvBoardDetailCommentsPrev.addItemDecoration(dividerItemDecoration)
 
         binding.tvBoardDetailComment.setOnClickListener {
@@ -234,24 +225,22 @@ class BoardDetailActivity : AppCompatActivity() {
             //inflating menu from xml resource
             popup.menuInflater.inflate(R.menu.menu_comments, popup.menu)
             //adding click listener
-            popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                override fun onMenuItemClick(item: MenuItem?): Boolean {
-                    return when (item?.itemId) {
-                        R.id.edit -> {
-                            Intent(this@BoardDetailActivity, PostActivity::class.java).apply {
-                                startActivity(this)
-                            }
-                            true
+            popup.setOnMenuItemClickListener { item ->
+                when (item?.itemId) {
+                    R.id.edit -> {
+                        Intent(this@BoardDetailActivity, PostActivity::class.java).apply {
+                            startActivity(this)
                         }
-                        R.id.delete -> {
-                            Toast.makeText(this@BoardDetailActivity, "delete!", Toast.LENGTH_SHORT).show()
-                            deleteContent(id, binding)
-                            true
-                        }
-                        else -> false
+                        true
                     }
+                    R.id.delete -> {
+                        Toast.makeText(this@BoardDetailActivity, "delete!", Toast.LENGTH_SHORT).show()
+                        deleteContent(id, binding)
+                        true
+                    }
+                    else -> false
                 }
-            })
+            }
             //displaying the popup
             popup.show()
         }
