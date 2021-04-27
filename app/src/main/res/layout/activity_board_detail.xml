@@ -68,7 +68,6 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textStyle="bold"
                 android:padding="15dp"
-                android:visibility="invisible"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_board_detail_title"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

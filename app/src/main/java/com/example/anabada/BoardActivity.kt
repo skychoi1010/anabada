@@ -158,8 +158,15 @@ class BoardActivity : AppCompatActivity() {
         }
 
         binding.floatingActionButton.setOnClickListener {
-            Intent(this@BoardActivity, PostActivity::class.java).apply {
-                startActivity(this)
+            if (MySharedPreferences.getUserId(this) == "no") { // need to login
+                Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                Intent(this, LoginActivity::class.java).apply {
+                    startActivity(this)
+                }
+            } else {
+                Intent(this@BoardActivity, PostActivity::class.java).apply {
+                    startActivity(this)
+                }
             }
         }
     }

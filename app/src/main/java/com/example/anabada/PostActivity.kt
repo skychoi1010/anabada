@@ -45,7 +45,7 @@ class PostActivity : AppCompatActivity() {
     private var imagePath: String? = null
     private var imageUri: Uri? = null
     private var binding: ActivityPostBinding? = null
-    private var body : MultipartBody.Part? = null
+    private var body: MultipartBody.Part? = null
     var imageId: Int = 0
 
     private val CROP_FROM_IMAGE = 1000
@@ -70,14 +70,14 @@ class PostActivity : AppCompatActivity() {
         }
 
         binding.btnPickImage.setOnClickListener {
-//            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI).apply {
-//                startActivityForResult(this, pickImage)
-//            }
+            //            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI).apply {
+            //                startActivityForResult(this, pickImage)
+            //            }
             selectGallery()
         }
 
         binding.appbar.toolbarBack.colorFilter = PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
-        binding.appbar.toolbarBack.setOnClickListener{
+        binding.appbar.toolbarBack.setOnClickListener {
             onBackPressed()
         }
         binding.appbar.toolbarTitle.text = "중고거래 글쓰기"
@@ -86,42 +86,33 @@ class PostActivity : AppCompatActivity() {
         binding.appbar.toolbarFin.setOnClickListener {
             if (System.currentTimeMillis() - time >= 10000) {
                 time = System.currentTimeMillis()
-                Toast.makeText(this, "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
                 val title = binding.tvPostContentTitle.text.toString()
                 val price = binding.tvPostContentPrice.text.toString()
                 val contents = binding.tvPostContentContents.text.toString()
-                if (MySharedPreferences.getUserId(this) == "no") { // need to login
-                    Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                    Intent(this@PostActivity, LoginActivity::class.java).apply {
-                        startActivity(this)
-                    }
-                } else { //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
+                //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
 
-                    if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
-                        api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
-                                .enqueue(object : Callback<PostContentRes> {
-                                    override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
-                                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
+                    api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
+                            .enqueue(object : Callback<PostContentRes> {
+                                override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
+                                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+                                }
+
+                                override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
+                                    postContentRes = response.body()
+                                    Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                                    Intent(this@PostActivity, BoardActivity::class.java).apply {
+                                        startActivity(this)
                                     }
 
-                                    override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
-                                        postContentRes = response.body()
-                                        Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                                        Intent(this@PostActivity, BoardActivity::class.java).apply {
-                                            startActivity(this)
-                                        }
-
-                                    }
-                                })
-
-                    } else { // missing contents
-                        Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
-                    }
-
+                                }
+                            })
+                } else { // missing contents
+                    Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
 
-            } else {
-                //
+            } else if (System.currentTimeMillis() - time < 1000) {
+                //post 버튼 두 번 연속 동작 방지
             }
 
         }
@@ -218,49 +209,49 @@ class PostActivity : AppCompatActivity() {
         return tempFile
     }
 
-//    fun getPath(uri: Uri?): String? {
-//        val projection = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor = managedQuery(uri, projection, null, null, null)
-//        val column_index = cursor
-//                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//        cursor.moveToFirst()
-//        return cursor.getString(column_index)
-//    }
+    //    fun getPath(uri: Uri?): String? {
+    //        val projection = arrayOf(MediaStore.Images.Media.DATA)
+    //        val cursor = managedQuery(uri, projection, null, null, null)
+    //        val column_index = cursor
+    //                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+    //        cursor.moveToFirst()
+    //        return cursor.getString(column_index)
+    //    }
 
-//    private fun getRealPathFromURI(contentURI: Uri): String? {
-//        val filePath: String?
-//        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
-//        if (cursor == null) {
-//            filePath = contentURI.path
-//        } else {
-//            cursor.moveToFirst()
-//            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-//            filePath = cursor.getString(idx)
-//            cursor.close()
-//        }
-//        return filePath
-//    }
+    //    private fun getRealPathFromURI(contentURI: Uri): String? {
+    //        val filePath: String?
+    //        val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
+    //        if (cursor == null) {
+    //            filePath = contentURI.path
+    //        } else {
+    //            cursor.moveToFirst()
+    //            val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+    //            filePath = cursor.getString(idx)
+    //            cursor.close()
+    //        }
+    //        return filePath
+    //    }
 
-//    private fun cropImage(imageUri: Uri?) {
-//        val intent = getCropIntent(imageUri)
-//        startActivityForResult(intent, CROP_FROM_IMAGE)
-//    }
-//
-//    private fun getCropIntent(inputUri: Uri?): Intent {
-//        val intent = Intent("com.android.camera.action.CROP")
-//        intent.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-//        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-//        intent.setDataAndType(inputUri, "image/*")
-//        intent.putExtra("aspectX", 5)
-//        intent.putExtra("aspectY", 5)
-//        intent.putExtra("outputX", 300)
-//        intent.putExtra("outputY", 300)
-//        intent.putExtra("scale", true)
-//
-//        //intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
-//        intent.putExtra("return-data", true)
-//        return intent
-//    }
+    //    private fun cropImage(imageUri: Uri?) {
+    //        val intent = getCropIntent(imageUri)
+    //        startActivityForResult(intent, CROP_FROM_IMAGE)
+    //    }
+    //
+    //    private fun getCropIntent(inputUri: Uri?): Intent {
+    //        val intent = Intent("com.android.camera.action.CROP")
+    //        intent.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+    //        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    //        intent.setDataAndType(inputUri, "image/*")
+    //        intent.putExtra("aspectX", 5)
+    //        intent.putExtra("aspectY", 5)
+    //        intent.putExtra("outputX", 300)
+    //        intent.putExtra("outputY", 300)
+    //        intent.putExtra("scale", true)
+    //
+    //        //intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+    //        intent.putExtra("return-data", true)
+    //        return intent
+    //    }
 
     private fun resize(context: Context, uri: Uri, resize: Int): Bitmap? {
         var resizeBitmap: Bitmap? = null
@@ -295,16 +286,16 @@ class PostActivity : AppCompatActivity() {
             // 권한 있음
             var state = Environment.getExternalStorageState()
             if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
-//                var intent1 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//                intent1.resolveActivity(packageManager)?.let {
-//                    val photoFile: File? = createImageFile()
-//                    photoFile?.let {
-//                        val photoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", it)
-//                        Log.d("camera intent2", photoUri.toString())
-//                        intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-//                        startActivityForResult(intent1, REQ_IMAGE_CAPTURE)
-//                    }
-//                }
+                //                var intent1 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                //                intent1.resolveActivity(packageManager)?.let {
+                //                    val photoFile: File? = createImageFile()
+                //                    photoFile?.let {
+                //                        val photoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", it)
+                //                        Log.d("camera intent2", photoUri.toString())
+                //                        intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                //                        startActivityForResult(intent1, REQ_IMAGE_CAPTURE)
+                //                    }
+                //                }
                 val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 if (takePictureIntent.resolveActivity(packageManager) != null) {
                     var photoFile: File? = null
@@ -461,53 +452,53 @@ class PostActivity : AppCompatActivity() {
 
         var resizeBitmap = BitmapFactory.decodeFile(imagePath, options)
 
-//        // 회전값 조정
-//        var exit = ExifInterface(imagePath)
-//        var exifDegree = 0
-//        exit?.let {
-//            var exifOrientation = it.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-//            exifDegree = exifOrientationToDegrees(exifOrientation)
-//        }
-//
-//        return rotateBitmap(resizeBitmap, exifDegree.toFloat())
+        //        // 회전값 조정
+        //        var exit = ExifInterface(imagePath)
+        //        var exifDegree = 0
+        //        exit?.let {
+        //            var exifOrientation = it.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        //            exifDegree = exifOrientationToDegrees(exifOrientation)
+        //        }
+        //
+        //        return rotateBitmap(resizeBitmap, exifDegree.toFloat())
 
         return resizeBitmap
     }
 
-//    private fun getRealPathFromURI(contentUri: Uri): String? {
-//        var column_index = 0
-//        val proj = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor: Cursor? = contentResolver.query(contentUri, proj, null, null, null)
-//        if (cursor.moveToFirst()) {
-//            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-//        }
-//        return cursor.getString(column_index)
-//    }
+    //    private fun getRealPathFromURI(contentUri: Uri): String? {
+    //        var column_index = 0
+    //        val proj = arrayOf(MediaStore.Images.Media.DATA)
+    //        val cursor: Cursor? = contentResolver.query(contentUri, proj, null, null, null)
+    //        if (cursor.moveToFirst()) {
+    //            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+    //        }
+    //        return cursor.getString(column_index)
+    //    }
 
-//    private fun exifOrientationToDegrees(exifOrientation: Int): Int {
-//        return when (exifOrientation) {
-//            ExifInterface.ORIENTATION_ROTATE_90 -> {
-//                90
-//            }
-//            ExifInterface.ORIENTATION_ROTATE_180 -> {
-//                180
-//            }
-//            ExifInterface.ORIENTATION_ROTATE_270 -> {
-//                270
-//            }
-//            else -> 0
-//        }
-//    }
-//
-//    private fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
-//        // Matrix 객체 생성
-//        val matrix = Matrix()
-//        // 회전 각도 셋팅
-//        matrix.postRotate(degree)
-//        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
-//        return Bitmap.createBitmap(src, 0, 0, src.width,
-//                src.height, matrix, true)
-//    }
+    //    private fun exifOrientationToDegrees(exifOrientation: Int): Int {
+    //        return when (exifOrientation) {
+    //            ExifInterface.ORIENTATION_ROTATE_90 -> {
+    //                90
+    //            }
+    //            ExifInterface.ORIENTATION_ROTATE_180 -> {
+    //                180
+    //            }
+    //            ExifInterface.ORIENTATION_ROTATE_270 -> {
+    //                270
+    //            }
+    //            else -> 0
+    //        }
+    //    }
+    //
+    //    private fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
+    //        // Matrix 객체 생성
+    //        val matrix = Matrix()
+    //        // 회전 각도 셋팅
+    //        matrix.postRotate(degree)
+    //        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+    //        return Bitmap.createBitmap(src, 0, 0, src.width,
+    //                src.height, matrix, true)
+    //    }
 
     private fun saveBitmap(bitmap: Bitmap): String {
         var folderPath = Environment.getExternalStorageDirectory().absolutePath + "/path/"

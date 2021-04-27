@@ -187,7 +187,6 @@ class BoardDetailActivity : AppCompatActivity() {
                     else -> {
                         if (boardDetailRes?.board?.isMine == true) {
                             binding.tvBoardDetailAuthor.text = "내 글"
-                            binding.tvBoardDetailOptions.visibility = VISIBLE
                         }
                         binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
                         Glide.with(this@BoardDetailActivity)
@@ -217,6 +216,7 @@ class BoardDetailActivity : AppCompatActivity() {
             }
         }
 
+        //TODO isMine 확인 로직 더 깔끔하게
         binding.tvBoardDetailOptions.setOnClickListener {
             //creating a popup menu
             val popup = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -224,21 +224,40 @@ class BoardDetailActivity : AppCompatActivity() {
             } else {
                 PopupMenu(binding.root.context, binding.tvBoardDetailOptions)
             }
-            //inflating menu from xml resource
-            popup.menuInflater.inflate(R.menu.menu_comments, popup.menu)
-            //adding click listener
-            popup.setOnMenuItemClickListener { item ->
-                when (item?.itemId) {
-                    R.id.edit -> {
-                        //TODO create edit activity? share post activity?
-                        true
+            if (binding.tvBoardDetailAuthor.text == "내 글") {
+                //inflating menu from xml resource
+                popup.menuInflater.inflate(R.menu.menu_comments, popup.menu)
+                //adding click listener
+                popup.setOnMenuItemClickListener { item ->
+                    when (item?.itemId) {
+                        R.id.edit -> {
+                            //TODO create edit activity? share post activity?
+                            true
+                        }
+                        R.id.delete -> {
+                            Toast.makeText(this@BoardDetailActivity, "delete!", Toast.LENGTH_SHORT).show()
+                            deleteContent(id, binding)
+                            true
+                        }
+                        else -> false
                     }
-                    R.id.delete -> {
-                        Toast.makeText(this@BoardDetailActivity, "delete!", Toast.LENGTH_SHORT).show()
-                        deleteContent(id, binding)
-                        true
+                }
+            } else {
+                //inflating menu from xml resource
+                popup.menuInflater.inflate(R.menu.menu_board_detail_not_mine, popup.menu)
+                //adding click listener
+                popup.setOnMenuItemClickListener { item ->
+                    when (item?.itemId) {
+                        R.id.one -> {
+                            Toast.makeText(this@BoardDetailActivity, "내 글 아님!", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+                        R.id.two -> {
+                            Toast.makeText(this@BoardDetailActivity, "신고!", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+                        else -> false
                     }
-                    else -> false
                 }
             }
             //displaying the popup
