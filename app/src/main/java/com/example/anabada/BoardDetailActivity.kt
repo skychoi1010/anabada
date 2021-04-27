@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -34,6 +35,7 @@ class BoardDetailActivity : AppCompatActivity() {
 
     private var boardDetailRes: BoardDetailRes? = null
     private var commentRes: CommentRes? = null
+    private var editContentRes: EditContentRes? = null
     private var deleteContentRes: DeleteContentRes? = null
     var intentRes: BoardsData? = null
     private var commentsPrevDataList = arrayListOf<CommentDetail>()
@@ -228,9 +230,7 @@ class BoardDetailActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item?.itemId) {
                     R.id.edit -> {
-                        Intent(this@BoardDetailActivity, PostActivity::class.java).apply {
-                            startActivity(this)
-                        }
+                        //TODO create edit activity? share post activity?
                         true
                     }
                     R.id.delete -> {
@@ -282,42 +282,34 @@ class BoardDetailActivity : AppCompatActivity() {
         })
     }
 
-//    private fun editComments(input: String, id: Int, binding: ActivityCommentsDetailBinding, inputMethodManager: InputMethodManager) {
-//        api.reqEditComment(id, input).enqueue(object : Callback<EditCommentRes> {
-//            override fun onFailure(call: Call<EditCommentRes>, t: Throwable) {
-//                Toast.makeText(this@CommentsDetailActivity, "comment edit api\nFailed connection", Toast.LENGTH_SHORT).show()
-//                //end
-//            }
-//
-//            override fun onResponse(call: Call<EditCommentRes>, response: Response<EditCommentRes>) {
-//                editCommentRes = response.body()
-//                when (editCommentRes?.resultCode) {
-//                    null -> {
-//                        //end
-//                        Toast.makeText(this@CommentsDetailActivity, "댓글 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
-//                    }
-//                    "OK" -> {
-//                        //end
-//                        binding.tvCommentInput.text.clear()
-//                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
-//                        binding.btnEditComment.visibility = View.INVISIBLE
-//                        binding.btnPostComment.visibility = View.VISIBLE
-//                        commentsDataList.clear()
-//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-//                        this@CommentsDetailActivity.isPageCallable = true
-//                        //                        binding.rvComments.visibility = View.VISIBLE
-//                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
-//                        callComments(1, this@CommentsDetailActivity.id, binding)
-//                        //                        initView(binding, this@CommentsDetailActivity.id)
-//                        Toast.makeText(this@CommentsDetailActivity, "comment edit api\n" + editCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-//                    }
-//                    else -> {
-//                        //
-//                    }
-//                }
-//            }
-//        })
-//    }
+    private fun editContent(id: Int, title: String, price: Int, contents: String, imgId: Int) {
+        api.reqEditContent(id, title, price, contents, imgId).enqueue(object : Callback<EditContentRes> {
+            override fun onFailure(call: Call<EditContentRes>, t: Throwable) {
+                Toast.makeText(this@BoardDetailActivity, "content edit api\nFailed connection", Toast.LENGTH_SHORT).show()
+                //end
+            }
+
+            override fun onResponse(call: Call<EditContentRes>, response: Response<EditContentRes>) {
+                editContentRes = response.body()
+                when (editContentRes?.resultCode) {
+                    null -> {
+                        //end
+                        Toast.makeText(this@BoardDetailActivity, "게시물 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    "OK" -> {
+                        //end
+                        Toast.makeText(this@BoardDetailActivity, "edit content api\n" + editContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+                        Intent(this@BoardDetailActivity, BoardActivity::class.java).apply {
+                            startActivity(this)
+                        }
+                    }
+                    else -> {
+                        //
+                    }
+                }
+            }
+        })
+    }
 
     private fun deleteContent(id: Int, binding: ActivityBoardDetailBinding) {
         api.reqDeleteContent(id).enqueue(object : Callback<DeleteContentRes> {
