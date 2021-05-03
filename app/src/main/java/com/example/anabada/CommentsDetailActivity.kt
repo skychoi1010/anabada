@@ -254,7 +254,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                 when (postCommentRes?.resultCode) {
                     null -> {
                         //end
-                        Toast.makeText(this@CommentsDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@CommentsDetailActivity, "comment post api\n result code null", Toast.LENGTH_SHORT).show()
                     }
                     "OK" -> {
                         //end
@@ -269,8 +269,9 @@ class CommentsDetailActivity : AppCompatActivity() {
                         //                        initView(binding, this@CommentsDetailActivity.id)
                         Toast.makeText(this@CommentsDetailActivity, "comment post api\n" + postCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
                     }
-                    else -> {
+                    "Unauthorized Request" -> {
                         //
+                        Toast.makeText(this@CommentsDetailActivity, "Unauthorized Request", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -92,6 +92,7 @@ data class DeleteContentRes (
         )
 
 data class PostCommentRes (
+        var success: Boolean,
         var resultCode: String,
         var id: Int
         )

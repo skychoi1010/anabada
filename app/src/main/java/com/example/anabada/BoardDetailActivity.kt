@@ -342,7 +342,7 @@ class BoardDetailActivity : AppCompatActivity() {
                 when (deleteContentRes?.resultCode) {
                     null -> {
                         //end
-                        Toast.makeText(this@BoardDetailActivity, "댓글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@BoardDetailActivity, "게시글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                     "OK" -> {
                         //end
@@ -351,8 +351,9 @@ class BoardDetailActivity : AppCompatActivity() {
                             startActivity(this)
                         }
                     }
-                    else -> {
+                    "Not Your Board" -> {
                         //
+                        Toast.makeText(this@BoardDetailActivity, "Not your board", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
