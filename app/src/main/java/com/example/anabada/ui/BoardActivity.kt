@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,18 +10,21 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.anabada.*
 import com.example.anabada.databinding.ActivityBoardBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.SimpleDateFormat
 import java.util.*
-import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.PopupMenu
 import com.example.anabada.databinding.ListitemBoardBinding
-import kotlin.random.Random
+import com.example.anabada.network.ApiService
+import com.example.anabada.network.BoardPageRes
+import com.example.anabada.network.BoardsData
+import com.example.anabada.network.LogoutRes
+import com.example.anabada.repo.MySharedPreferences
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 

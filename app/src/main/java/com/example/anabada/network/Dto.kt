@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.network
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

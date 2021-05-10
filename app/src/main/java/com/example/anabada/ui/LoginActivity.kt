@@ -1,11 +1,15 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.anabada.*
 import com.example.anabada.databinding.ActivityLoginBinding
+import com.example.anabada.network.ApiService
+import com.example.anabada.network.LoginRes
+import com.example.anabada.repo.MySharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

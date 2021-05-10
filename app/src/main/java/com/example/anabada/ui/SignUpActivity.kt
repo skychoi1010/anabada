@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.databinding.ActivitySignupBinding
+import com.example.anabada.network.ApiService
+import com.example.anabada.network.SignUpRes
+import com.example.anabada.repo.MySharedPreferences
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
@@ -18,7 +21,7 @@ import java.util.regex.Pattern
 
 class SignUpActivity: AppCompatActivity() {
 
-    var signup:SignUpRes? = null
+    var signup: SignUpRes? = null
     private val ID_POLICY:String = "4~12자리의 대소문자/숫자만 가능합니다."
     private val NICKNAME_POLICY:String = "2~10자리의 한글/대소문자/숫자만 가능합니다."
     private val PASSWORD_POLICY:String = "8~30자리의 숫자/대문자/소문자/특수문자(!,_) 중 2가지 이상의 조합이어야 합니다."

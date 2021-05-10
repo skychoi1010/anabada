@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/tab_home"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/anabada_font"
+        android:title="home" />
+    <item
+        android:id="@+id/tab_trends"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/anabada_font"
+        android:title="trends" />
+    <item
+        android:id="@+id/tab_post"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/anabada_font"
+        android:title="post" />
+    <item
+        android:id="@+id/tab_chat"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/anabada_font"
+        android:title="chat" />
+    <item
+        android:id="@+id/tab_mypage"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/anabada_font"
+        android:title="mypage" />
+</menu>

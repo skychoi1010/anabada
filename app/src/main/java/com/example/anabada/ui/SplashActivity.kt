@@ -1,9 +1,12 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.anabada.network.ApiService
+import com.example.anabada.network.LoginRes
+import com.example.anabada.repo.MySharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +42,7 @@ class SplashActivity : AppCompatActivity() {
                         finish()
                     } else {
                         Toast.makeText(this@SplashActivity, "${MySharedPreferences.getUserNick(this@SplashActivity)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-                        Intent(this@SplashActivity, BoardActivity::class.java).apply {
+                        Intent(this@SplashActivity, MainActivity::class.java).apply {
                             startActivity(this)
                         }
                         finish()

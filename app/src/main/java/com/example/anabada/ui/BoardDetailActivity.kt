@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -23,7 +22,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.anabada.*
 import com.example.anabada.databinding.ActivityBoardDetailBinding
+import com.example.anabada.network.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

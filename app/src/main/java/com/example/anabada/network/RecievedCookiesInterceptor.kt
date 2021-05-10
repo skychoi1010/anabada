@@ -1,10 +1,10 @@
-package com.example.anabada
+package com.example.anabada.network
 
 import android.content.Context
+import com.example.anabada.repo.MySharedPreferences
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
-
 
 class ReceivedCookiesInterceptor     // AddCookiesInterceptor()
     (private val context: Context) : Interceptor {

@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.content.Context
 import android.graphics.Color
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.anabada.databinding.ListitemCommentsBinding
+import com.example.anabada.network.CommentDetail
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,7 +26,7 @@ class CommentsRecyclerAdapter(private var commentsPrevDataList: ArrayList<Commen
 
     override fun getItemCount(): Int = commentsPrevDataList.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentsViewHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentsViewHolder {
         val binding = ListitemCommentsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CommentsViewHolder(binding)
     }

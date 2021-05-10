@@ -1,7 +1,6 @@
-package com.example.anabada
+package com.example.anabada.network
 
 import android.content.Context
-import android.util.Log
 import okhttp3.JavaNetCookieJar
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient

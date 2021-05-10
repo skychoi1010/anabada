@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.anabada.R
 import com.example.anabada.databinding.ListitemBoardBinding
+import com.example.anabada.network.BoardsData
 import java.text.SimpleDateFormat
 import java.util.*
 

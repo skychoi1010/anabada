@@ -1,4 +1,4 @@
-package com.example.anabada
+package com.example.anabada.ui
 
 import android.Manifest
 import android.app.Activity
@@ -22,6 +22,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ActivityPostBinding
+import com.example.anabada.network.ApiService
+import com.example.anabada.network.HealthCheckRes
+import com.example.anabada.network.PostContentRes
+import com.example.anabada.network.PostImageRes
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
