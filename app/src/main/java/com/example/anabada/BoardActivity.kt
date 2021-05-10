@@ -16,7 +16,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.system.exitProcess
 
-
 class BoardActivity : AppCompatActivity() {
 
     private var boardPageRes: BoardPageRes? = null
