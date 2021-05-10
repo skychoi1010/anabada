@@ -13,15 +13,14 @@ import retrofit2.http.*
 import java.net.CookieManager
 import java.net.CookiePolicy
 
-
 interface ApiService {
 
     @FormUrlEncoded
     @POST("user/login")
-    suspend fun reqLogin(
+    fun reqLogin(
         @Field("uid") uid: String,
         @Field("upw") upw: String
-    ): LoginRes
+    ): Call<LoginRes>
 
     @GET("user/logout")
     fun reqLogout(): Call<LogoutRes>
@@ -67,18 +66,17 @@ interface ApiService {
 
     @FormUrlEncoded
     @PUT("board/{id}")
-    fun reqReviseContent(
+    fun reqEditContent(
         @Path("id") id: Int,
         @Field("title") title: String,
         @Field("price") price: Int,
         @Field("contents") contents: String,
         @Field("imgId") imgId: Int //TODO not confirmed
-    ): Call<ReviseContentRes>
+    ): Call<EditContentRes>
 
-    @FormUrlEncoded
     @DELETE("board/{id}")
     fun reqDeleteContent(
-        @Field("id") id: Int
+        @Path("id") id: Int
     ): Call<DeleteContentRes>
 
     @FormUrlEncoded
@@ -90,11 +88,11 @@ interface ApiService {
 
     @FormUrlEncoded
     @PUT("comment/{id}")
-    fun reqReviseComment(
-        @Path("contents") contents: String
-    ): Call<ReviseCommentRes>
+    fun reqEditComment(
+        @Path("id") id: Int,
+        @Field("contents") contents: String
+    ): Call<EditCommentRes>
 
-    @FormUrlEncoded
     @DELETE("comment/{id}")
     fun reqDeleteComment(
         @Path("id") id: Int

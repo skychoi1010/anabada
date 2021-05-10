@@ -1,13 +1,10 @@
 package com.example.anabada
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.databinding.ActivitySignupBinding
 import com.google.android.material.textfield.TextInputEditText
@@ -15,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import java.util.regex.Pattern
 
 
@@ -30,6 +28,11 @@ class SignUpActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        Objects.requireNonNull(supportActionBar)!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = "Sign Up"
+        supportActionBar!!.setDisplayShowTitleEnabled(true)
 
         val api = ApiService.create(this)
 
@@ -104,9 +107,6 @@ class SignUpActivity: AppCompatActivity() {
         })
 
         binding.signupBtn.setOnClickListener {
-            setError(binding.id, null)
-            setError(binding.pw, null)
-            setError(binding.nickname, null)
 
             val uid = binding.id.text.toString()
             val upw = binding.pw.text.toString()
@@ -137,6 +137,11 @@ class SignUpActivity: AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun isValidPassword(data: Any, str: String): Boolean {

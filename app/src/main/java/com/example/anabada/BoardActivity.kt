@@ -14,6 +14,15 @@ import com.example.anabada.databinding.ActivityBoardBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
+import android.text.format.DateFormat
+import android.view.Gravity
+import android.view.MenuItem
+import android.widget.PopupMenu
+import com.example.anabada.databinding.ListitemBoardBinding
+import kotlin.random.Random
+import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
 class BoardActivity : AppCompatActivity() {
@@ -54,27 +63,49 @@ class BoardActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<LogoutRes>, response: Response<LogoutRes>) {
                     MySharedPreferences.clearUser(this@BoardActivity)
-                    Intent(this@BoardActivity, MainActivity::class.java).apply {
+                    Intent(this@BoardActivity, LoginActivity::class.java).apply {
                         startActivity(this)
                     }
                 }
             })
         }
 
-    }
-    /*
-    public  void onBackPressed()  {
-        long tempTime  =  System.currentTimeMillis();   
-        long intervalTime  =  tempTime - backPressedTime;   
-        if (0 <= intervalTime  &&  FINISH_INTERVAL_TIME >= intervalTime)   {       
-            super.onBackPressed();   
-        }   else {            
-            backPressedTime  =  tempTime;     
-            Toast.makeText(getApplicationContext(),  "한번 더 누르면 종료됩니다.",  Toast.LENGTH_SHORT).show();   
-        }
-    }
+        boardRecyclerAdapter.setOptionsClickListener(object : BoardRecyclerAdapter.OptionsClickListener {
 
-     */
+            override fun onOptionsClick(view: View, id: BoardsData, binding: ListitemBoardBinding) {
+                //creating a popup menu
+                val popup = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    PopupMenu(binding.root.context, binding.tvPrevCommentOptions, Gravity.END, 0, R.style.MyPopupMenu)
+                } else {
+                    PopupMenu(binding.root.context, binding.tvPrevCommentOptions)
+                }
+                //inflating menu from xml resource
+                popup.menuInflater.inflate(R.menu.menu_comments, popup.menu)
+                //adding click listener
+                popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                    override fun onMenuItemClick(item: MenuItem?): Boolean {
+                        return when (item?.itemId) {
+                            R.id.edit -> {
+                                Intent(this@BoardActivity, BoardDetailActivity::class.java).apply {
+                                    putExtra("board item", id)
+                                    startActivity(this)
+                                }
+                                true
+                            }
+                            R.id.delete -> {
+                                Toast.makeText(this@BoardActivity, "delete!", Toast.LENGTH_SHORT).show()
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                })
+                //displaying the popup
+                popup.show()
+            }
+        })
+
+    }
 
     private var time: Long = 0
     override fun onBackPressed() {
@@ -90,6 +121,10 @@ class BoardActivity : AppCompatActivity() {
 
     private fun initView(binding: ActivityBoardBinding) {
 
+        binding.appbar.ivAppbarLogo.setOnClickListener {
+            binding.rvBoard.smoothScrollToPosition(0)
+        }
+
         if (isPageCallable) {
             pageNum = 1
             Log.d("//////////init////////", pageNum.toString())
@@ -103,9 +138,9 @@ class BoardActivity : AppCompatActivity() {
         binding.rvBoard.addItemDecoration(dividerItemDecoration)
 
         boardRecyclerAdapter.setItemClickListener(object : BoardRecyclerAdapter.ItemClickListener {
-            override fun onClick(view: View, item: BoardsData) {
+            override fun onClick(view: View, id: BoardsData) {
                 Intent(this@BoardActivity, BoardDetailActivity::class.java).apply {
-                    putExtra("board item", item)
+                    putExtra("board item", id)
                     startActivity(this)
                 }
             }
@@ -122,8 +157,15 @@ class BoardActivity : AppCompatActivity() {
         }
 
         binding.floatingActionButton.setOnClickListener {
-            Intent(this@BoardActivity, PostActivity::class.java).apply {
-                startActivity(this)
+            if (MySharedPreferences.getUserId(this) == "no") { // need to login
+                Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                Intent(this, LoginActivity::class.java).apply {
+                    startActivity(this)
+                }
+            } else {
+                Intent(this@BoardActivity, PostActivity::class.java).apply {
+                    startActivity(this)
+                }
             }
         }
     }

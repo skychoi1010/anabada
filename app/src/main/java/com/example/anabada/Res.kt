@@ -81,7 +81,7 @@ data class PostContentRes (
         var id: Int
         )
 
-data class ReviseContentRes (
+data class EditContentRes (
         var resultCode: String,
         var id: Int
         )
@@ -92,11 +92,12 @@ data class DeleteContentRes (
         )
 
 data class PostCommentRes (
+        var success: Boolean,
         var resultCode: String,
         var id: Int
         )
 
-data class ReviseCommentRes (
+data class EditCommentRes (
         var resultCode: String,
         var id: Int
         )

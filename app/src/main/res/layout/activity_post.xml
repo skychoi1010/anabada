@@ -1,80 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/white">
 
-    <include layout="@layout/layout_app_bar_image"
+    <include
         android:id="@+id/appbar"
-        app:layout_constraintTop_toBottomOf="@id/ll_image"/>
+        layout="@layout/layout_app_bar_image"
+        app:layout_constraintTop_toBottomOf="@id/ll_image" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp"
         android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@id/appbar"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/v_divider_1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tv_post_content_title">
+        app:layout_constraintTop_toBottomOf="@id/appbar">
 
         <Button
             android:id="@+id/btn_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp" />
 
         <Button
             android:id="@+id/btn_pick_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
-            android:text="0/5"/>
+            android:text="0/5" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/siv_post_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="centerCrop"
             android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/circleImageView" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <EditText
-        android:id="@+id/tv_post_content_title"
+    <View
+        android:id="@+id/v_divider_1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginHorizontal="20dp"
-        android:hint="title"
-        android:layout_marginTop="30dp"
+        android:background="#ececec"
         app:layout_constraintTop_toBottomOf="@id/ll_image"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/til_title"/>
 
-    <EditText
-        android:id="@+id/tv_post_content_price"
-        android:inputType="number"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:hint="price"
-        app:layout_constraintTop_toBottomOf="@id/tv_post_content_title"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:gravity="center_vertical"
+        app:hintEnabled="false"
+        android:foregroundGravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/v_divider_1"
+        app:layout_constraintBottom_toTopOf="@id/v_divider_2">
 
-    <EditText
-        android:id="@+id/tv_post_content_contents"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_post_content_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="제목"
+            android:textSize="16sp"
+            android:paddingVertical="10dp"
+            android:background="@color/transparent"
+            android:fontFamily="@font/font_regular" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/v_divider_2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="#ececec"
+        app:layout_constraintTop_toBottomOf="@id/til_title"
+        app:layout_constraintBottom_toTopOf="@id/til_price"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        app:hintEnabled="false"
+        app:layout_constraintTop_toBottomOf="@id/v_divider_2"
+        app:layout_constraintBottom_toTopOf="@id/v_divider_3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_post_content_price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="10dp"
+            android:hint="가격"
+            android:textSize="16sp"
+            android:background="@color/transparent"
+            android:fontFamily="@font/font_regular"
+            android:inputType="number"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/v_divider_3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="#ececec"
+        app:layout_constraintTop_toBottomOf="@id/til_price"
+        app:layout_constraintBottom_toTopOf="@id/til_content"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="20dp"
-        android:hint="content"
-        app:layout_constraintTop_toBottomOf="@id/tv_post_content_price"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp"/>
+        app:hintEnabled="false"
+        app:layout_constraintTop_toBottomOf="@id/v_divider_3"
+        app:layout_constraintBottom_toTopOf="@id/v_divider_4">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_post_content_contents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="10dp"
+            android:hint="상품 설명"
+            android:textSize="16sp"
+            android:background="@color/transparent"
+            android:gravity="start"
+            android:fontFamily="@font/font_regular"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/v_divider_4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="50dp"
+        android:background="#ececec"
+        app:layout_constraintTop_toBottomOf="@id/til_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

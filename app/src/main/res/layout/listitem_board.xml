@@ -12,6 +12,7 @@
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,6 +44,7 @@
         android:layout_marginTop="3dp"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="12dp"
+        android:layout_marginRight="5dp"
         tools:text="작성자"
         android:fontFamily="@font/font_regular"
         android:textSize="14sp"
@@ -72,6 +74,7 @@
         android:id="@+id/tv_board_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
         tools:text="날짜"
         android:fontFamily="@font/font_regular"
         android:textSize="14sp"
@@ -134,5 +137,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/iv_board_comment_ic"/>
+
+    <TextView
+        android:id="@+id/tv_prev_comment_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textStyle="bold"
+        android:paddingTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingBottom="15dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_board_title"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
