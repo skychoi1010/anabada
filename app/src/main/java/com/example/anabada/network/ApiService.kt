@@ -97,12 +97,6 @@ interface ApiService {
         @Path("id") id: Int
     ): Call<DeleteCommentRes>
 
-    @Multipart
-    @POST("echo")
-    fun reqHealthCheck(
-        @Part image: MultipartBody.Part
-    ): Call<HealthCheckRes>
-
     companion object {
         private const val BASE_URL = "https://anabada.du.r.appspot.com/api/"
         private const val BASE_URL_IMG = "http://175.113.223.199:8080/api/"
