@@ -1,7 +1,7 @@
 package com.example.anabada.network
 
 import android.content.Context
-import com.example.anabada.repo.MySharedPreferences
+import com.example.anabada.repository.MySharedPreferences
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response

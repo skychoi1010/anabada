@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.databinding.ActivitySignupBinding
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.SignUpRes
-import com.example.anabada.repo.MySharedPreferences
+import com.example.anabada.repository.MySharedPreferences
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call

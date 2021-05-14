@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.LoginRes
-import com.example.anabada.repo.MySharedPreferences
+import com.example.anabada.repository.MySharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

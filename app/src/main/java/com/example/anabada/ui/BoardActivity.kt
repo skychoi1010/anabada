@@ -24,7 +24,7 @@ import com.example.anabada.network.ApiService
 import com.example.anabada.network.BoardPageRes
 import com.example.anabada.network.BoardsData
 import com.example.anabada.network.LogoutRes
-import com.example.anabada.repo.MySharedPreferences
+import com.example.anabada.repository.MySharedPreferences
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
@@ -33,7 +33,7 @@ class BoardActivity : AppCompatActivity() {
     private var boardPageRes: BoardPageRes? = null
     private var boardsDataList = ArrayList<BoardsData>()
 
-    //mutableListOf(BoardsData(2,"skyy", "testtitle1", "contents\nnewline\nend\n", 1000, "1", false, "2020/03/16", "2020/03/16", "1", "skyyy"))
+    //mutableListOf(BoardsDataLocal(2,"skyy", "testtitle1", "contents\nnewline\nend\n", 1000, "1", false, "2020/03/16", "2020/03/16", "1", "skyyy"))
     private var boardRecyclerAdapter = BoardRecyclerAdapter(boardsDataList)
     var pageNum = 1
     var isPageCallable = true

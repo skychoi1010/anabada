@@ -1,6 +1,8 @@
 package com.example.anabada.db
 
+import android.app.Application
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.anabada.db.model.BoardsData
@@ -18,5 +20,16 @@ import com.example.anabada.db.model.BoardsData
 //    TranslationsConverter::class)
 
 abstract class AnabadaDB : RoomDatabase() {
-//    abstract val countriesDao: CountriesDao
+    abstract val boardsDataDao: BoardsDataDao
+
+
+    fun create(application: Application): CountriesDatabase {
+        return Room.databaseBuilder(application, CountriesDatabase::class.java, "countries")
+                .fallbackToDestructiveMigration()
+                .build()
+    }
+
+    fun provideCountriesDao(database: CountriesDatabase): CountriesDao {
+        return  database.countriesDao
+    }
 }

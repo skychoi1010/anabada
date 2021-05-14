@@ -1,6 +1,8 @@
 package com.example.anabada
 
 import android.app.Application
+import com.example.anabada.db.AnabadaDatabase
+import com.example.anabada.db.BoardsDataDao
 import com.example.anabada.network.ApiService
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +18,8 @@ class AnabadaApp : Application() {
             androidLogger()
             androidContext(this@AnabadaApp)
             modules(
-                networkModule
+                    networkModule,
+                    databaseModule
             )
         }
     }
@@ -25,4 +28,8 @@ class AnabadaApp : Application() {
 val networkModule = module {
     single { ApiService.create(androidContext()) }
     single { ApiService.createImg() }
+}
+
+val databaseModule = module {
+    single { AnabadaDatabase.create(androidContext()) }
 }

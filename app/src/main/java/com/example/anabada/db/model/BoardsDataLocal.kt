@@ -2,8 +2,9 @@ package com.example.anabada.db.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.anabada.db.AnabadaDatabase
 
-@Entity(tableName = "BoardsData")
+@Entity(tableName = AnabadaDatabase.TABLE_BOARDS_DATA)
 class BoardsData (
     @PrimaryKey(autoGenerate = true)
     var id: Int,

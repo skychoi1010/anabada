@@ -4,14 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.anabada.network.BoardsData
+import com.example.anabada.db.model.BoardsDataLocal
 
 @Dao
 interface BoardsDataDao {
 
-    @Query("SELECT * FROM BoardsData")
-    fun findAll(): ArrayList<BoardsData>
+    @Query("SELECT * FROM boards_data")
+    fun findAll(): BoardsDataLocal
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(data: ArrayList<BoardsData>)
+    fun add(data: BoardsDataLocal)
+
 }

@@ -19,7 +19,7 @@ import com.example.anabada.*
 import com.example.anabada.databinding.ActivityCommentsDetailBinding
 import com.example.anabada.databinding.ListitemCommentsBinding
 import com.example.anabada.network.*
-import com.example.anabada.repo.MySharedPreferences
+import com.example.anabada.repository.MySharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -23,7 +23,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.databinding.ActivityPostBinding
 import com.example.anabada.network.ApiService
-import com.example.anabada.network.HealthCheckRes
 import com.example.anabada.network.PostContentRes
 import com.example.anabada.network.PostImageRes
 import okhttp3.MediaType
@@ -40,7 +39,6 @@ import java.io.IOException
 
 class PostActivity : AppCompatActivity() {
 
-    var healthCheckRes: HealthCheckRes? = null
     var postContentRes: PostContentRes? = null
     var postImageRes: PostImageRes? = null
     private val api = ApiService.create(this)
