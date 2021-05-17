@@ -6,6 +6,7 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -16,86 +17,86 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("user/login")
-    fun reqLogin(
+    suspend fun reqLogin(
         @Field("uid") uid: String,
         @Field("upw") upw: String
-    ): Call<LoginRes>
+    ): Response<LoginRes>
 
     @GET("user/logout")
-    fun reqLogout(): Call<LogoutRes>
+    suspend fun reqLogout(): Response<LogoutRes>
 
     @FormUrlEncoded
     @POST("user/signup")
-    fun reqSignUp(
+    suspend fun reqSignUp(
         @Field("uid") uid: String,
         @Field("upw") upw: String,
         @Field("nickname") nickname: String
-    ): Call<SignUpRes>
+    ): Response<SignUpRes>
 
     @GET("board")
-    fun reqBoard(
+    suspend fun reqBoard(
         @Query("page") page: Int
-    ): Call<BoardPageRes>
+    ): Response<BoardPageRes>
 
     @GET("board/{id}")
-    fun reqBoardDetail(
+    suspend fun reqBoardDetail(
         @Path("id") id: Int
-    ): Call<BoardDetailRes>
+    ): Response<BoardDetailRes>
 
     @GET("board/{id}/comment")
-    fun reqComment(
+    suspend fun reqComment(
         @Path("id") id: Int,
         @Query("page") page: Int
-    ): Call<CommentRes>
+    ): Response<CommentRes>
 
     @Multipart
     @POST("image")
-    fun reqPostImage(
+    suspend fun reqPostImage(
         @Part image: MultipartBody.Part
-    ): Call<PostImageRes>
+    ): Response<PostImageRes>
 
     @FormUrlEncoded
     @POST("board")
-    fun reqPostContent(
+    suspend fun reqPostContent(
         @Field("title") title: String,
         @Field("price") price: Int,
         @Field("contents") contents: String,
         @Field("imgId") imgId: Int
-    ): Call<PostContentRes>
+    ): Response<PostContentRes>
 
     @FormUrlEncoded
     @PUT("board/{id}")
-    fun reqEditContent(
+    suspend fun reqEditContent(
         @Path("id") id: Int,
         @Field("title") title: String,
         @Field("price") price: Int,
         @Field("contents") contents: String,
         @Field("imgId") imgId: Int //TODO not confirmed
-    ): Call<EditContentRes>
+    ): Response<EditContentRes>
 
     @DELETE("board/{id}")
-    fun reqDeleteContent(
+    suspend fun reqDeleteContent(
         @Path("id") id: Int
-    ): Call<DeleteContentRes>
+    ): Response<DeleteContentRes>
 
     @FormUrlEncoded
     @POST("comment")
-    fun reqPostComment(
+    suspend fun reqPostComment(
         @Field("boardId") boardId: Int,
         @Field("contents") contents: String
-    ): Call<PostCommentRes>
+    ): Response<PostCommentRes>
 
     @FormUrlEncoded
     @PUT("comment/{id}")
-    fun reqEditComment(
+    suspend fun reqEditComment(
         @Path("id") id: Int,
         @Field("contents") contents: String
-    ): Call<EditCommentRes>
+    ): Response<EditCommentRes>
 
     @DELETE("comment/{id}")
-    fun reqDeleteComment(
+    suspend fun reqDeleteComment(
         @Path("id") id: Int
-    ): Call<DeleteCommentRes>
+    ): Response<DeleteCommentRes>
 
     companion object {
         private const val BASE_URL = "https://anabada.du.r.appspot.com/api/"

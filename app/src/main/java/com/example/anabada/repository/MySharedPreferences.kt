@@ -1,4 +1,4 @@
-package com.example.anabada.repo
+package com.example.anabada.repository
 
 import android.content.Context
 import android.content.SharedPreferences

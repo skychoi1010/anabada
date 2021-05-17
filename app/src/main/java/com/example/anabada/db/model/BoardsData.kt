@@ -18,7 +18,7 @@ class BoardsData (
     var commentCount: Int
 )
 
-//@Entity(tableName = "BoardsData")
+//@Entity(tableName = "BoardsDataLocal")
 //class BoardsDetail (
 //    @PrimaryKey(autoGenerate = true)
 //    var id: Int,
