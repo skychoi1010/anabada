@@ -41,7 +41,7 @@
         <activity android:name=".ui.LoginActivity" />
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.BoardActivity" />
+        <activity android:name=".ui.HomeFragment" />
         <activity android:name=".ui.PostActivity" />
         <activity android:name=".ui.BoardDetailActivity" />
         <activity android:name=".ui.CommentsDetailActivity" />

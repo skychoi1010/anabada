@@ -227,7 +227,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                         commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
                     }
                     else -> {
-                        /*Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
+                        /*Toast.makeText(this@HomeFragment, "board api\nsuccess: " + boardPageRes?.success.toString() +
                                 "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
                         commentRes?.comments.also {
                             if (it != null) {

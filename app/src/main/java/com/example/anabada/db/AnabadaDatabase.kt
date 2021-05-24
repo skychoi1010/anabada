@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.anabada.db.model.BoardsDataLocal
+import com.example.anabada.db.model.BoardsData
 
 @Database(
-    entities = [BoardsDataLocal::class],
+    entities = [BoardsData::class],
     version = 1, exportSchema = false
 )
 

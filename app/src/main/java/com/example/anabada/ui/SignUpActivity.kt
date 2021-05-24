@@ -131,7 +131,7 @@ class SignUpActivity: AppCompatActivity() {
                             MySharedPreferences.setUserId(this@SignUpActivity, uid)
                             MySharedPreferences.setUserPass(this@SignUpActivity, upw)
                             MySharedPreferences.setUserNick(this@SignUpActivity, nickname)
-                            Intent(this@SignUpActivity, BoardActivity::class.java).apply {
+                            Intent(this@SignUpActivity, HomeFragment::class.java).apply {
                                 startActivity(this)
                             }
                         }

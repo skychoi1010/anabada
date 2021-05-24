@@ -103,7 +103,7 @@ class PostActivity : AppCompatActivity() {
                                 override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
                                     postContentRes = response.body()
                                     Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                                    Intent(this@PostActivity, BoardActivity::class.java).apply {
+                                    Intent(this@PostActivity, HomeFragment::class.java).apply {
                                         startActivity(this)
                                     }
 

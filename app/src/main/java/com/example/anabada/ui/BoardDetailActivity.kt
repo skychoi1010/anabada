@@ -192,7 +192,7 @@ class BoardDetailActivity : AppCompatActivity() {
                         binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
                         Glide.with(this@BoardDetailActivity)
                                 .load(boardDetailRes?.board?.detailImg)
-                                .apply(RequestOptions().placeholder(R.drawable.ic_launcher_foreground))
+                                .apply(RequestOptions().placeholder(R.drawable.no_img_small))
                                 .into(binding.ivBoardDetailImg)
                         binding.tvBoardDetailComment.text = "댓글 ${boardDetailRes?.board?.commentCount.toString()} > "
                     }
@@ -220,7 +220,7 @@ class BoardDetailActivity : AppCompatActivity() {
         //TODO isMine 확인 로직 더 깔끔하게
         binding.tvBoardDetailOptions.setOnClickListener {
             //creating a popup menu
-            val popup = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+            val popup = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 PopupMenu(binding.root.context, binding.tvBoardDetailOptions, Gravity.END, 0, R.style.MyPopupMenu)
             } else {
                 PopupMenu(binding.root.context, binding.tvBoardDetailOptions)
@@ -287,7 +287,7 @@ class BoardDetailActivity : AppCompatActivity() {
                         binding.tvBoardDetailNoComment.visibility = VISIBLE
                     }
                     else -> {
-                        /*Toast.makeText(this@BoardActivity, "board api\nsuccess: " + boardPageRes?.success.toString() +
+                        /*Toast.makeText(this@HomeFragment, "board api\nsuccess: " + boardPageRes?.success.toString() +
                                 "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
                         commentRes?.comments.also {
                             if (it != null) {
@@ -319,7 +319,7 @@ class BoardDetailActivity : AppCompatActivity() {
                     "OK" -> {
                         //end
                         Toast.makeText(this@BoardDetailActivity, "edit content api\n" + editContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                        Intent(this@BoardDetailActivity, BoardActivity::class.java).apply {
+                        Intent(this@BoardDetailActivity, HomeFragment::class.java).apply {
                             startActivity(this)
                         }
                     }
@@ -348,7 +348,7 @@ class BoardDetailActivity : AppCompatActivity() {
                     "OK" -> {
                         //end
                         Toast.makeText(this@BoardDetailActivity, "delete content api\n" + deleteContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                        Intent(this@BoardDetailActivity, BoardActivity::class.java).apply {
+                        Intent(this@BoardDetailActivity, HomeFragment::class.java).apply {
                             startActivity(this)
                         }
                     }

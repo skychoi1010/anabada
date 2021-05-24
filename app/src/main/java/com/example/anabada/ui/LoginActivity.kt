@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.skipBtn.setOnClickListener {
             MySharedPreferences.setUserId(this, "no")
-            val intent = Intent(this@LoginActivity, BoardActivity::class.java)
+            val intent = Intent(this@LoginActivity, HomeFragment::class.java)
             startActivity(intent)
         }
 
@@ -72,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                             this@LoginActivity,
                             loginRes?.nickname.toString()
                     )
-                    Intent(this@LoginActivity, BoardActivity::class.java).apply {
+                    Intent(this@LoginActivity, HomeFragment::class.java).apply {
                         startActivity(this)
                     }
                 }

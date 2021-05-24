@@ -5,30 +5,30 @@
         android:id="@+id/tab_home"
         app:showAsAction="always"
         android:enabled="true"
-        android:icon="@drawable/anabada_font"
+        android:icon="@drawable/ic_home_b"
         android:title="home" />
     <item
         android:id="@+id/tab_trends"
         app:showAsAction="always"
         android:enabled="true"
-        android:icon="@drawable/anabada_font"
+        android:icon="@drawable/ic_search"
         android:title="trends" />
     <item
         android:id="@+id/tab_post"
         app:showAsAction="always"
         android:enabled="true"
-        android:icon="@drawable/anabada_font"
+        android:icon="@drawable/ic_plus_b"
         android:title="post" />
     <item
         android:id="@+id/tab_chat"
         app:showAsAction="always"
         android:enabled="true"
-        android:icon="@drawable/anabada_font"
+        android:icon="@drawable/ic_comment_b"
         android:title="chat" />
     <item
         android:id="@+id/tab_mypage"
         app:showAsAction="always"
         android:enabled="true"
-        android:icon="@drawable/anabada_font"
+        android:icon="@drawable/ic_user_b"
         android:title="mypage" />
 </menu>

@@ -2,15 +2,26 @@ package com.example.anabada.repository
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.anabada.CoroutineHandler
+import com.example.anabada.Utils.handleApiError
+import com.example.anabada.Utils.handleApiSuccess
 import com.example.anabada.Utils.isNetworkAvailable
 import com.example.anabada.db.BoardsDataDao
+import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.ApiService
-import com.example.anabada.network.BoardsData
+import com.example.anabada.network.BoardPageRes
+import com.example.anabada.ui.BoardsDataPagingSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 interface BoardsDataRepo {
-    suspend fun getBoard(): ArrayList<BoardsData>
+    suspend fun getBoard(): CoroutineHandler<BoardPageRes>
+    fun getSearchResultStream(query: String): Flow<PagingData<com.example.anabada.db.model.BoardsData>>
 }
 
 class BoardsDataRepoImpl(
@@ -18,38 +29,58 @@ class BoardsDataRepoImpl(
     private val context: Context,
     private val dao: BoardsDataDao
 ) : BoardsDataRepo {
-    override suspend fun getBoard(): ArrayList<BoardsData> {
+    override suspend fun getBoard(): CoroutineHandler<BoardPageRes> {
         if (isNetworkAvailable(context)) {
-            return try {
+            try {
                 val response = api.reqBoard(1)
                 if (response.isSuccessful) {
+                    response.body()
                     //save the data
-                    response.body().let {
-                        withContext(Dispatchers.IO) { dao.add(it) }
+                    response.body()?.boards.let {
+                        withContext(Dispatchers.IO) {
+                            if (it != null) {
+                                dao.add(it)
+                            }
+                        }
                     }
-                    handleSuccess(response)
+                    return handleApiSuccess(response)
                 } else {
-                    handleApiError(response)
+                    Toast.makeText(context, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+                    Log.d("///BoardsDataRepo", "board api Failed connection")
+                    return handleApiError(response)
                 }
             } catch (e: Exception) {
-                AppResult.Error(e)
+                return CoroutineHandler.Error(e)
             }
         } else {
             //check in db if the data exists
-            val data = getCountriesDataFromCache()
-            return if (data.isNotEmpty()) {
+            val data = getDataFromCache()
+            return run {
                 Log.d("db", "from db")
-                AppResult.Success(data)
-            } else
-            //no network
-                context.noNetworkConnectivityError()
+                CoroutineHandler.Success(BoardPageRes(true, "DB", data))
+            }
+            //                context.noNetworkConnectivityError()
         }
     }
 
-    private suspend fun getCountriesDataFromCache(): ArrayList<BoardsData> {
+    private suspend fun getDataFromCache(): ArrayList<BoardsData> {
         return withContext(Dispatchers.IO) {
             dao.findAll()
         }
+    }
+
+    override fun getSearchResultStream(query: String): Flow<PagingData<BoardsData>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { BoardsDataPagingSource(api, query) }
+        ).flow
+    }
+
+    companion object {
+        private const val NETWORK_PAGE_SIZE = 3 * 20 //current page size must be initial loading page times three (??)
     }
 
     /*

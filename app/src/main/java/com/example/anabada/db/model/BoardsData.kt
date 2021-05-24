@@ -1,11 +1,14 @@
 package com.example.anabada.db.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.anabada.db.AnabadaDatabase
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = AnabadaDatabase.TABLE_BOARDS_DATA)
-class BoardsData (
+data class BoardsData (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var title: String,
@@ -13,12 +16,12 @@ class BoardsData (
     var author: String,
     var thumbImg: String,
     var detailImg: String,
-    var isMine: Boolean,
+    val isMine: Boolean,
     var date: String,
     var commentCount: Int
-)
+): Parcelable
 
-//@Entity(tableName = "BoardsDataLocal")
+//@Entity(tableName = "BoardsData")
 //class BoardsDetail (
 //    @PrimaryKey(autoGenerate = true)
 //    var id: Int,

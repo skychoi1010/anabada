@@ -23,7 +23,7 @@
             android:fontFamily="@font/font_bold"
             android:padding="15dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/anabada"
+            android:src="@drawable/ic_anabada"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
