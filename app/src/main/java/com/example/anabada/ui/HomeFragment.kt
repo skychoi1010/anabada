@@ -180,29 +180,29 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
             }
         })
 
-        binding.lSwipeRefresh.setOnRefreshListener {
-//            isPageCallable = true
-//            pageNum = 1
-//            boardsDataList.clear()
-//            boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
-//            Log.d("//////////swipe////////", pageNum.toString())
-//            callBoard(pageNum)
-//            binding.lSwipeRefresh.isRefreshing = false
-            boardsDataAdapter.refresh() //changed to paging adapter + load state adapter
-        }
-
-        binding.floatingActionButton.setOnClickListener {
-            if (MySharedPreferences.getUserId(fragmentContext) == "no") { // need to login
-                Toast.makeText(fragmentContext, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-                Intent(fragmentContext, LoginActivity::class.java).run {
-                    startActivity(this)
-                }
-            } else {
-                Intent(fragmentContext, PostActivity::class.java).run {
-                    startActivity(this)
-                }
-            }
-        }
+//        binding.lSwipeRefresh.setOnRefreshListener {
+////            isPageCallable = true
+////            pageNum = 1
+////            boardsDataList.clear()
+////            boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+////            Log.d("//////////swipe////////", pageNum.toString())
+////            callBoard(pageNum)
+////            binding.lSwipeRefresh.isRefreshing = false
+//            boardsDataAdapter.refresh() //changed to paging adapter + load state adapter
+//        }
+//
+//        binding.floatingActionButton.setOnClickListener {
+//            if (MySharedPreferences.getUserId(fragmentContext) == "no") { // need to login
+//                Toast.makeText(fragmentContext, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+//                Intent(fragmentContext, LoginActivity::class.java).run {
+//                    startActivity(this)
+//                }
+//            } else {
+//                Intent(fragmentContext, PostActivity::class.java).run {
+//                    startActivity(this)
+//                }
+//            }
+//        }
     }
 
     private fun initScrollListener() {

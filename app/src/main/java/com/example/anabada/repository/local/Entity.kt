@@ -3,7 +3,7 @@ package com.example.anabada.db.model
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.anabada.db.AnabadaDatabase
+import com.example.anabada.repository.local.AnabadaDatabase
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -34,3 +34,11 @@ data class BoardsData (
 //    var date: String,
 //    var commentCount: Int
 //)
+
+@Entity(tableName = "remote_keys")
+data class RemoteKeys(
+    @PrimaryKey
+    val repoId: Int,
+    val prevKey: Int?,
+    val nextKey: Int?
+)

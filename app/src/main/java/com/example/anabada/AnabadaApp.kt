@@ -1,9 +1,12 @@
 package com.example.anabada
 
 import android.app.Application
-import com.example.anabada.db.AnabadaDatabase
-import com.example.anabada.db.BoardsDataDao
+import androidx.lifecycle.ViewModelProvider
+import com.example.anabada.repository.local.AnabadaDatabase
 import com.example.anabada.network.ApiService
+import com.example.anabada.repository.BoardsDataPagingSource
+import com.example.anabada.repository.BoardsDataRepoImpl
+import com.example.anabada.repository.BoardsRemoteMediator
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -18,8 +21,9 @@ class AnabadaApp : Application() {
             androidLogger()
             androidContext(this@AnabadaApp)
             modules(
-                    networkModule,
-                    databaseModule
+                networkModule,
+                databaseModule,
+                repositoryModule
             )
         }
     }
@@ -32,4 +36,11 @@ val networkModule = module {
 
 val databaseModule = module {
     single { AnabadaDatabase.create(androidContext()) }
+}
+
+val repositoryModule = module {
+    factory { ViewModelProvider.AndroidViewModelFactory(get()) }
+    factory { BoardsDataRepoImpl(get(), get(), get()) }
+    factory { BoardsRemoteMediator(get(), get()) }
+    factory { BoardsDataPagingSource(get()) }
 }

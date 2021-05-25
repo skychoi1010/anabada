@@ -3,6 +3,7 @@ package com.example.anabada.repository
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -10,64 +11,97 @@ import com.example.anabada.CoroutineHandler
 import com.example.anabada.Utils.handleApiError
 import com.example.anabada.Utils.handleApiSuccess
 import com.example.anabada.Utils.isNetworkAvailable
+import com.example.anabada.repository.local.AnabadaDatabase
 import com.example.anabada.db.BoardsDataDao
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.BoardPageRes
-import com.example.anabada.ui.BoardsDataPagingSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 interface BoardsDataRepo {
-    suspend fun getBoard(): CoroutineHandler<BoardPageRes>
-    fun getSearchResultStream(query: String): Flow<PagingData<com.example.anabada.db.model.BoardsData>>
+//    suspend fun getBoard(): CoroutineHandler<BoardPageRes>
+    fun getSearchResultStream(query: String): Flow<PagingData<BoardsData>>
+    fun postsOfSubreddit(subReddit: String, pageSize: Int): Flow<PagingData<BoardsData>>
 }
 
 class BoardsDataRepoImpl(
     private val api: ApiService,
     private val context: Context,
-    private val dao: BoardsDataDao
+    private val db: AnabadaDatabase
 ) : BoardsDataRepo {
-    override suspend fun getBoard(): CoroutineHandler<BoardPageRes> {
-        if (isNetworkAvailable(context)) {
-            try {
-                val response = api.reqBoard(1)
-                if (response.isSuccessful) {
-                    response.body()
-                    //save the data
-                    response.body()?.boards.let {
-                        withContext(Dispatchers.IO) {
-                            if (it != null) {
-                                dao.add(it)
-                            }
-                        }
-                    }
-                    return handleApiSuccess(response)
-                } else {
-                    Toast.makeText(context, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
-                    Log.d("///BoardsDataRepo", "board api Failed connection")
-                    return handleApiError(response)
-                }
-            } catch (e: Exception) {
-                return CoroutineHandler.Error(e)
-            }
-        } else {
-            //check in db if the data exists
-            val data = getDataFromCache()
-            return run {
-                Log.d("db", "from db")
-                CoroutineHandler.Success(BoardPageRes(true, "DB", data))
-            }
-            //                context.noNetworkConnectivityError()
-        }
+
+    private val boardsDataDao: BoardsDataDao = db.boardsDataDao()
+    private val pagingSourceFactory = boardsDataDao.findAll()
+
+    fun getDefaultPageConfig(): PagingConfig {
+        return PagingConfig(pageSize = 20, enablePlaceholders = true)
     }
 
-    private suspend fun getDataFromCache(): ArrayList<BoardsData> {
-        return withContext(Dispatchers.IO) {
-            dao.findAll()
-        }
+    @ExperimentalPagingApi
+    fun letDoggoImagesFlowDb(pagingConfig: PagingConfig = getDefaultPageConfig()): Flow<PagingData<BoardsData>> {
+        if (db == null) throw IllegalStateException("Database is not initialized")
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = { BoardsDataPagingSource(api) },
+            remoteMediator = BoardsRemoteMediator(db, api)
+        ).flow
     }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun postsOfSubreddit(subReddit: String, pageSize: Int) = Pager(
+        config = PagingConfig(pageSize),
+        pagingSourceFactory = { BoardsDataPagingSource(api) },
+        remoteMediator = BoardsRemoteMediator(db = db, api = api)
+    ).flow
+
+    fun letDoggoImagesFlow(pageSize: Int): Flow<PagingData<BoardsData>> {
+        return Pager(
+            config = PagingConfig(pageSize),
+            pagingSourceFactory = { BoardsDataPagingSource(api) }
+        ).flow
+    }
+
+//    override suspend fun getBoard(): CoroutineHandler<BoardPageRes> {
+//        if (isNetworkAvailable(context)) {
+//            try {
+//                val response = api.reqBoard(1)
+//                if (response.isSuccessful) {
+//                    response.body()
+//                    //save the data
+//                    response.body()?.boards.let {
+//                        withContext(Dispatchers.IO) {
+//                            if (it != null) {
+//                                dao.add(it)
+//                            }
+//                        }
+//                    }
+//                    return handleApiSuccess(response)
+//                } else {
+//                    Toast.makeText(context, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                    Log.d("///BoardsDataRepo", "board api Failed connection")
+//                    return handleApiError(response)
+//                }
+//            } catch (e: Exception) {
+//                return CoroutineHandler.Error(e)
+//            }
+//        } else {
+//            //check in db if the data exists
+//            val data = getDataFromCache()
+//            return run {
+//                Log.d("db", "from db")
+//                CoroutineHandler.Success(BoardPageRes(true, "DB", data))
+//            }
+//            //                context.noNetworkConnectivityError()
+//        }
+//    }
+
+//    private suspend fun getDataFromCache(): ArrayList<BoardsData> {
+//        return withContext(Dispatchers.IO) {
+//            dao.findAll()
+//        }
+//    }
 
     override fun getSearchResultStream(query: String): Flow<PagingData<BoardsData>> {
         return Pager(
@@ -75,7 +109,7 @@ class BoardsDataRepoImpl(
                 pageSize = NETWORK_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { BoardsDataPagingSource(api, query) }
+            pagingSourceFactory = { BoardsDataPagingSource(api) }
         ).flow
     }
 

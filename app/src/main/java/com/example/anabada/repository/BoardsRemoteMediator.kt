@@ -1,27 +1,27 @@
 package com.example.anabada.repository
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
-import androidx.paging.PagingState
-import androidx.paging.RemoteMediator
-import com.example.anabada.db.AnabadaDatabase
+import androidx.paging.*
+import androidx.room.withTransaction
+import com.example.anabada.repository.local.AnabadaDatabase
 import com.example.anabada.db.BoardsDataDao
+import com.example.anabada.db.RemoteKeysDao
 import com.example.anabada.db.model.BoardsData
+import com.example.anabada.db.model.RemoteKeys
 import com.example.anabada.network.ApiService
 import retrofit2.HttpException
 import java.io.IOException
 
+
+const val BOARDS_PAGING_START_INDEX = 1
+
 @OptIn(ExperimentalPagingApi::class)
 class BoardsRemoteMediator(
-    private val query: String,
     private val db: AnabadaDatabase,
     private val api: ApiService
 ) : RemoteMediator<Int, BoardsData>() {
 
-    private val postDao: BoardsDataDao = db.posts()
-    private val remoteKeyDao: SubredditRemoteKeyDao = db.remoteKeys()
-
-    private val boardsDao: BoardsDataDao =
+    private val boardsDataDao: BoardsDataDao = db.boardsDataDao()
+    private val remoteKeysDao: RemoteKeysDao = db.remoteKeysDao()
 
     override suspend fun initialize(): InitializeAction {
         // Require that remote REFRESH is launched on initial load and succeeds before launching
@@ -29,66 +29,158 @@ class BoardsRemoteMediator(
         return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
 
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, BoardsData>): RemoteKeys? {
+        // Get the last page that was retrieved, that contained items.
+        // From that last page, get the last item
+        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
+            ?.let { repo ->
+                // Get the remote keys of the last item retrieved
+                remoteKeysDao.remoteKeysRepoId(repo.id)
+            }
+    }
 
-    override suspend fun load(
-        loadType: LoadType,
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, BoardsData>): RemoteKeys? {
+        // Get the first page that was retrieved, that contained items.
+        // From that first page, get the first item
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
+            ?.let { repo ->
+                // Get the remote keys of the first items retrieved
+                remoteKeysDao.remoteKeysRepoId(repo.id)
+            }
+    }
+
+    private suspend fun getRemoteKeyClosestToCurrentPosition(
         state: PagingState<Int, BoardsData>
-    ): MediatorResult {
-        return try {
-            // The network load method takes an optional after=<user.id>
-            // parameter. For every page after the first, pass the last user
-            // ID to let it continue from where it left off. For REFRESH,
-            // pass null to load the first page.
-            val loadKey = when (loadType) {
-                LoadType.REFRESH -> null
-                // In this example, you never need to prepend, since REFRESH
-                // will always load the first page in the list. Immediately
-                // return, reporting end of pagination.
-                LoadType.PREPEND ->
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-
-                    // You must explicitly check if the last item is null when
-                    // appending, since passing null to networkService is only
-                    // valid for initial load. If lastItem is null it means no
-                    // items were loaded after the initial REFRESH and there are
-                    // no more items to load.
-                    if (lastItem == null) {
-                        return MediatorResult.Success(
-                            endOfPaginationReached = true
-                        )
-                    }
-
-                    lastItem.id
-                }
+    ): RemoteKeys? {
+        // The paging library is trying to load data after the anchor position
+        // Get the item closest to the anchor position
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { repoId ->
+                remoteKeysDao.remoteKeysRepoId(repoId)
             }
-
-            // Suspending network load via Retrofit. This doesn't need to be
-            // wrapped in a withContext(Dispatcher.IO) { ... } block since
-            // Retrofit's Coroutine CallAdapter dispatches on a worker
-            // thread.
-            val response = loadKey?.let { api.reqBoard(it) }
-
-            database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    userDao.deleteByQuery(query)
-                }
-
-                // Insert new users into database, which invalidates the
-                // current PagingData, allowing Paging to present the updates
-                // in the DB.
-                dao.insertAll(response?.body()?.boards)
-            }
-
-            MediatorResult.Success(
-                endOfPaginationReached = response.nextKey == null
-            )
-        } catch (e: IOException) {
-            MediatorResult.Error(e)
-        } catch (e: HttpException) {
-            MediatorResult.Error(e)
         }
     }
+
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, BoardsData>): MediatorResult {
+        val page = when (loadType) {
+            LoadType.REFRESH -> {
+                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                remoteKeys?.nextKey?.minus(1) ?: BOARDS_PAGING_START_INDEX
+            }
+            LoadType.PREPEND -> {
+                val remoteKeys = getRemoteKeyForFirstItem(state)
+                // If remoteKeys is null, that means the refresh result is not in the database yet.
+                // We can return Success with `endOfPaginationReached = false` because Paging
+                // will call this method again if RemoteKeys becomes non-null.
+                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                // the end of pagination for prepend.
+                val prevKey = remoteKeys?.prevKey
+                if (prevKey == null) {
+                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                }
+                prevKey
+            }
+            LoadType.APPEND -> {
+                val remoteKeys = getRemoteKeyForLastItem(state)
+                // If remoteKeys is null, that means the refresh result is not in the database yet.
+                // We can return Success with endOfPaginationReached = false because Paging
+                // will call this method again if RemoteKeys becomes non-null.
+                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                // the end of pagination for append.
+                val nextKey = remoteKeys?.nextKey
+                if (nextKey == null) {
+                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                }
+                nextKey
+            }
+        }
+
+        try {
+            val response = api.reqBoard(page.toString().toInt()) //TODO
+            val repos = response.body()?.boards as ArrayList<BoardsData>
+            val endOfPaginationReached = repos.isEmpty()
+            db.withTransaction {
+                // clear all tables in the database
+                if (loadType == LoadType.REFRESH) {
+                    remoteKeysDao.clearRemoteKeys()
+                    boardsDataDao.clearBoards()
+                }
+                val prevKey = if (page == BOARDS_PAGING_START_INDEX) null else page - 1
+                val nextKey = if (endOfPaginationReached) null else page + 1
+                val keys = repos.map {
+                    RemoteKeys(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
+                }
+                remoteKeysDao.insertAll(keys)
+                boardsDataDao.insertAll(repos)
+            }
+            return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+        } catch (exception: IOException) {
+            return MediatorResult.Error(exception)
+        } catch (exception: HttpException) {
+            return MediatorResult.Error(exception)
+        }
+    }
+
+//
+//    override suspend fun load(
+//        loadType: LoadType,
+//        state: PagingState<Int, BoardsData>
+//    ): MediatorResult {
+//        return try {
+//            // The network load method takes an optional after=<user.id>
+//            // parameter. For every page after the first, pass the last user
+//            // ID to let it continue from where it left off. For REFRESH,
+//            // pass null to load the first page.
+//            val loadKey = when (loadType) {
+//                LoadType.REFRESH -> null
+//                // In this example, you never need to prepend, since REFRESH
+//                // will always load the first page in the list. Immediately
+//                // return, reporting end of pagination.
+//                LoadType.PREPEND ->
+//                    return MediatorResult.Success(endOfPaginationReached = true)
+//                LoadType.APPEND -> {
+//                    val lastItem = state.lastItemOrNull()
+//
+//                    // You must explicitly check if the last item is null when
+//                    // appending, since passing null to networkService is only
+//                    // valid for initial load. If lastItem is null it means no
+//                    // items were loaded after the initial REFRESH and there are
+//                    // no more items to load.
+//                    if (lastItem == null) {
+//                        return MediatorResult.Success(
+//                            endOfPaginationReached = true
+//                        )
+//                    }
+//
+//                    lastItem.id
+//                }
+//            }
+//
+//            // Suspending network load via Retrofit. This doesn't need to be
+//            // wrapped in a withContext(Dispatcher.IO) { ... } block since
+//            // Retrofit's Coroutine CallAdapter dispatches on a worker
+//            // thread.
+//            val response = loadKey?.let { api.reqBoard(it) }
+//
+//            database.withTransaction {
+//                if (loadType == LoadType.REFRESH) {
+//                    userDao.deleteByQuery(query)
+//                }
+//
+//                // Insert new users into database, which invalidates the
+//                // current PagingData, allowing Paging to present the updates
+//                // in the DB.
+//                dao.insertAll(response?.body()?.boards)
+//            }
+//
+//            MediatorResult.Success(
+//                endOfPaginationReached = response.nextKey == null
+//            )
+//        } catch (e: IOException) {
+//            MediatorResult.Error(e)
+//        } catch (e: HttpException) {
+//            MediatorResult.Error(e)
+//        }
+//    }
 
 }

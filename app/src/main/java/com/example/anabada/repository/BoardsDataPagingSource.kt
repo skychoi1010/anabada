@@ -1,5 +1,6 @@
 package com.example.anabada.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.anabada.db.model.BoardsData
@@ -7,7 +8,7 @@ import com.example.anabada.network.ApiService
 import retrofit2.HttpException
 import java.io.IOException
 
-const val BOARDS_PAGING_START_INDEX = 1
+//const val BOARDS_PAGING_START_INDEX = 1
 const val NETWORK_PAGE_SIZE = 1
 
 class BoardsDataPagingSource(
