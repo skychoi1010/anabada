@@ -10,6 +10,7 @@ import com.example.anabada.db.model.RemoteKeys
 import com.example.anabada.network.ApiService
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 const val BOARDS_PAGING_START_INDEX = 1
@@ -24,10 +25,20 @@ class BoardsRemoteMediator(
     private val remoteKeysDao: RemoteKeysDao = db.remoteKeysDao()
 
     override suspend fun initialize(): InitializeAction {
-        // Require that remote REFRESH is launched on initial load and succeeds before launching
-        // remote PREPEND / APPEND.
-        return InitializeAction.LAUNCH_INITIAL_REFRESH
+        val cacheTimeout = TimeUnit.HOURS.convert(1, TimeUnit.MILLISECONDS)
+        return if (System.currentTimeMillis() - db.lastUpdated() >= cacheTimeout)
+        {
+            // Cached data is up-to-date, so there is no need to re-fetch
+            // from the network.
+            InitializeAction.SKIP_INITIAL_REFRESH
+        } else {
+            // Need to refresh cached data from network; returning
+            // LAUNCH_INITIAL_REFRESH here will also block RemoteMediator's
+            // APPEND and PREPEND from running until REFRESH succeeds.
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
     }
+
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, BoardsData>): RemoteKeys? {
         // Get the last page that was retrieved, that contained items.
@@ -64,10 +75,12 @@ class BoardsRemoteMediator(
     override suspend fun load(loadType: LoadType, state: PagingState<Int, BoardsData>): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                remoteKeys?.nextKey?.minus(1) ?: BOARDS_PAGING_START_INDEX
+//                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+//                remoteKeys?.nextKey?.minus(1) ?: BOARDS_PAGING_START_INDEX
+                null
             }
             LoadType.PREPEND -> {
+//                return MediatorResult.Success(endOfPaginationReached = true)
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 // If remoteKeys is null, that means the refresh result is not in the database yet.
                 // We can return Success with `endOfPaginationReached = false` because Paging
