@@ -28,27 +28,32 @@ class SplashActivity : AppCompatActivity() {
             val uid = MySharedPreferences.getUserId(this)
             val upw = MySharedPreferences.getUserPass(this)
 
-            api.reqLogin(uid, upw).enqueue(object : Callback<LoginRes> {
-                override fun onFailure(call: Call<LoginRes>, t: Throwable) {
-                    Toast.makeText(this@SplashActivity, "login api\nFailed connection", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
-                    loginRes = response.body()
-                    if (loginRes?.success == null) {
-                        Intent(this@SplashActivity, LoginActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                        finish()
-                    } else {
-                        Toast.makeText(this@SplashActivity, "${MySharedPreferences.getUserNick(this@SplashActivity)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
-                        Intent(this@SplashActivity, MainActivity::class.java).apply {
-                            startActivity(this)
-                        }
-                        finish()
-                    }
-                }
-            })
+            //TODO temporary fix - must delete afterwards
+            Intent(this@SplashActivity, LoginActivity::class.java).apply {
+                startActivity(this)
+            }
+            finish()
+//            api.reqLogin(uid, upw).enqueue(object : Callback<LoginRes> {
+//                override fun onFailure(call: Call<LoginRes>, t: Throwable) {
+//                    Toast.makeText(this@SplashActivity, "login api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                }
+//
+//                override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
+//                    loginRes = response.body()
+//                    if (loginRes?.success == null) {
+//                        Intent(this@SplashActivity, LoginActivity::class.java).apply {
+//                            startActivity(this)
+//                        }
+//                        finish()
+//                    } else {
+//                        Toast.makeText(this@SplashActivity, "${MySharedPreferences.getUserNick(this@SplashActivity)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+//                        Intent(this@SplashActivity, MainActivity::class.java).apply {
+//                            startActivity(this)
+//                        }
+//                        finish()
+//                    }
+//                }
+//            })
         }
 
     }

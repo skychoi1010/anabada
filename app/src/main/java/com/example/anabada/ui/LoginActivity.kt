@@ -41,42 +41,42 @@ class LoginActivity : AppCompatActivity() {
 
         binding.skipBtn.setOnClickListener {
             MySharedPreferences.setUserId(this, "no")
-            val intent = Intent(this@LoginActivity, HomeFragment::class.java)
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
         }
 
     }
 
     private fun login(uid: String, upw: String) {
-        api.reqLogin(uid, upw).enqueue(object : Callback<LoginRes> {
-            override fun onFailure(call: Call<LoginRes>, t: Throwable) {
-                val dialog = AlertDialog.Builder(this@LoginActivity)
-                dialog.setTitle("login api\nFailed connection")
-                dialog.show()
-            }
-
-            override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
-                loginRes = response.body()
-                if (loginRes?.success == null) {
-                    Toast.makeText(this@LoginActivity, "아이디와 비밀번호를 다시 확인해주세요.", Toast.LENGTH_SHORT)
-                            .show()
-                } else {
-                    Toast.makeText(
-                            this@LoginActivity, "login api\nsuccess: " + loginRes?.success.toString() +
-                            "\nresult code: " + loginRes?.resultCode + "\nid: " + loginRes?.id.toString() +
-                            "\nnickname: " + loginRes?.nickname, Toast.LENGTH_SHORT
-                    ).show()
-                    MySharedPreferences.setUserId(this@LoginActivity, uid)
-                    MySharedPreferences.setUserPass(this@LoginActivity, upw)
-                    MySharedPreferences.setUserNick(
-                            this@LoginActivity,
-                            loginRes?.nickname.toString()
-                    )
-                    Intent(this@LoginActivity, HomeFragment::class.java).apply {
-                        startActivity(this)
-                    }
-                }
-            }
-        })
+//        api.reqLogin(uid, upw).enqueue(object : Callback<LoginRes> {
+//            override fun onFailure(call: Call<LoginRes>, t: Throwable) {
+//                val dialog = AlertDialog.Builder(this@LoginActivity)
+//                dialog.setTitle("login api\nFailed connection")
+//                dialog.show()
+//            }
+//
+//            override fun onResponse(call: Call<LoginRes>, response: Response<LoginRes>) {
+//                loginRes = response.body()
+//                if (loginRes?.success == null) {
+//                    Toast.makeText(this@LoginActivity, "아이디와 비밀번호를 다시 확인해주세요.", Toast.LENGTH_SHORT)
+//                            .show()
+//                } else {
+//                    Toast.makeText(
+//                            this@LoginActivity, "login api\nsuccess: " + loginRes?.success.toString() +
+//                            "\nresult code: " + loginRes?.resultCode + "\nid: " + loginRes?.id.toString() +
+//                            "\nnickname: " + loginRes?.nickname, Toast.LENGTH_SHORT
+//                    ).show()
+//                    MySharedPreferences.setUserId(this@LoginActivity, uid)
+//                    MySharedPreferences.setUserPass(this@LoginActivity, upw)
+//                    MySharedPreferences.setUserNick(
+//                            this@LoginActivity,
+//                            loginRes?.nickname.toString()
+//                    )
+//                    Intent(this@LoginActivity, HomeFragment::class.java).apply {
+//                        startActivity(this)
+//                    }
+//                }
+//            }
+//        })
     }
 }

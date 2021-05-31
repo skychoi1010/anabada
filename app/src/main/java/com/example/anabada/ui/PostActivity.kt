@@ -94,21 +94,21 @@ class PostActivity : AppCompatActivity() {
                 //TODO 로그인 세션 만료 시 예외 처리 (아직 api 없음)
 
                 if (title.isNotEmpty() && price.isNotEmpty() && contents.isNotEmpty()) { // all contents not null
-                    api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
-                            .enqueue(object : Callback<PostContentRes> {
-                                override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
-                                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                                }
-
-                                override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
-                                    postContentRes = response.body()
-                                    Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                                    Intent(this@PostActivity, HomeFragment::class.java).apply {
-                                        startActivity(this)
-                                    }
-
-                                }
-                            })
+//                    api.reqPostContent(title, price.toInt(), contents, this@PostActivity.imageId)
+//                            .enqueue(object : Callback<PostContentRes> {
+//                                override fun onFailure(call: Call<PostContentRes>, t: Throwable) {
+//                                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                                }
+//
+//                                override fun onResponse(call: Call<PostContentRes>, response: Response<PostContentRes>) {
+//                                    postContentRes = response.body()
+//                                    Toast.makeText(this@PostActivity, "post content api\nresult: " + postContentRes?.resultCode.toString() + "\nid: " + postContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                                    Intent(this@PostActivity, HomeFragment::class.java).apply {
+//                                        startActivity(this)
+//                                    }
+//
+//                                }
+//                            })
                 } else { // missing contents
                     Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
@@ -346,19 +346,19 @@ class PostActivity : AppCompatActivity() {
                     val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
                     body = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
-                    apiImg.reqPostImage(body!!)
-                            .enqueue(object : Callback<PostImageRes> {
-                                override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                                }
-
-                                override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                                    postImageRes = response.body()
-                                    this@PostActivity.imageId = postImageRes?.id!!
-                                    Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
-                                            "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                                }
-                            })
+//                    apiImg.reqPostImage(body!!)
+//                            .enqueue(object : Callback<PostImageRes> {
+//                                override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+//                                    Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                                }
+//
+//                                override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+//                                    postImageRes = response.body()
+//                                    this@PostActivity.imageId = postImageRes?.id!!
+//                                    Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+//                                            "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                                }
+//                            })
                 }
 
                 REQ_GALLERY -> {
@@ -374,19 +374,19 @@ class PostActivity : AppCompatActivity() {
                         val requestBody: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
                         body = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
-                        apiImg.reqPostImage(body!!)
-                                .enqueue(object : Callback<PostImageRes> {
-                                    override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
-                                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                                    }
-
-                                    override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
-                                        postImageRes = response.body()
-                                        this@PostActivity.imageId = postImageRes?.id!!
-                                        Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
-                                                "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                                    }
-                                })
+//                        apiImg.reqPostImage(body!!)
+//                                .enqueue(object : Callback<PostImageRes> {
+//                                    override fun onFailure(call: Call<PostImageRes>, t: Throwable) {
+//                                        Toast.makeText(this@PostActivity, "post content api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                                    }
+//
+//                                    override fun onResponse(call: Call<PostImageRes>, response: Response<PostImageRes>) {
+//                                        postImageRes = response.body()
+//                                        this@PostActivity.imageId = postImageRes?.id!!
+//                                        Toast.makeText(this@PostActivity, "post image api\nresult: " + postImageRes?.resultCode.toString() +
+//                                                "\nid: " + postImageRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                                    }
+//                                })
 
                     }
 

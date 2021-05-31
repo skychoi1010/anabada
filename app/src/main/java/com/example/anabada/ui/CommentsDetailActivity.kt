@@ -202,152 +202,152 @@ class CommentsDetailActivity : AppCompatActivity() {
 
     private fun callComments(callNum: Int, id: Int, binding: ActivityCommentsDetailBinding) {
         Log.d("***comments detail id", id.toString())
-        api.reqComment(id, callNum).enqueue(object : Callback<CommentRes> {
-            override fun onFailure(call: Call<CommentRes>, t: Throwable) {
-                Toast.makeText(this@CommentsDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<CommentRes>, response: Response<CommentRes>) {
-                commentRes = response.body()
-                when {
-                    commentRes?.success == null -> {
-                        //end
-                        Toast.makeText(this@CommentsDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    commentRes?.comments?.isEmpty() == true -> {
-                        //end
-                        if (callNum == 1) {
-                            binding.rvComments.visibility = View.GONE
-                            binding.tvBoardDetailNoComment.visibility = View.VISIBLE
-                        }
-                        Toast.makeText(this@CommentsDetailActivity, "end of page", Toast.LENGTH_SHORT).show()
-                        //boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
-                        this@CommentsDetailActivity.isPageCallable = false
-                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                    }
-                    else -> {
-                        /*Toast.makeText(this@HomeFragment, "board api\nsuccess: " + boardPageRes?.success.toString() +
-                                "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
-                        commentRes?.comments.also {
-                            if (it != null) {
-                                commentsDataList.addAll(it)
-                            }
-                        }
-                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                        //callComments(pageNum + 1, api, id)
-                        this@CommentsDetailActivity.isPageCallable = true
-                        this@CommentsDetailActivity.pageNum = callNum + 1
-                    }
-                }
-            }
-        })
+//        api.reqComment(id, callNum).enqueue(object : Callback<CommentRes> {
+//            override fun onFailure(call: Call<CommentRes>, t: Throwable) {
+//                Toast.makeText(this@CommentsDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<CommentRes>, response: Response<CommentRes>) {
+//                commentRes = response.body()
+//                when {
+//                    commentRes?.success == null -> {
+//                        //end
+//                        Toast.makeText(this@CommentsDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    commentRes?.comments?.isEmpty() == true -> {
+//                        //end
+//                        if (callNum == 1) {
+//                            binding.rvComments.visibility = View.GONE
+//                            binding.tvBoardDetailNoComment.visibility = View.VISIBLE
+//                        }
+//                        Toast.makeText(this@CommentsDetailActivity, "end of page", Toast.LENGTH_SHORT).show()
+//                        //boardsDataList.let { boardRecyclerAdapter.setDataNotify(it) }
+//                        this@CommentsDetailActivity.isPageCallable = false
+//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+//                    }
+//                    else -> {
+//                        /*Toast.makeText(this@HomeFragment, "board api\nsuccess: " + boardPageRes?.success.toString() +
+//                                "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
+//                        commentRes?.comments.also {
+//                            if (it != null) {
+//                                commentsDataList.addAll(it)
+//                            }
+//                        }
+//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+//                        //callComments(pageNum + 1, api, id)
+//                        this@CommentsDetailActivity.isPageCallable = true
+//                        this@CommentsDetailActivity.pageNum = callNum + 1
+//                    }
+//                }
+//            }
+//        })
     }
 
     private fun postComments(input: String, id: Int, binding: ActivityCommentsDetailBinding, inputMethodManager: InputMethodManager) {
-        api.reqPostComment(id, input).enqueue(object : Callback<PostCommentRes> {
-            override fun onFailure(call: Call<PostCommentRes>, t: Throwable) {
-                Toast.makeText(this@CommentsDetailActivity, "comment post api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<PostCommentRes>, response: Response<PostCommentRes>) {
-                postCommentRes = response.body()
-                when (postCommentRes?.resultCode) {
-                    null -> {
-                        //end
-                        Toast.makeText(this@CommentsDetailActivity, "comment post api\n result code null", Toast.LENGTH_SHORT).show()
-                    }
-                    "OK" -> {
-                        //end
-                        binding.tvCommentInput.text.clear()
-                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
-                        commentsDataList.clear()
-                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                        this@CommentsDetailActivity.isPageCallable = true
-                        binding.rvComments.visibility = View.VISIBLE
-                        binding.tvBoardDetailNoComment.visibility = View.GONE
-                        callComments(1, this@CommentsDetailActivity.id, binding)
-                        //                        initView(binding, this@CommentsDetailActivity.id)
-                        Toast.makeText(this@CommentsDetailActivity, "comment post api\n" + postCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                    "Unauthorized Request" -> {
-                        //
-                        Toast.makeText(this@CommentsDetailActivity, "Unauthorized Request", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
+//        api.reqPostComment(id, input).enqueue(object : Callback<PostCommentRes> {
+//            override fun onFailure(call: Call<PostCommentRes>, t: Throwable) {
+//                Toast.makeText(this@CommentsDetailActivity, "comment post api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<PostCommentRes>, response: Response<PostCommentRes>) {
+//                postCommentRes = response.body()
+//                when (postCommentRes?.resultCode) {
+//                    null -> {
+//                        //end
+//                        Toast.makeText(this@CommentsDetailActivity, "comment post api\n result code null", Toast.LENGTH_SHORT).show()
+//                    }
+//                    "OK" -> {
+//                        //end
+//                        binding.tvCommentInput.text.clear()
+//                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
+//                        commentsDataList.clear()
+//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+//                        this@CommentsDetailActivity.isPageCallable = true
+//                        binding.rvComments.visibility = View.VISIBLE
+//                        binding.tvBoardDetailNoComment.visibility = View.GONE
+//                        callComments(1, this@CommentsDetailActivity.id, binding)
+//                        //                        initView(binding, this@CommentsDetailActivity.id)
+//                        Toast.makeText(this@CommentsDetailActivity, "comment post api\n" + postCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                    }
+//                    "Unauthorized Request" -> {
+//                        //
+//                        Toast.makeText(this@CommentsDetailActivity, "Unauthorized Request", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }
+//        })
     }
 
     private fun editComments(input: String, id: Int, binding: ActivityCommentsDetailBinding, inputMethodManager: InputMethodManager) {
-        api.reqEditComment(id, input).enqueue(object : Callback<EditCommentRes> {
-            override fun onFailure(call: Call<EditCommentRes>, t: Throwable) {
-                Toast.makeText(this@CommentsDetailActivity, "comment edit api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<EditCommentRes>, response: Response<EditCommentRes>) {
-                editCommentRes = response.body()
-                when (editCommentRes?.resultCode) {
-                    null -> {
-                        //end
-                        Toast.makeText(this@CommentsDetailActivity, "댓글 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    "OK" -> {
-                        //end
-                        binding.tvCommentInput.text.clear()
-                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
-                        binding.btnEditComment.visibility = View.INVISIBLE
-                        binding.btnPostComment.visibility = View.VISIBLE
-                        commentsDataList.clear()
-                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                        this@CommentsDetailActivity.isPageCallable = true
-                        //                        binding.rvComments.visibility = View.VISIBLE
-                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
-                        callComments(1, this@CommentsDetailActivity.id, binding)
-                        //                        initView(binding, this@CommentsDetailActivity.id)
-                        Toast.makeText(this@CommentsDetailActivity, "comment edit api\n" + editCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        //
-                    }
-                }
-            }
-        })
+//        api.reqEditComment(id, input).enqueue(object : Callback<EditCommentRes> {
+//            override fun onFailure(call: Call<EditCommentRes>, t: Throwable) {
+//                Toast.makeText(this@CommentsDetailActivity, "comment edit api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<EditCommentRes>, response: Response<EditCommentRes>) {
+//                editCommentRes = response.body()
+//                when (editCommentRes?.resultCode) {
+//                    null -> {
+//                        //end
+//                        Toast.makeText(this@CommentsDetailActivity, "댓글 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    "OK" -> {
+//                        //end
+//                        binding.tvCommentInput.text.clear()
+//                        inputMethodManager.hideSoftInputFromWindow(binding.tvCommentInput.windowToken, 0)
+//                        binding.btnEditComment.visibility = View.INVISIBLE
+//                        binding.btnPostComment.visibility = View.VISIBLE
+//                        commentsDataList.clear()
+//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+//                        this@CommentsDetailActivity.isPageCallable = true
+//                        //                        binding.rvComments.visibility = View.VISIBLE
+//                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
+//                        callComments(1, this@CommentsDetailActivity.id, binding)
+//                        //                        initView(binding, this@CommentsDetailActivity.id)
+//                        Toast.makeText(this@CommentsDetailActivity, "comment edit api\n" + editCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                    }
+//                    else -> {
+//                        //
+//                    }
+//                }
+//            }
+//        })
     }
 
     private fun deleteComments(id: Int, binding: ActivityCommentsDetailBinding) {
-        api.reqDeleteComment(id).enqueue(object : Callback<DeleteCommentRes> {
-            override fun onFailure(call: Call<DeleteCommentRes>, t: Throwable) {
-                Toast.makeText(this@CommentsDetailActivity, "comment delete api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<DeleteCommentRes>, response: Response<DeleteCommentRes>) {
-                deleteCommentRes = response.body()
-                when (deleteCommentRes?.resultCode) {
-                    null -> {
-                        //end
-                        Toast.makeText(this@CommentsDetailActivity, "댓글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    "OK" -> {
-                        //end
-                        commentsDataList.clear()
-                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
-                        //                        binding.rvComments.visibility = View.VISIBLE
-                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
-                        this@CommentsDetailActivity.isPageCallable = true
-                        callComments(1, this@CommentsDetailActivity.id, binding)
-                        //                        initView(binding, this@CommentsDetailActivity.id)
-                        Toast.makeText(this@CommentsDetailActivity, "comment delete api\n" + deleteCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        //
-                    }
-                }
-            }
-        })
+//        api.reqDeleteComment(id).enqueue(object : Callback<DeleteCommentRes> {
+//            override fun onFailure(call: Call<DeleteCommentRes>, t: Throwable) {
+//                Toast.makeText(this@CommentsDetailActivity, "comment delete api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<DeleteCommentRes>, response: Response<DeleteCommentRes>) {
+//                deleteCommentRes = response.body()
+//                when (deleteCommentRes?.resultCode) {
+//                    null -> {
+//                        //end
+//                        Toast.makeText(this@CommentsDetailActivity, "댓글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    "OK" -> {
+//                        //end
+//                        commentsDataList.clear()
+//                        commentsDataList.let { commentsRecyclerAdapter?.setDataNotify(it) }
+//                        //                        binding.rvComments.visibility = View.VISIBLE
+//                        //                        binding.tvBoardDetailNoComment.visibility = View.GONE
+//                        this@CommentsDetailActivity.isPageCallable = true
+//                        callComments(1, this@CommentsDetailActivity.id, binding)
+//                        //                        initView(binding, this@CommentsDetailActivity.id)
+//                        Toast.makeText(this@CommentsDetailActivity, "comment delete api\n" + deleteCommentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                    }
+//                    else -> {
+//                        //
+//                    }
+//                }
+//            }
+//        })
     }
 
 }

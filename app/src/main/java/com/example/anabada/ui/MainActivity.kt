@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager
 import com.example.anabada.BaseViewBindingActivity
 import com.example.anabada.R
 import com.example.anabada.databinding.ActivityMainBinding
+import com.example.anabada.repository.MySharedPreferences
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.system.exitProcess
@@ -22,20 +23,20 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
     }
 
     private fun initView(binding: ActivityMainBinding) {
-        binding.bottomNav.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.tab_home -> {
-                    Intent(this, HomeFragment::class.java).apply {
-                        startActivity(this)
-                    }
-                    return@OnNavigationItemSelectedListener true
-                }
-            }
-            false
-        })
+//        binding.bottomNav.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.tab_home -> {
+//                    Intent(this, HomeFragment::class.java).apply {
+//                        startActivity(this)
+//                    }
+//                    return@OnNavigationItemSelectedListener true
+//                }
+//            }
+//            false
+//        })
 
         pager?.adapter = MainPagerAdapter(supportFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-        pager?.offscreenPageLimit = 4
+        pager?.offscreenPageLimit = 3
         pager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
@@ -67,15 +68,24 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.tab_post -> {
-                    pager?.currentItem = 2
+                    if (MySharedPreferences.getUserId(this) == "no") { // need to login
+                        Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                        Intent(this, LoginActivity::class.java).run {
+                            startActivity(this)
+                        }
+                    } else {
+                        Intent(this, PostActivity::class.java).run {
+                            startActivity(this)
+                        }
+                    }
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.tab_chat -> {
-                    pager?.currentItem = 3
+                    pager?.currentItem = 2
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.tab_mypage -> {
-                    pager?.currentItem = 4
+                    pager?.currentItem = 3
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -99,70 +109,29 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
 
     private inner class MainPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
 
+        private val homeFragment = HomeFragment()
+        private val tempFragment = TempFragment()
+        private val chatFragment = ChatFragment()
+        private val myPageFragment = MyPageFragment()
+
         private val fragments = listOf(
-                HomeFragment()
-//                TrendsFragment(),
-//                RewardFragment(),
-//                LotteryFragment(),
-//                MenuFragment()
+            homeFragment,
+            tempFragment,
+            chatFragment,
+            myPageFragment
         )
 
         override fun getItem(position: Int): Fragment {
-            return fragments[position]
+            return if (!fragments[position].isAdded) {
+                fragments[position]
+            } else
+                TempFragment()
         }
 
         override fun getCount(): Int {
             return fragments.size
         }
     }
-//
-//    private inner class FinishActivityBroadcastReceiver : BroadcastReceiver() {
-//
-//        val filter: IntentFilter
-//            get() {
-//                val filter = IntentFilter()
-//                filter.addAction(BROADCAST_FINISH_MAIN_ACTIVITY)
-//                return filter
-//            }
-//
-//        override fun onReceive(context: Context, intent: Intent) {
-//            if (intent.action != null) {
-//                if (intent.action == BROADCAST_FINISH_MAIN_ACTIVITY) {
-//                    finish()
-//                }
-//            }
-//        }
-//    }
-//
-//    private inner class ViewPagerGotoReceiver : BroadcastReceiver() {
-//
-//        val filter: IntentFilter
-//            get() {
-//                val filter = IntentFilter()
-//                filter.addAction(AppConstants.ACTION_TAB_GOTO_TRENDS)
-//                filter.addAction(AppConstants.ACTION_TAB_GOTO_REWARDS)
-//                filter.addAction(AppConstants.ACTION_TAB_GOTO_LOTTERY)
-//                return filter
-//            }
-//
-//        override fun onReceive(context: Context, intent: Intent) {
-//
-//            when(intent.action){
-//                AppConstants.ACTION_TAB_GOTO_TRENDS -> pager?.currentItem = 1
-//                AppConstants.ACTION_TAB_GOTO_REWARDS -> pager?.currentItem = 2
-//                AppConstants.ACTION_TAB_GOTO_LOTTERY -> pager?.currentItem = 3
-//            }
-//        }
-//    }
-//
-//    fun addMenuPageHistory(pageIndex: Int) {
-//        menuPageHistory.push(pageIndex)
-//    }
-//
-//    fun menuHistoryClear() {
-//        if (!menuPageHistory.empty()) {
-//            menuPageHistory.clear()
-//        }
-//    }
+
 }
 

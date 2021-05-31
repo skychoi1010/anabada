@@ -6,14 +6,13 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
-import com.example.anabada.network.BoardsData
-import com.google.gson.GsonBuilder
-import retrofit2.Response
-import java.io.IOException
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.gson.GsonBuilder
+import retrofit2.Response
+import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
 

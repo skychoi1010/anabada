@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.*
 import com.example.anabada.databinding.ActivityBoardDetailBinding
+import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -168,37 +169,37 @@ class BoardDetailActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initView(binding: ActivityBoardDetailBinding, id: Int) {
 
-        api.reqBoardDetail(id).enqueue(object : Callback<BoardDetailRes> {
-            override fun onFailure(call: Call<BoardDetailRes>, t: Throwable) {
-                Toast.makeText(this@BoardDetailActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<BoardDetailRes>, response: Response<BoardDetailRes>) {
-                boardDetailRes = response.body()
-                when {
-                    boardDetailRes?.resultCode == null -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    boardDetailRes?.board == null -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "게시글이 존재하지 않습니다", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        if (boardDetailRes?.board?.isMine == true) {
-                            binding.tvBoardDetailAuthor.text = "내 글"
-                        }
-                        binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
-                        Glide.with(this@BoardDetailActivity)
-                                .load(boardDetailRes?.board?.detailImg)
-                                .apply(RequestOptions().placeholder(R.drawable.no_img_small))
-                                .into(binding.ivBoardDetailImg)
-                        binding.tvBoardDetailComment.text = "댓글 ${boardDetailRes?.board?.commentCount.toString()} > "
-                    }
-                }
-            }
-        })
+//        api.reqBoardDetail(id).enqueue(object : Callback<BoardDetailRes> {
+//            override fun onFailure(call: Call<BoardDetailRes>, t: Throwable) {
+//                Toast.makeText(this@BoardDetailActivity, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<BoardDetailRes>, response: Response<BoardDetailRes>) {
+//                boardDetailRes = response.body()
+//                when {
+//                    boardDetailRes?.resultCode == null -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    boardDetailRes?.board == null -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "게시글이 존재하지 않습니다", Toast.LENGTH_SHORT).show()
+//                    }
+//                    else -> {
+//                        if (boardDetailRes?.board?.isMine == true) {
+//                            binding.tvBoardDetailAuthor.text = "내 글"
+//                        }
+//                        binding.tvBoardDetailContents.text = boardDetailRes?.board?.contents
+//                        Glide.with(this@BoardDetailActivity)
+//                                .load(boardDetailRes?.board?.detailImg)
+//                                .apply(RequestOptions().placeholder(R.drawable.no_img_small))
+//                                .into(binding.ivBoardDetailImg)
+//                        binding.tvBoardDetailComment.text = "댓글 ${boardDetailRes?.board?.commentCount.toString()} > "
+//                    }
+//                }
+//            }
+//        })
 
         callComments(1, api, id, binding)
         binding.rvBoardDetailCommentsPrev.adapter = commentsPrevRecyclerAdapter
@@ -268,96 +269,96 @@ class BoardDetailActivity : AppCompatActivity() {
     }
 
     private fun callComments(callNum: Int, api: ApiService, id: Int, binding: ActivityBoardDetailBinding) {
-        api.reqComment(id, callNum).enqueue(object : Callback<CommentRes> {
-            override fun onFailure(call: Call<CommentRes>, t: Throwable) {
-                Toast.makeText(this@BoardDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<CommentRes>, response: Response<CommentRes>) {
-                commentRes = response.body()
-                when {
-                    commentRes?.success == null -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    commentRes?.comments?.isEmpty() == true -> {
-                        //end
-                        binding.rvBoardDetailCommentsPrev.visibility = GONE
-                        binding.tvBoardDetailNoComment.visibility = VISIBLE
-                    }
-                    else -> {
-                        /*Toast.makeText(this@HomeFragment, "board api\nsuccess: " + boardPageRes?.success.toString() +
-                                "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
-                        commentRes?.comments.also {
-                            if (it != null) {
-                                commentsPrevDataList.addAll(it)
-                            }
-                        }
-                        commentsPrevDataList.let { commentsPrevRecyclerAdapter.setDataNotify(it) }
-                        //callComments(pageNum + 1, api, id)
-                    }
-                }
-            }
-        })
+//        api.reqComment(id, callNum).enqueue(object : Callback<CommentRes> {
+//            override fun onFailure(call: Call<CommentRes>, t: Throwable) {
+//                Toast.makeText(this@BoardDetailActivity, "comment api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<CommentRes>, response: Response<CommentRes>) {
+//                commentRes = response.body()
+//                when {
+//                    commentRes?.success == null -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "페이지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    commentRes?.comments?.isEmpty() == true -> {
+//                        //end
+//                        binding.rvBoardDetailCommentsPrev.visibility = GONE
+//                        binding.tvBoardDetailNoComment.visibility = VISIBLE
+//                    }
+//                    else -> {
+//                        /*Toast.makeText(this@HomeFragment, "board api\nsuccess: " + boardPageRes?.success.toString() +
+//                                "\nresult code: " + boardPageRes?.resultCode + "\nboards: " + boardPageRes?.boards?.get(0)?.title, Toast.LENGTH_SHORT).show()*/
+//                        commentRes?.comments.also {
+//                            if (it != null) {
+//                                commentsPrevDataList.addAll(it)
+//                            }
+//                        }
+//                        commentsPrevDataList.let { commentsPrevRecyclerAdapter.setDataNotify(it) }
+//                        //callComments(pageNum + 1, api, id)
+//                    }
+//                }
+//            }
+//        })
     }
 
     private fun editContent(id: Int, title: String, price: Int, contents: String, imgId: Int) {
-        api.reqEditContent(id, title, price, contents, imgId).enqueue(object : Callback<EditContentRes> {
-            override fun onFailure(call: Call<EditContentRes>, t: Throwable) {
-                Toast.makeText(this@BoardDetailActivity, "content edit api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<EditContentRes>, response: Response<EditContentRes>) {
-                editContentRes = response.body()
-                when (editContentRes?.resultCode) {
-                    null -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "게시물 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    "OK" -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "edit content api\n" + editContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                        Intent(this@BoardDetailActivity, HomeFragment::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                    else -> {
-                        //
-                    }
-                }
-            }
-        })
+//        api.reqEditContent(id, title, price, contents, imgId).enqueue(object : Callback<EditContentRes> {
+//            override fun onFailure(call: Call<EditContentRes>, t: Throwable) {
+//                Toast.makeText(this@BoardDetailActivity, "content edit api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<EditContentRes>, response: Response<EditContentRes>) {
+//                editContentRes = response.body()
+//                when (editContentRes?.resultCode) {
+//                    null -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "게시물 수정에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    "OK" -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "edit content api\n" + editContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                        Intent(this@BoardDetailActivity, HomeFragment::class.java).apply {
+//                            startActivity(this)
+//                        }
+//                    }
+//                    else -> {
+//                        //
+//                    }
+//                }
+//            }
+//        })
     }
 
     private fun deleteContent(id: Int, binding: ActivityBoardDetailBinding) {
-        api.reqDeleteContent(id).enqueue(object : Callback<DeleteContentRes> {
-            override fun onFailure(call: Call<DeleteContentRes>, t: Throwable) {
-                Toast.makeText(this@BoardDetailActivity, "delete content api\nFailed connection", Toast.LENGTH_SHORT).show()
-                //end
-            }
-
-            override fun onResponse(call: Call<DeleteContentRes>, response: Response<DeleteContentRes>) {
-                deleteContentRes = response.body()
-                when (deleteContentRes?.resultCode) {
-                    null -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "게시글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    "OK" -> {
-                        //end
-                        Toast.makeText(this@BoardDetailActivity, "delete content api\n" + deleteContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
-                        Intent(this@BoardDetailActivity, HomeFragment::class.java).apply {
-                            startActivity(this)
-                        }
-                    }
-                    "Not Your Board" -> {
-                        //
-                        Toast.makeText(this@BoardDetailActivity, "Not your board", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
+//        api.reqDeleteContent(id).enqueue(object : Callback<DeleteContentRes> {
+//            override fun onFailure(call: Call<DeleteContentRes>, t: Throwable) {
+//                Toast.makeText(this@BoardDetailActivity, "delete content api\nFailed connection", Toast.LENGTH_SHORT).show()
+//                //end
+//            }
+//
+//            override fun onResponse(call: Call<DeleteContentRes>, response: Response<DeleteContentRes>) {
+//                deleteContentRes = response.body()
+//                when (deleteContentRes?.resultCode) {
+//                    null -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "게시글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    "OK" -> {
+//                        //end
+//                        Toast.makeText(this@BoardDetailActivity, "delete content api\n" + deleteContentRes?.id.toString(), Toast.LENGTH_SHORT).show()
+//                        Intent(this@BoardDetailActivity, HomeFragment::class.java).apply {
+//                            startActivity(this)
+//                        }
+//                    }
+//                    "Not Your Board" -> {
+//                        //
+//                        Toast.makeText(this@BoardDetailActivity, "Not your board", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }
+//        })
     }
 }

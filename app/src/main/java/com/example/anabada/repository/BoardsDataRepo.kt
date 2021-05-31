@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 interface BoardsDataRepo {
 //    suspend fun getBoard(): CoroutineHandler<BoardPageRes>
     fun getSearchResultStream(query: String): Flow<PagingData<BoardsData>>
-    fun postsOfSubreddit(subReddit: String, pageSize: Int): Flow<PagingData<BoardsData>>
+    fun observeBoardsDataFromDB(): Flow<PagingData<BoardsData>>
 }
 
 class BoardsDataRepoImpl(
@@ -39,6 +39,17 @@ class BoardsDataRepoImpl(
         return PagingConfig(pageSize = 20, enablePlaceholders = true)
     }
 
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun observeBoardsDataFromDB(): Flow<PagingData<BoardsData>> {
+        return Pager(
+            config = PagingConfig(NETWORK_PAGE_SIZE), //TODO PAGE SIZE
+            remoteMediator = BoardsRemoteMediator(db = db, api = api)
+        ) {
+            db.boardsDataDao().findAll()
+        }.flow
+    }
+
     @ExperimentalPagingApi
     fun letDoggoImagesFlowDb(pagingConfig: PagingConfig = getDefaultPageConfig()): Flow<PagingData<BoardsData>> {
         if (db == null) throw IllegalStateException("Database is not initialized")
@@ -49,12 +60,12 @@ class BoardsDataRepoImpl(
         ).flow
     }
 
-    @OptIn(ExperimentalPagingApi::class)
-    override fun postsOfSubreddit(subReddit: String, pageSize: Int) = Pager(
-        config = PagingConfig(pageSize),
-        pagingSourceFactory = { BoardsDataPagingSource(api) },
-        remoteMediator = BoardsRemoteMediator(db = db, api = api)
-    ).flow
+//    @OptIn(ExperimentalPagingApi::class)
+//    override fun postsOfSubreddit(subReddit: String, pageSize: Int) = Pager(
+//        config = PagingConfig(pageSize),
+//        pagingSourceFactory = { BoardsDataPagingSource(api) },
+//        remoteMediator = BoardsRemoteMediator(db = db, api = api)
+//    ).flow
 
     fun letDoggoImagesFlow(pageSize: Int): Flow<PagingData<BoardsData>> {
         return Pager(

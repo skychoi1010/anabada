@@ -116,27 +116,27 @@ class SignUpActivity: AppCompatActivity() {
             val nickname = binding.nickname.text.toString()
 
             if(isValidId(binding.id, uid) && isValidPassword(binding.pw, upw) && isValidNick(binding.nickname, nickname) && (binding.confirmPw.text.toString() == binding.pw.text.toString())) {
-                api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
-                    override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
-                        Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) { //TODO success, resultCode별 대응k
-                        signup = response.body()
-                        if (signup?.success == null) {
-                            Toast.makeText(this@SignUpActivity, "sign up failed", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@SignUpActivity, "success: " + signup?.success.toString() +
-                                    "\nresult code: " + signup?.resultCode, Toast.LENGTH_SHORT).show()
-                            MySharedPreferences.setUserId(this@SignUpActivity, uid)
-                            MySharedPreferences.setUserPass(this@SignUpActivity, upw)
-                            MySharedPreferences.setUserNick(this@SignUpActivity, nickname)
-                            Intent(this@SignUpActivity, HomeFragment::class.java).apply {
-                                startActivity(this)
-                            }
-                        }
-                    }
-                })
+//                api.reqSignUp(uid, upw, nickname).enqueue(object : Callback<SignUpRes> {
+//                    override fun onFailure(call: Call<SignUpRes>, t: Throwable) {
+//                        Toast.makeText(this@SignUpActivity, "Failed connection", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    override fun onResponse(call: Call<SignUpRes>, response: Response<SignUpRes>) { //TODO success, resultCode별 대응k
+//                        signup = response.body()
+//                        if (signup?.success == null) {
+//                            Toast.makeText(this@SignUpActivity, "sign up failed", Toast.LENGTH_SHORT).show()
+//                        } else {
+//                            Toast.makeText(this@SignUpActivity, "success: " + signup?.success.toString() +
+//                                    "\nresult code: " + signup?.resultCode, Toast.LENGTH_SHORT).show()
+//                            MySharedPreferences.setUserId(this@SignUpActivity, uid)
+//                            MySharedPreferences.setUserPass(this@SignUpActivity, upw)
+//                            MySharedPreferences.setUserNick(this@SignUpActivity, nickname)
+//                            Intent(this@SignUpActivity, HomeFragment::class.java).apply {
+//                                startActivity(this)
+//                            }
+//                        }
+//                    }
+//                })
             }
         }
 

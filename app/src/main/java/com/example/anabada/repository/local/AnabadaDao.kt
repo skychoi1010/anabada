@@ -1,5 +1,6 @@
 package com.example.anabada.db
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +12,7 @@ import com.example.anabada.db.model.RemoteKeys
 interface BoardsDataDao {
 
     @Query("SELECT * FROM boards_data")
-    fun findAll(): ArrayList<BoardsData>
+    fun findAll(): PagingSource<Int, BoardsData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(data: ArrayList<BoardsData>)

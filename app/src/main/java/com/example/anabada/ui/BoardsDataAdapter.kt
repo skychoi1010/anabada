@@ -16,7 +16,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BoardsDataAdapter(private var boardsDataList: ArrayList<BoardsData>) : PagingDataAdapter<BoardsData, BoardsDataAdapter.BoardRecyclerViewHolder>(diffCallback) {
+class BoardsDataAdapter : PagingDataAdapter<BoardsData, BoardsDataAdapter.BoardRecyclerViewHolder>(diffCallback) {
 
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<BoardsData>() {
@@ -48,7 +48,7 @@ class BoardsDataAdapter(private var boardsDataList: ArrayList<BoardsData>) : Pag
         this.itemClickListener = itemClickListener
     }
 
-    override fun getItemCount(): Int = boardsDataList.size
+//    override fun getItemCount(): Int = boardsDataList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardRecyclerViewHolder {
         val binding = ListitemBoardBinding.inflate(
@@ -59,14 +59,6 @@ class BoardsDataAdapter(private var boardsDataList: ArrayList<BoardsData>) : Pag
         return BoardRecyclerViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: BoardRecyclerViewHolder, position: Int) {
-        holder.bind(boardsDataList[position])
-    }
-
-    fun setDataNotify(boardsDataList: ArrayList<BoardsData>) {
-        this.boardsDataList = boardsDataList
-        notifyDataSetChanged()
-    }
 
     inner class BoardRecyclerViewHolder(private val listBinding: ListitemBoardBinding): RecyclerView.ViewHolder(listBinding.root) {
         fun bind(item: BoardsData) {
@@ -97,6 +89,10 @@ class BoardsDataAdapter(private var boardsDataList: ArrayList<BoardsData>) : Pag
                 optionsClickListener.onOptionsClick(it, item, listBinding)
             }
         }
+    }
+
+    override fun onBindViewHolder(holder: BoardRecyclerViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
     }
 }
 

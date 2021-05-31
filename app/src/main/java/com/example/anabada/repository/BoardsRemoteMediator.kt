@@ -25,18 +25,19 @@ class BoardsRemoteMediator(
     private val remoteKeysDao: RemoteKeysDao = db.remoteKeysDao()
 
     override suspend fun initialize(): InitializeAction {
-        val cacheTimeout = TimeUnit.HOURS.convert(1, TimeUnit.MILLISECONDS)
-        return if (System.currentTimeMillis() - db.lastUpdated() >= cacheTimeout)
-        {
-            // Cached data is up-to-date, so there is no need to re-fetch
-            // from the network.
-            InitializeAction.SKIP_INITIAL_REFRESH
-        } else {
-            // Need to refresh cached data from network; returning
-            // LAUNCH_INITIAL_REFRESH here will also block RemoteMediator's
-            // APPEND and PREPEND from running until REFRESH succeeds.
-            InitializeAction.LAUNCH_INITIAL_REFRESH
-        }
+//        val cacheTimeout = TimeUnit.HOURS.convert(1, TimeUnit.MILLISECONDS)
+//        return if (System.currentTimeMillis() - db.lastUpdated() >= cacheTimeout)
+//        {
+//            // Cached data is up-to-date, so there is no need to re-fetch
+//            // from the network.
+//            InitializeAction.SKIP_INITIAL_REFRESH
+//        } else {
+//            // Need to refresh cached data from network; returning
+//            // LAUNCH_INITIAL_REFRESH here will also block RemoteMediator's
+//            // APPEND and PREPEND from running until REFRESH succeeds.
+//            InitializeAction.LAUNCH_INITIAL_REFRESH
+//        }
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
 
 
@@ -46,7 +47,7 @@ class BoardsRemoteMediator(
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { repo ->
                 // Get the remote keys of the last item retrieved
-                remoteKeysDao.remoteKeysRepoId(repo.id)
+                db.remoteKeysDao().remoteKeysRepoId(repo.id)
             }
     }
 
@@ -56,7 +57,7 @@ class BoardsRemoteMediator(
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { repo ->
                 // Get the remote keys of the first items retrieved
-                remoteKeysDao.remoteKeysRepoId(repo.id)
+                db.remoteKeysDao().remoteKeysRepoId(repo.id)
             }
     }
 
@@ -88,9 +89,7 @@ class BoardsRemoteMediator(
                 // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
                 // the end of pagination for prepend.
                 val prevKey = remoteKeys?.prevKey
-                if (prevKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
             LoadType.APPEND -> {
@@ -101,9 +100,7 @@ class BoardsRemoteMediator(
                 // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
                 // the end of pagination for append.
                 val nextKey = remoteKeys?.nextKey
-                if (nextKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
             }
         }
@@ -118,8 +115,8 @@ class BoardsRemoteMediator(
                     remoteKeysDao.clearRemoteKeys()
                     boardsDataDao.clearBoards()
                 }
-                val prevKey = if (page == BOARDS_PAGING_START_INDEX) null else page - 1
-                val nextKey = if (endOfPaginationReached) null else page + 1
+                val prevKey = if (page == BOARDS_PAGING_START_INDEX) null else page?.minus(1)
+                val nextKey = if (endOfPaginationReached) null else page?.plus(1)
                 val keys = repos.map {
                     RemoteKeys(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
