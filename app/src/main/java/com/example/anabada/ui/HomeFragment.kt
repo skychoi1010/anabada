@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.anabada.*
 import com.example.anabada.databinding.FragmentHomeBinding
-import com.example.anabada.databinding.LayoutLoadingBinding
-import com.example.anabada.databinding.ListitemBoardBinding
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.BoardPageRes
@@ -54,9 +52,6 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (!isAdded) {
-            return
-        }
         fragmentContext = context
 //        initLogout()
         initView()

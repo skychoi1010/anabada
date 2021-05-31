@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.anabada.BaseViewBindingFragment
-import com.example.anabada.databinding.FragmentHomeBinding
 import com.example.anabada.databinding.LayoutLoadingBinding
 
 class TempFragment : BaseViewBindingFragment<LayoutLoadingBinding>() {

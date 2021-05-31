@@ -46,7 +46,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
                 when (position) {
                     0 -> bottomNav?.selectedItemId = R.id.tab_home
                     1 -> bottomNav?.selectedItemId = R.id.tab_trends
-                    2 -> bottomNav?.selectedItemId = R.id.tab_post
                     3 -> bottomNav?.selectedItemId = R.id.tab_chat
                     4 -> bottomNav?.selectedItemId = R.id.tab_mypage
                 }
@@ -116,16 +115,13 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
 
         private val fragments = listOf(
             homeFragment,
-            tempFragment,
-            chatFragment,
-            myPageFragment
+                tempFragment,
+                chatFragment,
+                myPageFragment
         )
 
         override fun getItem(position: Int): Fragment {
-            return if (!fragments[position].isAdded) {
-                fragments[position]
-            } else
-                TempFragment()
+            return TempFragment()
         }
 
         override fun getCount(): Int {
