@@ -1,24 +1,15 @@
 package com.example.anabada.repository
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.anabada.CoroutineHandler
-import com.example.anabada.Utils.handleApiError
-import com.example.anabada.Utils.handleApiSuccess
-import com.example.anabada.Utils.isNetworkAvailable
 import com.example.anabada.repository.local.AnabadaDatabase
-import com.example.anabada.db.BoardsDataDao
+import com.example.anabada.repository.local.BoardsDataDao
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.ApiService
-import com.example.anabada.network.BoardPageRes
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 interface BoardsDataRepo {
 //    suspend fun getBoard(): CoroutineHandler<BoardPageRes>
@@ -33,9 +24,9 @@ class BoardsDataRepoImpl(
 ) : BoardsDataRepo {
 
     private val boardsDataDao: BoardsDataDao = db.boardsDataDao()
-    private val pagingSourceFactory = boardsDataDao.findAll()
+    private val pagingSourceFactory = boardsDataDao.observeBoardsPaginated()
 
-    fun getDefaultPageConfig(): PagingConfig {
+    private fun getDefaultPageConfig(): PagingConfig {
         return PagingConfig(pageSize = 20, enablePlaceholders = true)
     }
 
@@ -43,10 +34,10 @@ class BoardsDataRepoImpl(
     @OptIn(ExperimentalPagingApi::class)
     override fun observeBoardsDataFromDB(): Flow<PagingData<BoardsData>> {
         return Pager(
-            config = PagingConfig(NETWORK_PAGE_SIZE), //TODO PAGE SIZE
-            remoteMediator = BoardsRemoteMediator(db = db, api = api)
+            config = PagingConfig(BOARDS_PAGE_SIZE),
+            remoteMediator = BoardsRemoteMediator(db = db, api = api, context = context)
         ) {
-            db.boardsDataDao().findAll()
+            db.boardsDataDao().observeBoardsPaginated()
         }.flow
     }
 
@@ -56,7 +47,7 @@ class BoardsDataRepoImpl(
         return Pager(
             config = pagingConfig,
             pagingSourceFactory = { BoardsDataPagingSource(api) },
-            remoteMediator = BoardsRemoteMediator(db, api)
+            remoteMediator = BoardsRemoteMediator(db, api, context)
         ).flow
     }
 
@@ -125,7 +116,7 @@ class BoardsDataRepoImpl(
     }
 
     companion object {
-        private const val NETWORK_PAGE_SIZE = 3 * 20 //current page size must be initial loading page times three (??)
+        private const val NETWORK_PAGE_SIZE = 20 //current page size must be initial loading page times three (??) TODO
     }
 
     /*

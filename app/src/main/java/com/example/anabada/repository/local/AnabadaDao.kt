@@ -1,4 +1,4 @@
-package com.example.anabada.db
+package com.example.anabada.repository.local
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -11,14 +11,14 @@ import com.example.anabada.db.model.RemoteKeys
 @Dao
 interface BoardsDataDao {
 
-    @Query("SELECT * FROM boards_data")
-    fun findAll(): PagingSource<Int, BoardsData>
+    @Query("SELECT * FROM boards_data ORDER BY boards_data.date DESC")
+    fun observeBoardsPaginated(): PagingSource<Int, BoardsData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(data: ArrayList<BoardsData>)
 
     @Query("DELETE FROM boards_data")
-    suspend fun clearBoards()
+    fun deleteBoardItems(): Int
 
 }
 

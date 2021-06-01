@@ -46,8 +46,9 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
                 when (position) {
                     0 -> bottomNav?.selectedItemId = R.id.tab_home
                     1 -> bottomNav?.selectedItemId = R.id.tab_trends
-                    3 -> bottomNav?.selectedItemId = R.id.tab_chat
-                    4 -> bottomNav?.selectedItemId = R.id.tab_mypage
+//                    2 -> bottomNav?.selectedItemId = R.id.tab_post
+                    2 -> bottomNav?.selectedItemId = R.id.tab_chat
+                    3 -> bottomNav?.selectedItemId = R.id.tab_mypage
                 }
             }
 
@@ -108,20 +109,15 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
 
     private inner class MainPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
 
-        private val homeFragment = HomeFragment()
-        private val tempFragment = TempFragment()
-        private val chatFragment = ChatFragment()
-        private val myPageFragment = MyPageFragment()
-
         private val fragments = listOf(
-            homeFragment,
-                tempFragment,
-                chatFragment,
-                myPageFragment
+            HomeFragment(),
+                TempFragment(),
+                ChatFragment(),
+                MyPageFragment()
         )
 
         override fun getItem(position: Int): Fragment {
-            return TempFragment()
+            return fragments[position]
         }
 
         override fun getCount(): Int {

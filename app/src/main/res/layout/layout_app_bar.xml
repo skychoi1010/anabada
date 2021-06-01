@@ -18,44 +18,39 @@
             android:id="@+id/iv_appbar_logo"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
             android:fontFamily="@font/font_bold"
             android:padding="15dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_anabada"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/tv_appbar_user_nickname"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_appbar_user_nickname"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/iv_appbar_search"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_medium"
             android:padding="10dp"
-            android:text=""
-            android:textSize="14dp"
+            android:src="@drawable/ic_search"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_bias="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/tv_appbar_login_logout"
+            app:layout_constraintRight_toLeftOf="@id/iv_appbar_filter"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_appbar_login_logout"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/iv_appbar_filter"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_bold"
             android:padding="15dp"
-            android:text="logout"
-            android:textColor="@color/black"
-            android:textSize="14dp"
+            android:src="@drawable/ic_sliders"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toRightOf="@id/tv_appbar_login_logout"
+            app:layout_constraintLeft_toRightOf="@id/iv_appbar_search"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

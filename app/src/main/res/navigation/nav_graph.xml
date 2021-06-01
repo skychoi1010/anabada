@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.anabada.ui.HomeFragment"
+        android:label="HomeFragment" />
+    <activity
+        android:id="@+id/boardDetailActivity"
+        android:name="com.example.anabada.ui.BoardDetailActivity"
+        android:label="activity_board_detail"
+        tools:layout="@layout/activity_board_detail" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.anabada.ui.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/signUpActivity"
+        android:name="com.example.anabada.ui.SignUpActivity"
+        android:label="activity_signup"
+        tools:layout="@layout/activity_signup" />
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="com.example.anabada.ui.SplashActivity"
+        android:label="SplashActivity" />
+    <activity
+        android:id="@+id/postActivity"
+        android:name="com.example.anabada.ui.PostActivity"
+        android:label="PostActivity" />
+    <activity
+        android:id="@+id/commentsDetailActivity"
+        android:name="com.example.anabada.ui.CommentsDetailActivity"
+        android:label="CommentsDetailActivity" />
+</navigation>

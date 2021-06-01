@@ -1,24 +1,28 @@
 package com.example.anabada.repository
 
+import android.content.Context
+import android.widget.Toast
 import androidx.paging.*
 import androidx.room.withTransaction
 import com.example.anabada.repository.local.AnabadaDatabase
-import com.example.anabada.db.BoardsDataDao
-import com.example.anabada.db.RemoteKeysDao
+import com.example.anabada.repository.local.BoardsDataDao
+import com.example.anabada.repository.local.RemoteKeysDao
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.db.model.RemoteKeys
 import com.example.anabada.network.ApiService
 import retrofit2.HttpException
 import java.io.IOException
-import java.util.concurrent.TimeUnit
+import java.io.InvalidObjectException
 
 
 const val BOARDS_PAGING_START_INDEX = 1
+const val BOARDS_PAGE_SIZE = 20
 
 @OptIn(ExperimentalPagingApi::class)
 class BoardsRemoteMediator(
     private val db: AnabadaDatabase,
-    private val api: ApiService
+    private val api: ApiService,
+    private val context: Context
 ) : RemoteMediator<Int, BoardsData>() {
 
     private val boardsDataDao: BoardsDataDao = db.boardsDataDao()
@@ -44,11 +48,16 @@ class BoardsRemoteMediator(
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, BoardsData>): RemoteKeys? {
         // Get the last page that was retrieved, that contained items.
         // From that last page, get the last item
-        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
-            ?.let { repo ->
-                // Get the remote keys of the last item retrieved
+//        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
+//            ?.let { repo ->
+//                // Get the remote keys of the last item retrieved
+//                db.remoteKeysDao().remoteKeysRepoId(repo.id)
+//            }
+        return state.lastItemOrNull()?.let { repo->
+            db.withTransaction {
                 db.remoteKeysDao().remoteKeysRepoId(repo.id)
             }
+        }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, BoardsData>): RemoteKeys? {
@@ -68,55 +77,62 @@ class BoardsRemoteMediator(
         // Get the item closest to the anchor position
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { repoId ->
-                remoteKeysDao.remoteKeysRepoId(repoId)
+                db.withTransaction{
+                    db.remoteKeysDao().remoteKeysRepoId(repoId)
+                }
             }
         }
     }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, BoardsData>): MediatorResult {
-        val page = when (loadType) {
-            LoadType.REFRESH -> {
-//                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-//                remoteKeys?.nextKey?.minus(1) ?: BOARDS_PAGING_START_INDEX
-                null
-            }
-            LoadType.PREPEND -> {
-//                return MediatorResult.Success(endOfPaginationReached = true)
-                val remoteKeys = getRemoteKeyForFirstItem(state)
-                // If remoteKeys is null, that means the refresh result is not in the database yet.
-                // We can return Success with `endOfPaginationReached = false` because Paging
-                // will call this method again if RemoteKeys becomes non-null.
-                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
-                // the end of pagination for prepend.
-                val prevKey = remoteKeys?.prevKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                prevKey
-            }
-            LoadType.APPEND -> {
-                val remoteKeys = getRemoteKeyForLastItem(state)
-                // If remoteKeys is null, that means the refresh result is not in the database yet.
-                // We can return Success with endOfPaginationReached = false because Paging
-                // will call this method again if RemoteKeys becomes non-null.
-                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
-                // the end of pagination for append.
-                val nextKey = remoteKeys?.nextKey
-                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                nextKey
-            }
-        }
 
         try {
-            val response = api.reqBoard(page.toString().toInt()) //TODO
+            val page = when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                    remoteKeys?.nextKey?.minus(1) ?: BOARDS_PAGING_START_INDEX
+    //                null
+                }
+                LoadType.PREPEND -> {
+                    return MediatorResult.Success(endOfPaginationReached = true)
+    //                val remoteKeys = getRemoteKeyForFirstItem(state)
+    //                // If remoteKeys is null, that means the refresh result is not in the database yet.
+    //                // We can return Success with `endOfPaginationReached = false` because Paging
+    //                // will call this method again if RemoteKeys becomes non-null.
+    //                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+    //                // the end of pagination for prepend.
+    //                val prevKey = remoteKeys?.prevKey
+    //                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+    //                prevKey
+                }
+                LoadType.APPEND -> {
+                    val remoteKeys = getRemoteKeyForLastItem(state)
+                            ?: throw InvalidObjectException("Result is empty")
+                    remoteKeys.nextKey ?: return MediatorResult.Success(endOfPaginationReached = true)
+                    // If remoteKeys is null, that means the refresh result is not in the database yet.
+                    // We can return Success with endOfPaginationReached = false because Paging
+                    // will call this method again if RemoteKeys becomes non-null.
+                    // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                    // the end of pagination for append.
+    //                val nextKey = remoteKeys?.nextKey
+    //                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+    //                nextKey
+                }
+            }
+
+            val response = api.reqBoard(page) //TODO
+            Toast.makeText(context, response.body().toString(), Toast.LENGTH_SHORT).show()
             val repos = response.body()?.boards as ArrayList<BoardsData>
-            val endOfPaginationReached = repos.isEmpty()
+            val endOfPaginationReached = repos.size < state.config.pageSize
+//            val endOfPaginationReached = repos.isEmpty()
             db.withTransaction {
                 // clear all tables in the database
                 if (loadType == LoadType.REFRESH) {
                     remoteKeysDao.clearRemoteKeys()
-                    boardsDataDao.clearBoards()
+                    boardsDataDao.deleteBoardItems()
                 }
-                val prevKey = if (page == BOARDS_PAGING_START_INDEX) null else page?.minus(1)
-                val nextKey = if (endOfPaginationReached) null else page?.plus(1)
+                val prevKey = if (page == BOARDS_PAGING_START_INDEX) null else page.minus(1)
+                val nextKey = if (endOfPaginationReached) null else page.plus(1)
                 val keys = repos.map {
                     RemoteKeys(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }

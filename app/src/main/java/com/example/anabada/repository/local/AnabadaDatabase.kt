@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.anabada.db.BoardsDataDao
-import com.example.anabada.db.RemoteKeysDao
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.db.model.RemoteKeys
 

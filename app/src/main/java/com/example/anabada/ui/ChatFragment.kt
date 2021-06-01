@@ -15,4 +15,10 @@ class ChatFragment: BaseViewBindingFragment<LayoutLoadingBinding>() {
         return LayoutLoadingBinding.inflate(inflater, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (isAdded) {
+            return
+        }
+    }
+
 }

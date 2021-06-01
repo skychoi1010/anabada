@@ -41,6 +41,6 @@ val databaseModule = module {
 val repositoryModule = module {
     factory { ViewModelProvider.AndroidViewModelFactory(get()) }
     factory { BoardsDataRepoImpl(get(), get(), get()) }
-    factory { BoardsRemoteMediator(get(), get()) }
+    factory { BoardsRemoteMediator(get(), get(), get()) }
     factory { BoardsDataPagingSource(get()) }
 }

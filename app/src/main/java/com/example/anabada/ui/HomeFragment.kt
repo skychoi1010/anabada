@@ -1,5 +1,6 @@
 package com.example.anabada.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -52,6 +53,7 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (isAdded) return
         fragmentContext = context
 //        initLogout()
         initView()
@@ -66,7 +68,7 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
 //        })
     }
 
-    fun initAdapter() {
+    private fun initAdapter() {
         binding.rvBoard.adapter = boardsDataAdapter.withLoadStateFooter(
             footer = BoardsLoadStateAdapter { boardsDataAdapter.retry() }
         )
@@ -80,6 +82,8 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             boardViewModel.boardsDataPaginated.collectLatest {
                 boardsDataAdapter.submitData(it)
+
+                Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -100,7 +104,7 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
         })
     }
 
-    fun initSwipeToRefresh() {
+    private fun initSwipeToRefresh() {
         binding.lSwipeRefresh.setOnRefreshListener { boardsDataAdapter.refresh() }
     }
 
@@ -179,11 +183,11 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
 //            callBoard(pageNum)
 //        }
 
-        val layoutManager = LinearLayoutManager(fragmentContext)
+        val layoutManager = LinearLayoutManager(context)
         binding.rvBoard.layoutManager = layoutManager
 
-        val dividerItemDecoration = DividerItemDecoration(fragmentContext, LinearLayoutManager.VERTICAL)
-        fragmentContext?.let { ContextCompat.getDrawable(it, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) } }
+        val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        context?.let { context -> ContextCompat.getDrawable(context, R.drawable.divider_gray_ececec)?.let { dividerItemDecoration.setDrawable(it) } }
         binding.rvBoard.addItemDecoration(dividerItemDecoration)
 
 //        boardViewModel.repoResult.observe(this) { result ->
