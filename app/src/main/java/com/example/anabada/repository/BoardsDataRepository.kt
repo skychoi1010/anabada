@@ -11,25 +11,19 @@ import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.ApiService
 import kotlinx.coroutines.flow.Flow
 
-interface BoardsDataRepo {
+interface BoardsDataRepository {
 //    suspend fun getBoard(): CoroutineHandler<BoardPageRes>
     fun getSearchResultStream(query: String): Flow<PagingData<BoardsData>>
     fun observeBoardsDataFromDB(): Flow<PagingData<BoardsData>>
 }
 
-class BoardsDataRepoImpl(
+class BoardsDataRepositoryImpl(
     private val api: ApiService,
     private val context: Context,
     private val db: AnabadaDatabase
-) : BoardsDataRepo {
+) : BoardsDataRepository {
 
     private val boardsDataDao: BoardsDataDao = db.boardsDataDao()
-    private val pagingSourceFactory = boardsDataDao.observeBoardsPaginated()
-
-    private fun getDefaultPageConfig(): PagingConfig {
-        return PagingConfig(pageSize = 20, enablePlaceholders = true)
-    }
-
 
     @OptIn(ExperimentalPagingApi::class)
     override fun observeBoardsDataFromDB(): Flow<PagingData<BoardsData>> {
@@ -39,30 +33,6 @@ class BoardsDataRepoImpl(
         ) {
             db.boardsDataDao().observeBoardsPaginated()
         }.flow
-    }
-
-    @ExperimentalPagingApi
-    fun letDoggoImagesFlowDb(pagingConfig: PagingConfig = getDefaultPageConfig()): Flow<PagingData<BoardsData>> {
-        if (db == null) throw IllegalStateException("Database is not initialized")
-        return Pager(
-            config = pagingConfig,
-            pagingSourceFactory = { BoardsDataPagingSource(api) },
-            remoteMediator = BoardsRemoteMediator(db, api, context)
-        ).flow
-    }
-
-//    @OptIn(ExperimentalPagingApi::class)
-//    override fun postsOfSubreddit(subReddit: String, pageSize: Int) = Pager(
-//        config = PagingConfig(pageSize),
-//        pagingSourceFactory = { BoardsDataPagingSource(api) },
-//        remoteMediator = BoardsRemoteMediator(db = db, api = api)
-//    ).flow
-
-    fun letDoggoImagesFlow(pageSize: Int): Flow<PagingData<BoardsData>> {
-        return Pager(
-            config = PagingConfig(pageSize),
-            pagingSourceFactory = { BoardsDataPagingSource(api) }
-        ).flow
     }
 
 //    override suspend fun getBoard(): CoroutineHandler<BoardPageRes> {
@@ -82,7 +52,7 @@ class BoardsDataRepoImpl(
 //                    return handleApiSuccess(response)
 //                } else {
 //                    Toast.makeText(context, "board api\nFailed connection", Toast.LENGTH_SHORT).show()
-//                    Log.d("///BoardsDataRepo", "board api Failed connection")
+//                    Log.d("///BoardsDataRepository", "board api Failed connection")
 //                    return handleApiError(response)
 //                }
 //            } catch (e: Exception) {

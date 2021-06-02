@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.anabada.repository.local.AnabadaDatabase
 import com.example.anabada.network.ApiService
 import com.example.anabada.repository.BoardsDataPagingSource
-import com.example.anabada.repository.BoardsDataRepoImpl
+import com.example.anabada.repository.BoardsDataRepositoryImpl
 import com.example.anabada.repository.BoardsRemoteMediator
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -40,7 +40,7 @@ val databaseModule = module {
 
 val repositoryModule = module {
     factory { ViewModelProvider.AndroidViewModelFactory(get()) }
-    factory { BoardsDataRepoImpl(get(), get(), get()) }
+    factory { BoardsDataRepositoryImpl(get(), get(), get()) }
     factory { BoardsRemoteMediator(get(), get(), get()) }
     factory { BoardsDataPagingSource(get()) }
 }

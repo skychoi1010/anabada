@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.anabada.ui.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_boardDetailActivity"
+            app:destination="@id/boardDetailActivity" />
+    </fragment>
     <activity
         android:id="@+id/boardDetailActivity"
         android:name="com.example.anabada.ui.BoardDetailActivity"
@@ -36,4 +40,8 @@
         android:id="@+id/commentsDetailActivity"
         android:name="com.example.anabada.ui.CommentsDetailActivity"
         android:label="CommentsDetailActivity" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.anabada.ui.MainActivity"
+        android:label="MainActivity" />
 </navigation>

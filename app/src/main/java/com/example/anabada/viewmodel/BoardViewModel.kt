@@ -1,20 +1,13 @@
 package com.example.anabada.viewmodel
 
-import android.widget.Toast
 import androidx.lifecycle.*
-import androidx.paging.*
-import com.example.anabada.CoroutineHandler
 import com.example.anabada.SingleLiveEvent
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.ApiService
-import com.example.anabada.repository.BoardsDataRepo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import com.example.anabada.repository.BoardsDataRepository
 
 class BoardViewModel(
-    private val boardsDataRepo: BoardsDataRepo,
+    private val boardsDataRepository: BoardsDataRepository,
     private val api: ApiService
 ) : ViewModel() {
 
@@ -27,12 +20,12 @@ class BoardViewModel(
     private val _boardsDataList = MutableLiveData<ArrayList<BoardsData>>()
     var boardsDataList: LiveData<ArrayList<BoardsData>> = _boardsDataList
 
-    val boardsDataPaginated = boardsDataRepo.observeBoardsDataFromDB()
+    val boardsDataPaginated = boardsDataRepository.observeBoardsDataFromDB()
 
 //    private val queryLiveData = MutableLiveData<String>()
 //    val repoResult: LiveData<BoardsData> = queryLiveData.switchMap { queryString ->
 //        liveData {
-//            val repos = boardsDataRepo.getSearchResultStream(queryString).asLiveData(Dispatchers.Main)
+//            val repos = boardsDataRepository.getSearchResultStream(queryString).asLiveData(Dispatchers.Main)
 //            emitSource(repos)
 //        }
 //    }
@@ -44,7 +37,7 @@ class BoardViewModel(
         _showLoading.postValue(true)
 // val newsPaginated = newsRepo.observeNewsListPaginated().flow.asLiveData()
 //        viewModelScope.launch {
-//            val result = boardsDataRepo.getBoard()
+//            val result = boardsDataRepository.getBoard()
 //
 //            _showLoading.postValue(false)
 //            when (result) {
@@ -108,7 +101,7 @@ class BoardViewModel(
 //    val floww = Pager(
 //        PagingConfig(pageSize = 20)
 //    ) { // config 설정
-//        BoardsDataPagingSource(BoardsDataRepo()) // pagingSource 연결
+//        BoardsDataPagingSource(BoardsDataRepository()) // pagingSource 연결
 //    }.flow.map {
 //        it.map<BoardsData> { BoardsData.Item(it) }
 //        .cachedIn(viewModelScope) // 캐싱
@@ -124,7 +117,7 @@ class BoardViewModel(
 //            return lastResult
 //        }
 //        currentQueryValue = queryString
-//        val newResult: Flow<PagingData<com.example.anabada.db.model.BoardsData>> = boardsDataRepo.getSearchResultStream(queryString)
+//        val newResult: Flow<PagingData<com.example.anabada.db.model.BoardsData>> = boardsDataRepository.getSearchResultStream(queryString)
 //            .cachedIn(viewModelScope)
 //        currentSearchResult = newResult
 //        return newResult
