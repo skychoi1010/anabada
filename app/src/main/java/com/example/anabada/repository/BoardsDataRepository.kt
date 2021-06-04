@@ -23,8 +23,6 @@ class BoardsDataRepositoryImpl(
     private val db: AnabadaDatabase
 ) : BoardsDataRepository {
 
-    private val boardsDataDao: BoardsDataDao = db.boardsDataDao()
-
     @OptIn(ExperimentalPagingApi::class)
     override fun observeBoardsDataFromDB(): Flow<PagingData<BoardsData>> {
         return Pager(
