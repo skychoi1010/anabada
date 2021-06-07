@@ -1,4 +1,4 @@
-package com.example.anabada.view
+package com.example.anabada.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
