@@ -7,41 +7,71 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.anabada.ui.HomeFragment"
+        android:name="com.example.anabada.view.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_boardDetailActivity"
             app:destination="@id/boardDetailActivity" />
+        <action
+            android:id="@+id/action_homeFragment_to_tempFragment"
+            app:destination="@id/tempFragment" />
     </fragment>
     <activity
         android:id="@+id/boardDetailActivity"
-        android:name="com.example.anabada.ui.BoardDetailActivity"
+        android:name="com.example.anabada.view.BoardDetailActivity"
         android:label="activity_board_detail"
         tools:layout="@layout/activity_board_detail" />
     <activity
         android:id="@+id/loginActivity"
-        android:name="com.example.anabada.ui.LoginActivity"
+        android:name="com.example.anabada.view.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
     <activity
         android:id="@+id/signUpActivity"
-        android:name="com.example.anabada.ui.SignUpActivity"
+        android:name="com.example.anabada.view.SignUpActivity"
         android:label="activity_signup"
         tools:layout="@layout/activity_signup" />
     <activity
         android:id="@+id/splashActivity"
-        android:name="com.example.anabada.ui.SplashActivity"
+        android:name="com.example.anabada.view.SplashActivity"
         android:label="SplashActivity" />
     <activity
         android:id="@+id/postActivity"
-        android:name="com.example.anabada.ui.PostActivity"
+        android:name="com.example.anabada.view.PostActivity"
         android:label="PostActivity" />
     <activity
         android:id="@+id/commentsDetailActivity"
-        android:name="com.example.anabada.ui.CommentsDetailActivity"
+        android:name="com.example.anabada.view.CommentsDetailActivity"
         android:label="CommentsDetailActivity" />
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.example.anabada.ui.MainActivity"
+        android:name="com.example.anabada.view.MainActivity"
         android:label="MainActivity" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.anabada.view.ChatFragment"
+        android:label="ChatFragment" />
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.example.anabada.view.MyPageFragment"
+        android:label="MyPageFragment" >
+        <action
+            android:id="@+id/action_myPageFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.anabada.view.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tempFragment"
+        android:name="com.example.anabada.view.TempFragment"
+        android:label="TempFragment" />
 </navigation>

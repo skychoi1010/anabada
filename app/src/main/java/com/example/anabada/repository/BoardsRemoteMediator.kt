@@ -4,9 +4,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.paging.*
 import androidx.room.withTransaction
-import com.example.anabada.repository.local.AnabadaDatabase
-import com.example.anabada.repository.local.BoardsDataDao
-import com.example.anabada.repository.local.RemoteKeysDao
+import com.example.anabada.db.AnabadaDatabase
+import com.example.anabada.db.BoardsDataDao
+import com.example.anabada.db.RemoteKeysDao
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.db.model.RemoteKeys
 import com.example.anabada.network.ApiService

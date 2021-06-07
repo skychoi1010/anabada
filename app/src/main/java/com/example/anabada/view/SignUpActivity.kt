@@ -1,20 +1,14 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.databinding.ActivitySignupBinding
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.SignUpRes
-import com.example.anabada.repository.MySharedPreferences
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import java.util.regex.Pattern
 
@@ -128,9 +122,9 @@ class SignUpActivity: AppCompatActivity() {
 //                        } else {
 //                            Toast.makeText(this@SignUpActivity, "success: " + signup?.success.toString() +
 //                                    "\nresult code: " + signup?.resultCode, Toast.LENGTH_SHORT).show()
-//                            MySharedPreferences.setUserId(this@SignUpActivity, uid)
-//                            MySharedPreferences.setUserPass(this@SignUpActivity, upw)
-//                            MySharedPreferences.setUserNick(this@SignUpActivity, nickname)
+//                            SharedPreferencesManager.setUserId(this@SignUpActivity, uid)
+//                            SharedPreferencesManager.setUserPass(this@SignUpActivity, upw)
+//                            SharedPreferencesManager.setUserNick(this@SignUpActivity, nickname)
 //                            Intent(this@SignUpActivity, HomeFragment::class.java).apply {
 //                                startActivity(this)
 //                            }

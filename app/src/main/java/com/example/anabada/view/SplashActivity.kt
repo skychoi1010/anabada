@@ -1,15 +1,11 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.LoginRes
-import com.example.anabada.repository.MySharedPreferences
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.anabada.repository.SharedPreferencesManager
 
 class SplashActivity : AppCompatActivity() {
     var loginRes: LoginRes? = null
@@ -19,14 +15,14 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // SharedPreferences 안에 값이 저장되어 있지 않을 때 -> Login
-        if (MySharedPreferences.getUserNick(this).isBlank()) {
+        if (SharedPreferencesManager.getUserNick(this).isBlank()) {
             Intent(this@SplashActivity, LoginActivity::class.java).apply {
                 startActivity(this)
             }
             finish()
         } else { // SharedPreferences 안에 값이 저장되어 있을 때 -> 게시판으로 이동
-            val uid = MySharedPreferences.getUserId(this)
-            val upw = MySharedPreferences.getUserPass(this)
+            val uid = SharedPreferencesManager.getUserId(this)
+            val upw = SharedPreferencesManager.getUserPass(this)
 
             //TODO temporary fix - must delete afterwards
             Intent(this@SplashActivity, LoginActivity::class.java).apply {
@@ -46,7 +42,7 @@ class SplashActivity : AppCompatActivity() {
 //                        }
 //                        finish()
 //                    } else {
-//                        Toast.makeText(this@SplashActivity, "${MySharedPreferences.getUserNick(this@SplashActivity)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(this@SplashActivity, "${SharedPreferencesManager.getUserNick(this@SplashActivity)}님 자동 로그인 되었습니다.", Toast.LENGTH_SHORT).show()
 //                        Intent(this@SplashActivity, MainActivity::class.java).apply {
 //                            startActivity(this)
 //                        }

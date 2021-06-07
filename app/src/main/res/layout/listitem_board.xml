@@ -106,11 +106,12 @@
 
     <ImageView
         android:id="@+id/iv_board_comment_ic"
-        android:layout_width="24dp"
-        android:layout_height="12dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_marginLeft="3dp"
-        android:layout_marginBottom="12dp"
-        android:background="?android:attr/textSelectHandleRight"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/ic_comment_b"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintVertical_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -137,6 +138,40 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/iv_board_comment_ic"/>
+
+<!--    <ImageView-->
+<!--        android:id="@+id/iv_board_likes_ic"-->
+<!--        android:layout_width="24dp"-->
+<!--        android:layout_height="12dp"-->
+<!--        android:layout_marginLeft="3dp"-->
+<!--        android:layout_marginBottom="12dp"-->
+<!--        android:background="@drawable/ic_comment_b"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintVertical_bias="1.0"-->
+<!--        app:layout_constraintHorizontal_chainStyle="packed"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintRight_toLeftOf="@id/tv_board_comment_num"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_board_likes_num"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="12dp"-->
+<!--        android:paddingRight="12dp"-->
+<!--        android:fontFamily="@font/font_medium"-->
+<!--        tools:text="1"-->
+<!--        android:textSize="14dp"-->
+<!--        android:maxLines="1"-->
+<!--        android:ellipsize="end"-->
+<!--        android:maxEms="5"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintVertical_bias="1.0"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintLeft_toRightOf="@id/iv_board_comment_ic"/>-->
 
     <TextView
         android:id="@+id/tv_prev_comment_options"

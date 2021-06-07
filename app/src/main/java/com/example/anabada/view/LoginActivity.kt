@@ -1,18 +1,13 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.anabada.*
 import com.example.anabada.databinding.ActivityLoginBinding
 import com.example.anabada.network.ApiService
 import com.example.anabada.network.LoginRes
-import com.example.anabada.repository.MySharedPreferences
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.anabada.repository.SharedPreferencesManager
 
 class LoginActivity : AppCompatActivity() {
 
@@ -40,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.skipBtn.setOnClickListener {
-            MySharedPreferences.setUserId(this, "no")
+            SharedPreferencesManager.setUserId(this, "no")
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
         }
@@ -66,9 +61,9 @@ class LoginActivity : AppCompatActivity() {
 //                            "\nresult code: " + loginRes?.resultCode + "\nid: " + loginRes?.id.toString() +
 //                            "\nnickname: " + loginRes?.nickname, Toast.LENGTH_SHORT
 //                    ).show()
-//                    MySharedPreferences.setUserId(this@LoginActivity, uid)
-//                    MySharedPreferences.setUserPass(this@LoginActivity, upw)
-//                    MySharedPreferences.setUserNick(
+//                    SharedPreferencesManager.setUserId(this@LoginActivity, uid)
+//                    SharedPreferencesManager.setUserPass(this@LoginActivity, upw)
+//                    SharedPreferencesManager.setUserNick(
 //                            this@LoginActivity,
 //                            loginRes?.nickname.toString()
 //                    )

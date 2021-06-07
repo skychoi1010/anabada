@@ -30,7 +30,7 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".view.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,12 +38,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.LoginActivity" />
-        <activity android:name=".ui.SignUpActivity" />
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.PostActivity" />
-        <activity android:name=".ui.BoardDetailActivity" />
-        <activity android:name=".ui.CommentsDetailActivity" />
+        <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.SignUpActivity" />
+        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.PostActivity" />
+        <activity android:name=".view.BoardDetailActivity" />
+        <activity android:name=".view.CommentsDetailActivity" />
     </application>
 
 </manifest>

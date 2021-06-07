@@ -1,4 +1,4 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.content.Intent
 import android.graphics.Color
@@ -20,15 +20,11 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.*
 import com.example.anabada.databinding.ActivityBoardDetailBinding
 import com.example.anabada.db.model.BoardsData
 import com.example.anabada.network.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.anabada.view.adapter.CommentsRecyclerAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 

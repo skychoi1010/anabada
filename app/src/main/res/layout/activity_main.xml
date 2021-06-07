@@ -7,18 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/fragment"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_container"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +26,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="4dp"
         android:background="@android:color/background_light"
-        ads:layout_constraintTop_toBottomOf="@id/pager"
+        ads:layout_constraintTop_toBottomOf="@id/nav_host_container"
         android:foregroundTintMode="add"
         ads:itemIconTint="@color/black"
         ads:itemTextColor="@color/cardview_dark_background"

@@ -1,4 +1,4 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.content.Context
 import android.graphics.Color

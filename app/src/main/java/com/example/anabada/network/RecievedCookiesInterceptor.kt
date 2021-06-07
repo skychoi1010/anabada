@@ -1,7 +1,7 @@
 package com.example.anabada.network
 
 import android.content.Context
-import com.example.anabada.repository.MySharedPreferences
+import com.example.anabada.repository.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -12,11 +12,11 @@ class ReceivedCookiesInterceptor     // AddCookiesInterceptor()
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalResponse = chain.proceed(chain.request())
         if (originalResponse.headers("Set-Cookie").isNotEmpty()) {
-            val cookies = MySharedPreferences.getCookie(context)
+            val cookies = SharedPreferencesManager.getCookie(context)
             for (header in originalResponse.headers("Set-Cookie")) {
                 cookies.add(header)
             }
-            MySharedPreferences.setCookie(context, cookies)
+            SharedPreferencesManager.setCookie(context, cookies)
 
         }
         return originalResponse

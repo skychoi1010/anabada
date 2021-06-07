@@ -1,4 +1,4 @@
-package com.example.anabada.repository.local
+package com.example.anabada.db
 
 import android.content.Context
 import androidx.room.Database

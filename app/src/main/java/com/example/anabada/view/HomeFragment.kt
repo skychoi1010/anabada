@@ -1,37 +1,28 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.anabada.*
 import com.example.anabada.databinding.FragmentHomeBinding
 import com.example.anabada.db.model.BoardsData
-import com.example.anabada.network.ApiService
 import com.example.anabada.network.BoardPageRes
-import com.example.anabada.network.LogoutRes
-import com.example.anabada.repository.MySharedPreferences
+import com.example.anabada.util.BaseViewBindingFragment
+import com.example.anabada.view.adapter.BoardRecyclerAdapter
+import com.example.anabada.view.adapter.BoardsDataAdapter
+import com.example.anabada.view.adapter.BoardsLoadStateAdapter
 import com.example.anabada.viewmodel.BoardViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
@@ -112,9 +103,9 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
 //    private fun initLogout() {
 //
 //        binding.appbar.tvAppbarLoginLogout.text = "login"
-//        if (MySharedPreferences.getUserNick(fragmentContext).isNotEmpty()) {
+//        if (SharedPreferencesManager.getUserNick(fragmentContext).isNotEmpty()) {
 //            let {
-//                binding.appbar.tvAppbarUserNickname.text = MySharedPreferences.getUserNick(fragmentContext)
+//                binding.appbar.tvAppbarUserNickname.text = SharedPreferencesManager.getUserNick(fragmentContext)
 //                binding.appbar.tvAppbarLoginLogout.text = "logout"
 //            }
 //        }
@@ -126,7 +117,7 @@ class HomeFragment : BaseViewBindingFragment<FragmentHomeBinding>() {
 ////                }
 ////
 ////                override fun onResponse(call: Call<LogoutRes>, response: Response<LogoutRes>) {
-////                    MySharedPreferences.clearUser(fragmentContext)
+////                    SharedPreferencesManager.clearUser(fragmentContext)
 ////                    Intent(fragmentContext, LoginActivity::class.java).apply {
 ////                        startActivity(this)
 ////                    }

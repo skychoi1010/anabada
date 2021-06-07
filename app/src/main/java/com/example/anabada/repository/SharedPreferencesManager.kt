@@ -3,7 +3,7 @@ package com.example.anabada.repository
 import android.content.Context
 import android.content.SharedPreferences
 
-object MySharedPreferences {
+object SharedPreferencesManager {
     private val MY_ACCOUNT : String = "MY_ACCOUNT"
 
     fun setCookie(context: Context, input: HashSet<String>) {

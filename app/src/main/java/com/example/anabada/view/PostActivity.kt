@@ -1,4 +1,4 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.Manifest
 import android.app.Activity
@@ -13,6 +13,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -28,9 +29,6 @@ import com.example.anabada.network.PostImageRes
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -83,6 +81,7 @@ class PostActivity : AppCompatActivity() {
             onBackPressed()
         }
         binding.appbar.toolbarTitle.text = "중고거래 글쓰기"
+        binding.appbar.toolbarFin.visibility = View.VISIBLE
 
         var time: Long = 0
         binding.appbar.toolbarFin.setOnClickListener {

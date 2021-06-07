@@ -1,7 +1,7 @@
 package com.example.anabada.network
 
 import android.content.Context
-import com.example.anabada.repository.MySharedPreferences
+import com.example.anabada.repository.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -14,7 +14,7 @@ class AddCookiesInterceptor(
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder: Request.Builder = chain.request().newBuilder()
-        val preferences = MySharedPreferences.getCookie(context)
+        val preferences = SharedPreferencesManager.getCookie(context)
 
         // Use the following if you need everything in one line.
         // Some APIs die if you do it differently.

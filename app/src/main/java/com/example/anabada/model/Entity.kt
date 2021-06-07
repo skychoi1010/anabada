@@ -3,7 +3,7 @@ package com.example.anabada.db.model
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.anabada.repository.local.AnabadaDatabase
+import com.example.anabada.db.AnabadaDatabase
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

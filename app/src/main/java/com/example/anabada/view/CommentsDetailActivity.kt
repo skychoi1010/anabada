@@ -1,4 +1,4 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.content.Intent
 import android.os.Build
@@ -19,10 +19,8 @@ import com.example.anabada.*
 import com.example.anabada.databinding.ActivityCommentsDetailBinding
 import com.example.anabada.databinding.ListitemCommentsBinding
 import com.example.anabada.network.*
-import com.example.anabada.repository.MySharedPreferences
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.anabada.repository.SharedPreferencesManager
+import com.example.anabada.view.adapter.CommentsRecyclerAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -87,7 +85,7 @@ class CommentsDetailActivity : AppCompatActivity() {
         inputMethodManager.showSoftInput(binding.tvCommentInput, 0)
 
         binding.btnPostComment.setOnClickListener{
-            if (MySharedPreferences.getUserId(this) == "no") { // need to login
+            if (SharedPreferencesManager.getUserId(this) == "no") { // need to login
                 Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
                 Intent(this@CommentsDetailActivity, LoginActivity::class.java).apply {
                     startActivity(this)
@@ -122,7 +120,7 @@ class CommentsDetailActivity : AppCompatActivity() {
                                 binding.btnPostComment.visibility = View.INVISIBLE
                                 binding.btnEditComment.visibility = View.VISIBLE
                                 binding.btnEditComment.setOnClickListener {
-                                    if (MySharedPreferences.getUserId(this@CommentsDetailActivity) == "no") { // need to login
+                                    if (SharedPreferencesManager.getUserId(this@CommentsDetailActivity) == "no") { // need to login
                                         Toast.makeText(this@CommentsDetailActivity, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
                                         Intent(this@CommentsDetailActivity, LoginActivity::class.java).apply {
                                             startActivity(this)

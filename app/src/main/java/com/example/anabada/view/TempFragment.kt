@@ -1,19 +1,20 @@
-package com.example.anabada.ui
+package com.example.anabada.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.anabada.BaseViewBindingFragment
+import com.example.anabada.databinding.FragmentTempBinding
+import com.example.anabada.util.BaseViewBindingFragment
 import com.example.anabada.databinding.LayoutLoadingBinding
 
-class TempFragment : BaseViewBindingFragment<LayoutLoadingBinding>() {
+class TempFragment : BaseViewBindingFragment<FragmentTempBinding>() {
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): LayoutLoadingBinding {
-        return LayoutLoadingBinding.inflate(inflater, container, false)
+    ): FragmentTempBinding {
+        return FragmentTempBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,8 +1,8 @@
-package com.example.anabada
+package com.example.anabada.di
 
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider
-import com.example.anabada.repository.local.AnabadaDatabase
+import com.example.anabada.db.AnabadaDatabase
 import com.example.anabada.network.ApiService
 import com.example.anabada.repository.BoardsDataPagingSource
 import com.example.anabada.repository.BoardsDataRepositoryImpl
