@@ -2,7 +2,7 @@ package com.example.anabada.viewmodel
 
 import androidx.lifecycle.*
 import com.example.anabada.SingleLiveEvent
-import com.example.anabada.db.model.BoardsData
+import com.example.anabada.model.BoardsData
 import com.example.anabada.network.ApiService
 import com.example.anabada.repository.BoardsDataRepository
 
@@ -109,15 +109,15 @@ class BoardViewModel(
 
 //    private var currentQueryValue: String? = null
 //
-//    private var currentSearchResult: Flow<PagingData<com.example.anabada.db.model.BoardsData>>? = null
+//    private var currentSearchResult: Flow<PagingData<com.example.anabada.model.BoardsData>>? = null
 //
-//    fun searchRepo(queryString: String): Flow<PagingData<com.example.anabada.db.model.BoardsData>> {
+//    fun searchRepo(queryString: String): Flow<PagingData<com.example.anabada.model.BoardsData>> {
 //        val lastResult = currentSearchResult
 //        if (queryString == currentQueryValue && lastResult != null) {
 //            return lastResult
 //        }
 //        currentQueryValue = queryString
-//        val newResult: Flow<PagingData<com.example.anabada.db.model.BoardsData>> = boardsDataRepository.getSearchResultStream(queryString)
+//        val newResult: Flow<PagingData<com.example.anabada.model.BoardsData>> = boardsDataRepository.getSearchResultStream(queryString)
 //            .cachedIn(viewModelScope)
 //        currentSearchResult = newResult
 //        return newResult

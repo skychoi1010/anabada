@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.anabada.*
 import com.example.anabada.databinding.FragmentHomeBinding
-import com.example.anabada.db.model.BoardsData
+import com.example.anabada.model.BoardsData
 import com.example.anabada.network.BoardPageRes
 import com.example.anabada.util.BaseViewBindingFragment
 import com.example.anabada.view.adapter.BoardRecyclerAdapter

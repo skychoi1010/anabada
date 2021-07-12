@@ -1,8 +1,6 @@
 package com.example.anabada.network
 
-import android.os.Parcelable
-import com.example.anabada.db.model.BoardsData
-import kotlinx.android.parcel.Parcelize
+import com.example.anabada.model.BoardsData
 
 data class LoginRes (
         var success: Boolean,

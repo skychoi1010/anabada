@@ -1,4 +1,4 @@
-package com.example.anabada.db.model
+package com.example.anabada.model
 
 import android.os.Parcelable
 import androidx.room.Entity

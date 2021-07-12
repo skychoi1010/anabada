@@ -1,9 +1,8 @@
 package com.example.anabada.repository
 
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.anabada.db.model.BoardsData
+import com.example.anabada.model.BoardsData
 import com.example.anabada.network.ApiService
 import retrofit2.HttpException
 import java.io.IOException

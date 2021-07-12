@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.anabada.db.AnabadaDatabase
-import com.example.anabada.db.model.BoardsData
+import com.example.anabada.model.BoardsData
 import com.example.anabada.network.ApiService
 import kotlinx.coroutines.flow.Flow
 

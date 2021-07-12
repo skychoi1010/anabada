@@ -5,8 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.anabada.db.model.BoardsData
-import com.example.anabada.db.model.RemoteKeys
+import com.example.anabada.model.BoardsData
+import com.example.anabada.model.RemoteKeys
 
 @Dao
 interface BoardsDataDao {

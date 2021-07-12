@@ -7,8 +7,8 @@ import androidx.room.withTransaction
 import com.example.anabada.db.AnabadaDatabase
 import com.example.anabada.db.BoardsDataDao
 import com.example.anabada.db.RemoteKeysDao
-import com.example.anabada.db.model.BoardsData
-import com.example.anabada.db.model.RemoteKeys
+import com.example.anabada.model.BoardsData
+import com.example.anabada.model.RemoteKeys
 import com.example.anabada.network.ApiService
 import retrofit2.HttpException
 import java.io.IOException

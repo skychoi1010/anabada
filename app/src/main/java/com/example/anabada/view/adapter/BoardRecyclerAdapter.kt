@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.anabada.R
 import com.example.anabada.databinding.ListitemBoardBinding
-import com.example.anabada.db.model.BoardsData
+import com.example.anabada.model.BoardsData
 import java.text.SimpleDateFormat
 import java.util.*
 
