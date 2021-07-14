@@ -28,7 +28,7 @@
             android:id="@+id/cl_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray">
+            android:background="@color/light_gray">
 
             <ImageView
                 android:id="@+id/iv_board_detail_img"

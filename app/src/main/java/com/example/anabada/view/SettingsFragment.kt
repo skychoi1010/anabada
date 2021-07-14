@@ -28,7 +28,7 @@ class SettingsFragment : BaseViewBindingFragment<FragmentSettingsBinding>() {
 //        })
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                getView()?.findNavController()?.navigate(R.id.action_settingsFragment_to_myPageFragment)
+                view.findNavController().navigate(R.id.action_settingsFragment_to_myPageFragment)
             }
         })
         if (isAdded) {
@@ -40,7 +40,7 @@ class SettingsFragment : BaseViewBindingFragment<FragmentSettingsBinding>() {
     private fun initToolbar() {
         binding.appbarSettings.toolbarBack.colorFilter = PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
         binding.appbarSettings.toolbarBack.setOnClickListener {
-            getView()?.findNavController()?.navigate(R.id.action_settingsFragment_to_myPageFragment)
+            view?.findNavController()?.navigate(R.id.action_settingsFragment_to_myPageFragment)
         }
         binding.appbarSettings.toolbarTitle.text = "Settings"
     }

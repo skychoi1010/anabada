@@ -2,6 +2,7 @@ package com.example.anabada.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -32,6 +33,13 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>({ ActivityMain
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.settingsFragment) {
+                binding.bottomNav.visibility = View.GONE
+            } else {
+                binding.bottomNav.visibility = View.VISIBLE
+            }
+        }
         // 위와 같은 2번째 방법
         //        NavigationUI.setupWithNavController(
         //            main_bottom_navigation,
