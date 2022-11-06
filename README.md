@@ -37,7 +37,7 @@
   <img src="https://user-images.githubusercontent.com/50130497/176137430-fdb8bda1-89ee-4afe-af0e-15de804d9ef6.jpeg" width="23%">
 <p/>
 
-### 게시물 작성 화면
+### 게시물 작성 화면 (이미지 첨부 시)
 <p align="center">
   <img src="https://user-images.githubusercontent.com/50130497/176138547-c1065d2f-9f5f-4a68-b8c5-46341d9f2421.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176138557-25aa2a4f-5029-4d80-8f83-7dc69ce10232.jpeg" width="23%">
