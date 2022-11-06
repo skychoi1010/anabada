@@ -21,21 +21,21 @@
 - 마이페이지, 게시물 검색 등 기능 확장이 계획되고 더 이상 MVC로는 코드 관리 및 확장이 어렵다고 판단하여 MVVM과 Repository 패턴, Coroutine, 의존성 주입을 위해 Koin을 적용하여 안정화 및 최적화를 진행중입니다. Optimization 브랜치에서 작업 진행중이며, Navigation component를 사용하고 각 탭의 화면을 fragment로 구현, PagingSource와 RemoteMediator 등 최신 라이브러리로 앱의 사용성과 확장성을 높이고자 하였습니다.
 
 # Demo 
-### (Toolbar scroll gradient animation, 접속 시 화면, 게시물 작성 화면, 회원가입  등)
+### 접속 시 화면, 회원가입, 메인화면 및 게시물 상세페이지
 <p align="center">
   <img src="https://user-images.githubusercontent.com/50130497/176151870-b1584704-91f3-437b-bc59-fb7496ff19eb.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176138529-f2788a62-3d19-45d3-ac5a-37a720bd090a.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176137486-29549464-c45d-4d14-9321-9abd58682f45.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176137459-0419633c-9cf4-49c2-bf3b-bb8947dfa516.jpeg" width="23%">
-<p/>
-
+<p/><b/>
+### Toolbar scroll gradient animation
 <p align="center">
   <img src="https://user-images.githubusercontent.com/50130497/176137341-56a8ae80-47c5-40a3-a0f2-6b2ed456a715.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176137376-10e22ca2-6971-4e9a-9189-620a0ed62267.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176137395-508c1a8e-23fb-432f-9652-5cf8dd323d2e.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176137430-fdb8bda1-89ee-4afe-af0e-15de804d9ef6.jpeg" width="23%">
-<p/>
-
+<p/><b/>
+### 게시물 작성 화면
 <p align="center">
   <img src="https://user-images.githubusercontent.com/50130497/176138547-c1065d2f-9f5f-4a68-b8c5-46341d9f2421.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176138557-25aa2a4f-5029-4d80-8f83-7dc69ce10232.jpeg" width="23%">
