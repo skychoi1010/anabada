@@ -11,10 +11,10 @@
 
 ## demo (Toolbar scroll gradient animation, 접속 시 화면, 게시물 작성 화면, 회원가입  등)
 <figure>
-  <img src="https://user-images.githubusercontent.com/50130497/176151870-b1584704-91f3-437b-bc59-fb7496ff19eb.jpeg" width="23%">
-  <img src="https://user-images.githubusercontent.com/50130497/176138529-f2788a62-3d19-45d3-ac5a-37a720bd090a.jpeg" width="23%">
-  <img src="https://user-images.githubusercontent.com/50130497/176137486-29549464-c45d-4d14-9321-9abd58682f45.jpeg" width="23%">
-/figure>
+  <img src="https://user-images.githubusercontent.com/50130497/176151870-b1584704-91f3-437b-bc59-fb7496ff19eb.jpeg" width="23%"/>
+  <img src="https://user-images.githubusercontent.com/50130497/176138529-f2788a62-3d19-45d3-ac5a-37a720bd090a.jpeg" width="23%"/>
+  <img src="https://user-images.githubusercontent.com/50130497/176137486-29549464-c45d-4d14-9321-9abd58682f45.jpeg" width="23%"/>
+figure>
 <img src="https://user-images.githubusercontent.com/50130497/176137459-0419633c-9cf4-49c2-bf3b-bb8947dfa516.jpeg" width="23%">
 
 <img src="https://user-images.githubusercontent.com/50130497/176137341-56a8ae80-47c5-40a3-a0f2-6b2ed456a715.jpeg" width="23%">
