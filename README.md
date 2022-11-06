@@ -20,7 +20,8 @@
 - 'Optimization' branch에서 MVVM, Repository pattern, Koin 적용 등 리팩토링 중
 - 마이페이지, 게시물 검색 등 기능 확장이 계획되고 더 이상 MVC로는 코드 관리 및 확장이 어렵다고 판단하여 MVVM과 Repository 패턴, Coroutine, 의존성 주입을 위해 Koin을 적용하여 안정화 및 최적화를 진행중입니다. Optimization 브랜치에서 작업 진행중이며, Navigation component를 사용하고 각 탭의 화면을 fragment로 구현, PagingSource와 RemoteMediator 등 최신 라이브러리로 앱의 사용성과 확장성을 높이고자 하였습니다.
 
-# Demo (Toolbar scroll gradient animation, 접속 시 화면, 게시물 작성 화면, 회원가입  등)
+# Demo 
+### (Toolbar scroll gradient animation, 접속 시 화면, 게시물 작성 화면, 회원가입  등)
 <p align="center">
   <img src="https://user-images.githubusercontent.com/50130497/176151870-b1584704-91f3-437b-bc59-fb7496ff19eb.jpeg" width="23%">
   <img src="https://user-images.githubusercontent.com/50130497/176138529-f2788a62-3d19-45d3-ac5a-37a720bd090a.jpeg" width="23%">
